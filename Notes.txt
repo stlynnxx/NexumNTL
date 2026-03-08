@@ -136,5 +136,14 @@ I ended up coming back and cleaning up crawler a bit since it was getting a litt
 hard to manage and some things needed some improving. I do believe it to be much
 cleaner now!
 
-I also added a basic memory key: association defintion in SymbolTable
+I also added a basic memory key: association defintion in SymbolTable.
+
+5:55 PM-
+
+I probably won't spend too much time in here today as it's supposed to be my day off
+but I was reading The C Programming Language a bit while my chicken bakes in the oven
+and it inspired me to code a bit.
+
+I really just worked on associator logic a bit in the associations loop, nothing big
+and it isn't even finished yet. Still not nothing either, though!
 

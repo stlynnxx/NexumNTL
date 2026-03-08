@@ -46,10 +46,14 @@ char associations(char wC[50], char fileArray[50], int tracker) {
     // Whenever associations is called initally wC will be on
     // the first association's opening name token
     bool associationBool = false;
+    bool associatorBool = false;
     bool nameTokenBool = false;
     int letterCounter = 0;
+    int associatorLetterCounter = 0;
+    int associatiorStartPoint;
     char workingAssociations[50];
     int associationsSizes[100];
+    char workingAssociators[200];
     wC[0] = fileArray[tracker];
     if (wC == nameToken)
     {
@@ -74,9 +78,47 @@ char associations(char wC[50], char fileArray[50], int tracker) {
                 tracker++;
             }
         }
+        if (wC == associatorToken) {
+            associatorBool = true;
+            // This will record the index where the associator token was discovered
+            associatiorStartPoint = tracker;
+            // This will move tracker to the first letter of the associator
+            tracker++;
+            wC[0] = fileArray[tracker];
+            if (wC[i] == alphas[i])
+            {
+                    associatorLetterCounter++;
+                    workingAssociators[i] = wC[i];
+
+            }
+            if (wC == comma)
+                {
+                    // This puts tracker at the point of the comma which
+                    // in this context is acting as a delimiliter for the associator
+                    tracker = tracker + associatorLetterCounter + 1;
+                    wC[0] = fileArray[tracker];
+
+                }
+            tracker++;
+            wC[0] = fileArray[tracker];
+            if (wC == space) {
+                tracker++;
+                wC[0] = fileArray[tracker];
+            }
+            if (wC == nameToken) {
+                // This will need to repeat earlier logic an indefinte amount of times.
+
+            }
+
+
+
+
+
+        }
+
         // Instead of looking for a specific delimiter to end the assocations loop
         // this ends it if wc is neither a letter or nameToken
-        if (wC[i] != alphas[i] | wC != nameToken) {
+        if (wC[i] != alphas[i] | wC != nameToken | wC != associatorToken) {
             i = alphasLength + 1;
         }
 
