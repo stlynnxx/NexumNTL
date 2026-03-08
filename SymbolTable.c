@@ -16,3 +16,20 @@ const char endAssociationsToken[2] = "'}";
 const char *colon = ":";
 const char *space = " ";
 const char openingSeq[5] = ": {";
+
+
+struct MemoryKey
+    {
+        int x;
+        // char associationBank[20];
+        struct associatonBank{
+            char associationsList[200];
+            struct associator {
+                struct MemoryKey *associatonBank;
+
+            } associator;
+
+        } associatonBank;
+
+    } MemoryKey;
+
