@@ -13,3 +13,6 @@ const char alphas[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l
 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 const int alphasLength = sizeof(alphas) / sizeof(alphas[0]);
 const char endAssociationsToken[2] = "'}";
+const char *colon = ":";
+const char *space = " ";
+const char openingSeq[5] = ": {";

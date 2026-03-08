@@ -8,14 +8,15 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+
+// Macros
 #define MAX_ASSOC 50
 #define MAX_ASSOC_LEN 200
 #define ROW 20
 #define COLUMN 20
-#define STARTLINETOKEN "{"
-#define STARTITEMTOKEN "'"
-#define ENDLINETOKEN "}"
-#define ASSOCIATOR "@"
+
+
+
 typedef struct {
     char mainArray[2000];
     char splitArray[MAX_ASSOC][MAX_ASSOC_LEN];
@@ -83,19 +84,96 @@ char associations(char wC[50], char fileArray[50], int tracker) {
     // Tracker at this point should be on the closing brace of the line in question
     return workingAssociations[0], tracker;
 }
+
 void crawler(FILE *fp) {
-        MemoryFileSplit memoryFileSplit;
-        char fileArray[50];
-        char workingCheck[2];
-        char wC[50];
-        char workingMemKeys[200];
-        bool memoryKeyBool;
-        bool assocationBool;
-        int tracker = 0;
-        int nameTokenPoint;
-        int letterCounter = 0;
-        loadNexFile(fp, &memoryFileSplit);
-        int len = sizeof(memoryFileSplit.mainArray) / sizeof(memoryFileSplit.mainArray[0]);
+    MemoryFileSplit memoryFileSplit;
+    char fileArray[2000];
+    char workingCheck[5];
+    char wC[50];
+    char workingMemKeys[200];
+    bool memoryKeyBool;
+    bool assocationBool;
+    int tracker = 0;
+    int nameTokenPoint;
+    int letterCounter = 0;
+    // loadNexFile loads the working file into memoryFileSplit.mainArray
+    loadNexFile(fp, &memoryFileSplit);
+    int len = sizeof(memoryFileSplit.mainArray) / sizeof(memoryFileSplit.mainArray[0]);
+    // Here begins the crawling process.
+
+    for (int i = 0; i < len; i++);
+    {
+        // During loadNexFile, the working file is loaded into
+        // mainArray, and now that is being loaded into fileArray
+
+        wC[0] = memoryFileSplit.mainArray[0]; // wC is our working character.
+        if (wC == openBraceToken)
+            {
+                tracker++; // tracker is doing as it is named and tracking our working location
+                wC[0] = memoryFileSplit.mainArray[tracker];
+            }
+        if (wC == nameToken)
+            {
+                nameTokenPoint = tracker; // This records the index where the first name token occurs
+                tracker++;
+                wC[0] = memoryFileSplit.mainArray[tracker];
+            }
+        for (int i = 0; i < alphasLength; i++)
+            {
+                if (wC[i] == alphas[i] | wC == nameToken)
+                    {
+                      // I feel comfortable placing this signal here before the hard letter check
+                      // Just because even if it's only a pass for a nameToken at this point we're
+                      // Likely reading a memoryKey
+                        memoryKeyBool = true;
+
+                        while (memoryKeyBool == true) {
+                            if (wC[i] == alphas[i])
+                            {
+                                letterCounter++;
+                                tracker++;
+                                workingMemKeys[i] = memoryFileSplit.mainArray[i];
+
+                            }
+                            if (wC[i] != alphas[i])
+                            {
+                                memoryKeyBool = false;
+                            }
+                        }
+                        if (wC == nameToken)
+                            {
+                                tracker++;
+                                wC[0] = memoryFileSplit.mainArray[tracker];
+                            }
+
+                    }
+
+            }
+            if (wC[0] == openingSeq[0])
+                {
+                    tracker++;
+                    wC[0] = memoryFileSplit.mainArray[tracker];
+                }
+            if (wC == nameToken)
+                {
+                    tracker++;
+                    wC[0] = memoryFileSplit.mainArray[tracker];
+                    while (wC[0] == alphas[0] | wC == nameToken)
+                        {
+                            associations(wC, fileArray ,tracker);
+                            tracker++;
+                            wC[0] = fileArray[tracker];
+                        }
+
+                }
+
+    }
+
+
+
+
+}
+void rawler(FILE *fp) {
 
         for (int i = 0; i < sizeof(memoryFileSplit.mainArray); i++)
         {

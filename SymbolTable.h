@@ -13,5 +13,8 @@ extern const char endFileToken[];
 extern const char alphas[];
 extern const int alphasLength;
 extern const char endAssociationsToken[];
+extern const char *colon;
+extern const char *space;
+extern const char openingSeq[];
 
 #endif // AST_H

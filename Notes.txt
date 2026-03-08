@@ -130,3 +130,11 @@ now that I think of that.
 After that I need to come up with a clean ending for crawler. And then we'll be done
 with a basic version of lexing!
 
+3/8/2026-
+
+I ended up coming back and cleaning up crawler a bit since it was getting a little
+hard to manage and some things needed some improving. I do believe it to be much
+cleaner now!
+
+
+
