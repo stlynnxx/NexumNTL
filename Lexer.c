@@ -291,6 +291,9 @@ void catalyst()
 int lex_main() {
     printf("%s", openBraceToken);
 
+    char list[5] = "Hell";
+
+
 
     catalyst();
     return 0;

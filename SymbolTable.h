@@ -16,5 +16,20 @@ extern const char endAssociationsToken[];
 extern const char *colon;
 extern const char *space;
 extern const char openingSeq[];
+struct MemoryKey
+{
+    int x;
+    // char associationBank[20];
+    struct associatonBank{
+        char associationsList[200];
+        struct associator {
+            struct MemoryKey *associatonBank;
+
+        } associator;
+
+    } associatonBank;
+
+} MemoryKey;
+
 
 #endif // AST_H

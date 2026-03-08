@@ -17,7 +17,7 @@ const char *colon = ":";
 const char *space = " ";
 const char openingSeq[5] = ": {";
 
-
+/*
 struct MemoryKey
     {
         int x;
@@ -32,4 +32,4 @@ struct MemoryKey
         } associatonBank;
 
     } MemoryKey;
-
+*/
