@@ -4,6 +4,6 @@
 
 #ifndef NEXUMNTL_LEXER_H
 #define NEXUMNTL_LEXER_H
-int lexMain;
+
 
 #endif //NEXUMNTL_LEXER_H

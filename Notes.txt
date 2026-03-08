@@ -113,3 +113,20 @@ I have some pretty detailed comments in the actual code that reflect more detail
 what's going on in there on a technical level. I just don't really feel like repeating them
 in here.
 
+8:19 PM-
+
+I'm back! After sleeping and moving through and enitre day since my last entry. Time is
+timey-wimey indeed.
+
+This evening I smoothed out the associations loop and wrote the loop that calls the
+associations loop. There's no promise that any of it is good or even works, but.
+
+Progress it is.
+
+The next thing I need to do is smooth out the returns from associations and what I intend
+to do with them inside of crawler. I may need to redo the loop that calls associations
+now that I think of that.
+
+After that I need to come up with a clean ending for crawler. And then we'll be done
+with a basic version of lexing!
+
