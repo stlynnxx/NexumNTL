@@ -156,3 +156,25 @@ from it for too long, either.
 
 I did work on exporting the data from the associations loop from within a bit, so. There's a bit
 of progress for tonight.
+
+
+3/11/2026, 12:15 AM-
+I also went back and added commas between associations back to the source generator because
+they're useful and i'm not sure why I was so intimidated by handling not placing a comma
+on the last one. It was very simple.
+
+I put the source generator into it's own .c/.h and made main into an actual proper main
+that's initiating the other files.
+
+We actually found a rough end point for the crawler process and now I'm trying to get the
+process running as intended. Right now it's breaking a few levels into the process but
+that's okay; honestly I'm surprised it got as far as it did first try!
+
+It seems we're having difficulty at the first wC assignment as that's where my debug
+statments are failing at. I really don't think that it'll be too big of an issue to figure
+out but I might wait for tomorrow as I really should be winding down for bed.
+
+We'll see, I guess.
+
+Also I was thinking and is it really nessecary for me to use a semi colon line end delimiter
+here? When I could realisitcally just use \n as a delimiter itself.

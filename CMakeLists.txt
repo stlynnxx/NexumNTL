@@ -8,4 +8,6 @@ add_executable(NexumNTL main.c
         Lexer.h
         main.h
         SymbolTable.c
-        SymbolTable.h)
+        SymbolTable.h
+        SourceGenerator.c
+        SourceGenerator.h)

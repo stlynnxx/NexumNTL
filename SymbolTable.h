@@ -29,7 +29,7 @@ struct MemoryKey
 
     } associatonBank;
 
-} MemoryKey;
+};
 
 
 #endif // AST_H

@@ -140,9 +140,10 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
     return export[0];
 }
 
-void crawler(FILE *fp) {
+void crawler(FILE *fp)
+{
     MemoryFileSplit memoryFileSplit;
-    char fileArray[2000];
+    char associationsReturn[2000];
     char workingCheck[5];
     char wC[50];
     char workingMemKeys[200];
@@ -151,24 +152,29 @@ void crawler(FILE *fp) {
     int tracker = 0;
     int nameTokenPoint;
     int letterCounter = 0;
+    int endLinePoint;
     // loadNexFile loads the working file into memoryFileSplit.mainArray
     loadNexFile(fp, &memoryFileSplit);
     int len = sizeof(memoryFileSplit.mainArray) / sizeof(memoryFileSplit.mainArray[0]);
     // Here begins the crawling process.
-
+    printf("Crawler Start Reached\n");
     for (int i = 0; i < len; i++);
     {
+        printf("For Loop 01 executed\n");
         // During loadNexFile, the working file is loaded into
         // mainArray, and now that is being loaded into fileArray
 
         wC[0] = memoryFileSplit.mainArray[0]; // wC is our working character.
+        printf("wC Check: %s", wC[0]);
         if (wC == openBraceToken)
             {
+                printf("First openBraceToken Found\n");
                 tracker++; // tracker is doing as it is named and tracking our working location
                 wC[0] = memoryFileSplit.mainArray[tracker];
             }
         if (wC == nameToken)
             {
+                printf("First nameToken found\n");
                 nameTokenPoint = tracker; // This records the index where the first name token occurs
                 tracker++;
                 wC[0] = memoryFileSplit.mainArray[tracker];
@@ -181,11 +187,13 @@ void crawler(FILE *fp) {
                       // Just because even if it's only a pass for a nameToken at this point we're
                       // Likely reading a memoryKey
                         memoryKeyBool = true;
+                        printf("MemKeyBool reached\n");
                         // The idea here is that the while loop will run until memkeybool
                         // gets flipped and THEN if wC == nameToken runs
                         while (memoryKeyBool == true) {
                             if (wC[i] == alphas[i])
                             {
+                                printf("First letter check reached\n");
                                 letterCounter++;
                                 tracker++;
                                 workingMemKeys[i] = memoryFileSplit.mainArray[i];
@@ -217,16 +225,24 @@ void crawler(FILE *fp) {
                     wC[0] = memoryFileSplit.mainArray[tracker];
                     while (wC[0] == alphas[0] | wC == nameToken)
                         {
-                            associations(wC, memoryFileSplit.mainArray, tracker);
+                            associationsReturn[0] = associations(wC, memoryFileSplit.mainArray, tracker);
                             tracker++;
                             wC[0] = memoryFileSplit.mainArray[tracker];
                         }
 
                 }
+            if (wC == closeBraceToken) {
+                tracker++;
+                wC[0] = memoryFileSplit.mainArray[tracker];
+            }
+            if (wC == endLineToken) {
+                endLinePoint = tracker;
+
+            }
 
     }
-
-
+    printf("%s\n", associationsReturn);
+    printf("%s\n", workingMemKeys);
 
 
 }
@@ -238,20 +254,10 @@ void crawler(FILE *fp) {
 // The open function will serve to open the file and append
 // to memory.
 void catalyst()
-    {
+    {   printf("Catalyst Reached\n");
         FILE *fp = fopen("Testing2.nex", "r");
         crawler(fp);
         fclose(fp);
     }
 
 
-int lex_main() {
-    printf("%s", openBraceToken);
-
-    char list[5] = "Hell";
-
-
-
-    catalyst();
-    return 0;
-}
