@@ -139,7 +139,17 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
     // Tracker at this point should be on the closing brace of the line in question
     return export[0];
 }
-
+char setr(MemoryFileSplit *split) {
+    char wC;
+    wC = split->mainArray[0];
+    return wC;
+}
+char increment(MemoryFileSplit *split, int tracker) {
+    char wC;
+    tracker++;
+    wC = split->mainArray[tracker];
+    return wC;
+}
 void crawler(FILE *fp)
 {
     MemoryFileSplit memoryFileSplit;
@@ -164,13 +174,15 @@ void crawler(FILE *fp)
         // During loadNexFile, the working file is loaded into
         // mainArray, and now that is being loaded into fileArray
 
-        wC[0] = memoryFileSplit.mainArray[0]; // wC is our working character.
-        printf("wC Check: %s", wC[0]);
-        if (wC == openBraceToken)
+       // wC[0] = memoryFileSplit.mainArray[tracker]; // wC is our working character.
+        wC[0] = setr(&memoryFileSplit);
+        printf("wC Check: %s", &wC[0]);
+        if (&wC[0] == openBraceToken)
             {
                 printf("First openBraceToken Found\n");
-                tracker++; // tracker is doing as it is named and tracking our working location
-                wC[0] = memoryFileSplit.mainArray[tracker];
+                //tracker++; // tracker is doing as it is named and tracking our working location
+                //wC[0] = memoryFileSplit.mainArray[tracker];
+                wC[0] = increment(&memoryFileSplit, tracker);
             }
         if (wC == nameToken)
             {

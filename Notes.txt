@@ -178,3 +178,11 @@ We'll see, I guess.
 
 Also I was thinking and is it really nessecary for me to use a semi colon line end delimiter
 here? When I could realisitcally just use \n as a delimiter itself.
+
+1:41 AM-
+I was gonna go to bed but here I am; I just really want to get this lexing process working.
+
+We got the first wC check to print but we didn't get the next debug statement to print after. I really want to figure
+out why but I also really needt o get to sleep, so.
+
+I should probably go with sleep and come back at it fresh tomorrow.
