@@ -147,3 +147,12 @@ and it inspired me to code a bit.
 I really just worked on associator logic a bit in the associations loop, nothing big
 and it isn't even finished yet. Still not nothing either, though!
 
+3/10/2026-
+
+I've been spending some programming time on other things but came in here today
+so that I could just keep everything fresh in my mind and made a few small revisions so
+far. I'm not really planning on doing a ton in here tonight but I don't want to stay away
+from it for too long, either.
+
+I did work on exporting the data from the associations loop from within a bit, so. There's a bit
+of progress for tonight.
