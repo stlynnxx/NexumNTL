@@ -217,3 +217,10 @@ I am still having trouble successfully getting through the lexing crawl and I'm 
 explain in the associations loop but i'm still pretty confident in saying I'm only a few days away from a finished
 lexer and that's very exciting!
 
+3/12/2026-
+
+The issue was that I made tracker global but still required it as a parameter for increment so
+tracker = 0 was being used as the argument every time. But I got that fixed and now we
+can move on with the lexing process!
+
+I also went through and cleaned up and added more comments for clarity's sake.
