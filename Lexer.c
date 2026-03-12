@@ -29,7 +29,7 @@ typedef struct {
 } Breakdown;
 
 
-
+int tracker = 0;
 
 
 void *loadNexFile(FILE *fp, MemoryFileSplit *split) {
@@ -59,7 +59,7 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
     char workingAssociators[200];
     char export[250];
     wC[0] = fileArray[tracker];
-    if (wC == nameToken)
+    if (wC == NAMETOKEN)
     {
         tracker++;
         wC[0] = fileArray[tracker];
@@ -71,9 +71,9 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
         // for the memory key with the bool swapped out
 
 
-        if (wC == nameToken | wC[i] == alphas[i]) {
+        if (wC == NAMETOKEN) {
             wC[i] = fileArray[tracker];
-            if (wC == nameToken) {
+            if (wC == NAMETOKEN) {
                 nameTokenBool = true;
                 tracker++;
             }
@@ -84,7 +84,7 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
                 tracker++;
             }
         }
-        if (wC == associatorToken) {
+        if (wC == ASSOCIATOR) {
             associatorBool = true;
             // This will record the index where the associator token was discovered
             associatiorStartPoint = tracker;
@@ -97,7 +97,7 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
                     workingAssociators[i] = wC[i];
 
             }
-            if (wC == comma)
+            if (wC == COMMA)
                 {
                     // This puts tracker at the point of the comma which
                     // in this context is acting as a delimiliter for the associator
@@ -107,11 +107,11 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
                 }
             tracker++;
             wC[0] = fileArray[tracker];
-            if (wC == space) {
+            if (wC == SPACE) {
                 tracker++;
                 wC[0] = fileArray[tracker];
             }
-            if (wC == nameToken) {
+            if (wC == NAMETOKEN) {
                 // This will need to repeat earlier logic an indefinte amount of times.
 
             }
@@ -124,7 +124,7 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
 
         // Instead of looking for a specific delimiter to end the assocations loop
         // this ends it if wc is neither a letter or nameToken
-        if (wC[i] != alphas[i] | wC != nameToken | wC != associatorToken) {
+        if (wC[i] != alphas[i] | wC != NAMETOKEN | wC != ASSOCIATOR) {
             i = alphasLength + 1;
         }
 
@@ -151,7 +151,7 @@ char increment(MemoryFileSplit *split, int tracker) {
     return wC;
 }
 void wCCheck(char wC, char location[30]) {
-    printf("wC Check %s: %s\n", location, &wC);
+    printf("wC Check %s: %c\n", location, wC);
 
 }
 void crawler(FILE *fp)
@@ -163,7 +163,7 @@ void crawler(FILE *fp)
     char workingMemKeys[200];
     bool memoryKeyBool;
     bool assocationBool;
-    int tracker = 0;
+
     int nameTokenPoint;
     int letterCounter = 0;
     int endLinePoint;
@@ -171,6 +171,7 @@ void crawler(FILE *fp)
     // loadNexFile loads the working file into memoryFileSplit.mainArray
     loadNexFile(fp, &memoryFileSplit);
     int len = sizeof(memoryFileSplit.mainArray) / sizeof(memoryFileSplit.mainArray[0]);
+
     // Here begins the crawling process.
     printf("Crawler Start Reached\n");
     for (int i = 0; i < len; i++);
@@ -181,33 +182,28 @@ void crawler(FILE *fp)
 
        // wC[0] = memoryFileSplit.mainArray[tracker]; // wC is our working character.
         wC = setr(&memoryFileSplit);
+        // wC should be { when the next line runs
         wCCheck(wC, "One");
-        tracker++;
+        // tracker is now a global variable
+
         printf("Tracker Check %d\n", tracker);
         wC = increment(&memoryFileSplit, tracker);
+        // This should put wC at '
         wCCheck(wC, "Two");
-        if (&wC == openBraceToken | &wC == nameToken)
-            {
-                printf("First openBraceToken Found\n");
-                //tracker++; // tracker is doing as it is named and tracking our working location
-                //wC[0] = memoryFileSplit.mainArray[tracker];
-                wC = increment(&memoryFileSplit, tracker);
-                wCCheck(wC, "Three");
-            }
-        if (&wC == nameToken)
+
+        if (wC == NAMETOKEN)
             {
                 printf("First nameToken found\n");
                 nameTokenPoint = tracker; // This records the index where the first name token occurs
-                tracker++;
-                wC = memoryFileSplit.mainArray[tracker];
+                // The following increment call should place wC on the first letter of the Memory Key
+                wC = increment(&memoryFileSplit, tracker);
             }
         for (int i = 0; i < alphasLength; i++)
             {
-                if (wC == alphas[i] | &wC == nameToken)
+                if (wC == NAMETOKEN)
                     {
-                      // I feel comfortable placing this signal here before the hard letter check
-                      // Just because even if it's only a pass for a nameToken at this point we're
-                      // Likely reading a memoryKey
+                        printf("wC Check pre memkeybool: %s", &wC);
+                        wC = increment(&memoryFileSplit, tracker);
                         memoryKeyBool = true;
                         printf("MemKeyBool reached\n");
                         // The idea here is that the while loop will run until memkeybool
@@ -215,10 +211,13 @@ void crawler(FILE *fp)
                         while (memoryKeyBool == true) {
                             if (wC == alphas[i])
                             {
+
                                 printf("First letter check reached\n");
                                 letterCounter++;
-                                tracker++;
+                                printf("Tracker Check: %d", tracker);
+                                wC = increment(&memoryFileSplit, tracker);
                                 workingMemKeys[i] = memoryFileSplit.mainArray[i];
+                                memoryKeyBool = false;
 
                             }
                             if (wC != alphas[i])
@@ -226,38 +225,37 @@ void crawler(FILE *fp)
                                 memoryKeyBool = false;
                             }
                         }
-                        if (&wC == nameToken)
+                        if (wC == NAMETOKEN)
                             {
-                                tracker++;
-                                wC = memoryFileSplit.mainArray[tracker];
+
+                                wC = increment(&memoryFileSplit, tracker);
                             }
 
                     }
 
             }
-            // I'm unsure about using these multi char tokens
-            if (wC == openingSeq[0])
+
+            if (wC == COLON)
                 {
-                    tracker++;
-                    wC = memoryFileSplit.mainArray[tracker];
+                    wC = increment(&memoryFileSplit, tracker);
                 }
-            if (&wC == nameToken)
+            if (wC == SPACE) {
+                wC = increment(&memoryFileSplit, tracker);
+            }
+            if (wC == NAMETOKEN)
                 {
-                    tracker++;
-                    wC = memoryFileSplit.mainArray[tracker];
-                    while (wC == alphas[0] | &wC == nameToken)
+                    wC = increment(&memoryFileSplit, tracker);
+                    while (wC == alphas[0] | wC == NAMETOKEN)
                         {
-                            associationsReturn[0] = associations(wC, memoryFileSplit.mainArray, tracker);
-                            tracker++;
-                            wC = memoryFileSplit.mainArray[tracker];
+                            associationsReturn[0] = associations(&wC, memoryFileSplit.mainArray, tracker);
+                            wC = increment(&memoryFileSplit, tracker);
                         }
 
                 }
-            if (&wC == closeBraceToken) {
-                tracker++;
-                wC = memoryFileSplit.mainArray[tracker];
+            if (wC == CLOSEBRACE) {
+                wC = increment(&memoryFileSplit, tracker);
             }
-            if (&wC == endLineToken) {
+            if (wC == ENDOFFILE) {
                 endLinePoint = tracker;
 
             }

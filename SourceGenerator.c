@@ -41,7 +41,7 @@ void format(FILE *fp, InputForm *form) {
         fprintf(fp, "%s", form->associations[i]);
         fprintf(fp, "%s", "'");
          if (i != form->assocationCount - 1) {
-             fprintf(fp, "%s", comma);
+             fprintf(fp, "%c", COMMA);
          }
 
     }

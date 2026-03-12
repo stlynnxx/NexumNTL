@@ -190,3 +190,30 @@ I should probably go with sleep and come back at it fresh tomorrow.
 We got all the way to the first letter check! Which seems to be an infinite loop.
 
 I truly need to stop for the night now.
+
+Fixed the loop.
+
+
+Right now our issue is that we forgot to build increment to actually return tracker. If I can't find a way to keep
+it a one line declaration and return both wC and tracker then it's not worth implementing.
+
+I guess making tracker global would work.
+
+12:00 PM (Exactly)-
+
+^^^ Shit like that is what I get for programming while tired.
+
+9:24 PM-
+I was actually in here earlier today but it seems I forgot to journal.
+
+I did make tracker a global variable, and now it seems i'm hung up in the letter check.
+
+More when I have more to journal.
+
+I straightened out the mismtaches with the character constants and string literals; I just switched everything
+to a character constant. I set up SymbolTable.h a bit differently in repsonse to the changes.
+
+I am still having trouble successfully getting through the lexing crawl and I'm getting redlines that I can't
+explain in the associations loop but i'm still pretty confident in saying I'm only a few days away from a finished
+lexer and that's very exciting!
+
