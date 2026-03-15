@@ -165,6 +165,7 @@ void crawler(FILE *fp)
     bool assocationBool;
 
     int nameTokenPoint;
+    bool nameTokenOne;
     int letterCounter = 0;
     int endLinePoint;
 
@@ -174,99 +175,101 @@ void crawler(FILE *fp)
 
     // Here begins the crawling process.
     printf("Crawler Start Reached\n");
-    for (int i = 0; i < len; i++);
-    {
-        printf("For Loop 01 executed\n");
-        // During loadNexFile, the working file is loaded into
-        // mainArray, and now that is being loaded into fileArray
 
-       // wC[0] = memoryFileSplit.mainArray[tracker]; // wC is our working character.
-        wC = setr(&memoryFileSplit); // setr sets wC to mainArray[0]. At this point wC and tracker should both be at 0
-        // wC should be { when the next line runs
-        wCCheck(wC, "One"); // This should be mainArray[0], so, {
-        printf("Tracker Check %d\n", tracker);
-        // this function increments tracker by one and updates wC to mainArray[1]
-        wC = increment(&memoryFileSplit);
-        wCCheck(wC, "Two"); // Here wC should be at mainArray[1] which should be '
-        printf("---Testing Area---\n");
-        int s = sizeof(memoryFileSplit.mainArray) / sizeof(memoryFileSplit.mainArray[0]);
-        for (int i = 0; i < s; i++) {
-            printf("Mem Test %d: %c\n", i, memoryFileSplit.mainArray[i]);
-            printf("----\n");
+
+    printf("For Loop 01 executed\n");
+    // wC[0] = memoryFileSplit.mainArray[tracker]; // wC is our working character.
+    wC = setr(&memoryFileSplit); // setr sets wC to mainArray[0]. At this point wC and tracker should both be at 0
+    // wC should be { when the next line runs
+    wCCheck(wC, "One"); // This should be mainArray[0], so, {
+    printf("Tracker Check %d\n", tracker);
+    // this function increments tracker by one and updates wC to mainArray[1]
+    wC = increment(&memoryFileSplit);
+    wCCheck(wC, "Two"); // Here wC should be at mainArray[1] which should be '
+    // Dear god don't leave this uncommented unless we really need it
+    /*printf("---Testing Area---\n");
+    int s = sizeof(memoryFileSplit.mainArray) / sizeof(memoryFileSplit.mainArray[0]);
+    for (int i = 0; i < s; i++) {
+        printf("Mem Test %d: %c\n", i, memoryFileSplit.mainArray[i]);
+        printf("----\n");
+    }*/
+    if (wC == NAMETOKEN) {
+        for (int i = 0; i < alphasLength; i++) {
+                // This used to be in an if wC == NAMETOKEN loop but
+                // After I added the one above I found it redundant.
+                nameTokenOne = true;
+                // printf("wC == nameToken running\n");
+                wC = increment(&memoryFileSplit);
+                wCCheck(wC, "Line 203");
+
+
+            if (wC == alphas[i]) // wC should be at [2] which should always be a letter
+            {
+                printf("wC == alphas[i] running\n");
+                memoryKeyBool = true;
+                wCCheck(wC, "Line 211");
+
+                wC = increment(&memoryFileSplit); // This should increment by one per call
+                wCCheck(wC, "Line 214");
+
+                printf("MemKeyBool reached\n");
+                // The idea here is that the while loop will run until memkeybool
+                // gets flipped and THEN if wC == nameToken runs
+                if (memoryKeyBool == true) {
+                    printf("memkeybool == true loop running\n");
+                    workingMemKeys[i] = wC;
+                    wCCheck(wC, "Line 222");
+                    wC = increment(&memoryFileSplit);
+
+                }
+                if (wC == NAMETOKEN && nameTokenOne == true && memoryKeyBool == true) {
+
+                    wC = increment(&memoryFileSplit);
+                }
+            } // this is the end of the letter check
+
+
+
+
+        } // This is the end of the inner for loop
+
+        wCCheck(wC, "Line 232");
+        printf("Tracker: %d\n", tracker);
+        if (wC == COLON)
+        {
+            printf("Line 235 reached");
+            wC = increment(&memoryFileSplit);
         }
-
-
-        if (wC == NAMETOKEN) // we should be at [1] which should always be '
+        if (wC == SPACE) {
+            wC = increment(&memoryFileSplit);
+        }
+        if (wC == NAMETOKEN && nameTokenOne == true)
+        {
+            printf("Line 244 reached");
+            wC = increment(&memoryFileSplit);
+            while (wC == alphas[0] | wC == NAMETOKEN)
             {
-                printf("First nameToken found\n");
-                nameTokenPoint = tracker; // This records the index where the first name token occurs
-
-                wC = increment(&memoryFileSplit); // This should update wC to [2], which should always be the first char of the mem key
-                wCCheck(wC, "Three");
-            }
-        for (int i = 0; i < alphasLength; i++)
-            {
-                if (wC == alphas[i]) // We should be at [2] which should always be a letter
-                {
-                        memoryKeyBool = true;
-                        wCCheck(wC, "Pre MemkeyBool");
-
-                        wC = increment(&memoryFileSplit); // This should increment by one per call
-                        wCCheck(wC, "Line 208");
-                        ;
-                        printf("MemKeyBool reached\n");
-                        // The idea here is that the while loop will run until memkeybool
-                        // gets flipped and THEN if wC == nameToken runs
-                        if (memoryKeyBool == true) {
-                           workingMemKeys[i] = wC;
-
-                        }
-                } // this is the end of the letter check
-                     if (wC == NAMETOKEN)
-                     {
-                        printf("wC == nameToken\n");
-                        wC = increment(&memoryFileSplit);
-                    }
-            } // This is the end of the for loop
-
-            if (wC == COLON)
-                {
-                    wC = increment(&memoryFileSplit);
-                }
-            if (wC == SPACE) {
+                associationsReturn[0] = associations(&wC, memoryFileSplit.mainArray, tracker);
                 wC = increment(&memoryFileSplit);
             }
-            if (wC == NAMETOKEN)
-                {
-                    wC = increment(&memoryFileSplit);
-                    while (wC == alphas[0] | wC == NAMETOKEN)
-                        {
-                            associationsReturn[0] = associations(&wC, memoryFileSplit.mainArray, tracker);
-                            wC = increment(&memoryFileSplit);
-                        }
 
-                }
-            if (wC == CLOSEBRACE) {
-                wC = increment(&memoryFileSplit);
-            }
-            if (wC == ENDOFFILE) {
-                endLinePoint = tracker;
+        }
+        if (wC == CLOSEBRACE) {
+            wC = increment(&memoryFileSplit);
+        }
+        if (wC == ENDOFFILE) {
+            endLinePoint = tracker;
 
-            }
+        }
+    }// This is the end of the nametoken if loop
 
-    }
+
     printf("%s\n", associationsReturn);
     printf("%s\n", workingMemKeys);
 
 
 }
 
-
-
-
-
-// The open function will serve to open the file and append
-// to memory.
 void catalyst()
     {   printf("Catalyst Reached\n");
         FILE *fp = fopen("Testing2.nex", "r");

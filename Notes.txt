@@ -224,3 +224,30 @@ tracker = 0 was being used as the argument every time. But I got that fixed and 
 can move on with the lexing process!
 
 I also went through and cleaned up and added more comments for clarity's sake.
+
+3/14/2026-
+
+Tonight I've cleaned up the lexer a bit, getting rid of some logic bugs, unnecessary code,
+and cleaning up the unmanageable terminal output. My debugging was getting slightly
+out of hand.
+
+I've gotten father in the process! As of the last run, we made as far as the second letter
+of the first memory key! There's still a bit more to go but it's the farthest we've been
+thus far and quite exciting.
+
+I went back and removed the first for loop because I realized it was wrong. Right now as of
+line 203 wC is iterating through everything, it's just the checking logic behind it that
+needs worked on now. But alas I am getting tired and don't want to write a bunch of code
+that i'll have to fix later.
+
+I think the issue is in our letter check. It's just if wC == alphas[i], which, the
+first time around will always be alphas[0], which is 'a'.
+
+Yeah, that's exactly what's happening; everything else in the for loop is
+within the if wC == alphas[i] which means it's just looping back to line 203 for
+each line because it's not triggering alphas.
+
+Going into alphas and changing the first char to T, the first char in the test input,
+confirms this.
+
+I'll give this some thinking.
