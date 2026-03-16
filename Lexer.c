@@ -3,11 +3,15 @@
 //
 
 #include "Lexer.h"
+
+#include <ctype.h>
+
 #include "SymbolTable.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 // Macros
 #define MAX_ASSOC 50
@@ -42,7 +46,7 @@ void *loadNexFile(FILE *fp, MemoryFileSplit *split) {
 
 }
 
-char associations(char wC[50], char fileArray[2000], int tracker) {
+char associations(char wC, char fileArray[2000], int tracker) {
 
     // Whenever associations is called initally wC will be on
     // the first association's opening name token
@@ -58,11 +62,11 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
     int associationsSizes[100];
     char workingAssociators[200];
     char export[250];
-    wC[0] = fileArray[tracker];
+    wC = wC;
     if (wC == NAMETOKEN)
     {
         tracker++;
-        wC[0] = fileArray[tracker];
+        wC = fileArray[tracker];
         // At this point wC will be on the first char of the association
             }
 
@@ -72,12 +76,12 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
 
 
         if (wC == NAMETOKEN) {
-            wC[i] = fileArray[tracker];
+            wC = fileArray[tracker];
             if (wC == NAMETOKEN) {
                 nameTokenBool = true;
                 tracker++;
             }
-            if (wC[i] == alphas[i]) {
+            if (wC == alphas[i]) {
                 associationBool = true;
                 workingAssociations[i] = fileArray[i];
                 letterCounter++;
@@ -90,11 +94,11 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
             associatiorStartPoint = tracker;
             // This will move tracker to the first letter of the associator
             tracker++;
-            wC[0] = fileArray[tracker];
-            if (wC[i] == alphas[i])
+            wC = fileArray[tracker];
+            if (wC == alphas[i])
             {
                     associatorLetterCounter++;
-                    workingAssociators[i] = wC[i];
+                    workingAssociators[i] = wC;
 
             }
             if (wC == COMMA)
@@ -102,14 +106,14 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
                     // This puts tracker at the point of the comma which
                     // in this context is acting as a delimiliter for the associator
                     tracker = tracker + associatorLetterCounter + 1;
-                    wC[0] = fileArray[tracker];
+                    wC = fileArray[tracker];
 
                 }
             tracker++;
-            wC[0] = fileArray[tracker];
+            wC = fileArray[tracker];
             if (wC == SPACE) {
                 tracker++;
-                wC[0] = fileArray[tracker];
+                wC = fileArray[tracker];
             }
             if (wC == NAMETOKEN) {
                 // This will need to repeat earlier logic an indefinte amount of times.
@@ -124,7 +128,7 @@ char associations(char wC[50], char fileArray[2000], int tracker) {
 
         // Instead of looking for a specific delimiter to end the assocations loop
         // this ends it if wc is neither a letter or nameToken
-        if (wC[i] != alphas[i] | wC != NAMETOKEN | wC != ASSOCIATOR) {
+        if (wC != alphas[i] | wC != NAMETOKEN | wC != ASSOCIATOR) {
             i = alphasLength + 1;
         }
 
@@ -181,11 +185,11 @@ void crawler(FILE *fp)
     // wC[0] = memoryFileSplit.mainArray[tracker]; // wC is our working character.
     wC = setr(&memoryFileSplit); // setr sets wC to mainArray[0]. At this point wC and tracker should both be at 0
     // wC should be { when the next line runs
-    wCCheck(wC, "One"); // This should be mainArray[0], so, {
+    wCCheck(wC, "Line 188"); // This should be mainArray[0], so, {
     printf("Tracker Check %d\n", tracker);
     // this function increments tracker by one and updates wC to mainArray[1]
     wC = increment(&memoryFileSplit);
-    wCCheck(wC, "Two"); // Here wC should be at mainArray[1] which should be '
+    wCCheck(wC, "Line 192"); // Here wC should be at mainArray[1] which should be '
     // Dear god don't leave this uncommented unless we really need it
     /*printf("---Testing Area---\n");
     int s = sizeof(memoryFileSplit.mainArray) / sizeof(memoryFileSplit.mainArray[0]);
@@ -194,50 +198,51 @@ void crawler(FILE *fp)
         printf("----\n");
     }*/
     if (wC == NAMETOKEN) {
-        for (int i = 0; i < alphasLength; i++) {
+        if (isalpha(wC) != true) {
                 // This used to be in an if wC == NAMETOKEN loop but
                 // After I added the one above I found it redundant.
                 nameTokenOne = true;
                 // printf("wC == nameToken running\n");
                 wC = increment(&memoryFileSplit);
-                wCCheck(wC, "Line 203");
+                wCCheck(wC, "Line 207");
 
 
-            if (wC == alphas[i]) // wC should be at [2] which should always be a letter
-            {
-                printf("wC == alphas[i] running\n");
-                memoryKeyBool = true;
-                wCCheck(wC, "Line 211");
+             // wC should be at [2] which should always be a letter
+        if (isalpha(wC)) {
+            printf("wC == alphas[i] running\n");
+            memoryKeyBool = true;
+            wCCheck(wC, "Line 214");
 
-                wC = increment(&memoryFileSplit); // This should increment by one per call
-                wCCheck(wC, "Line 214");
+            wC = increment(&memoryFileSplit); // This should increment by one per call
+            wCCheck(wC, "Line 217");
 
-                printf("MemKeyBool reached\n");
-                // The idea here is that the while loop will run until memkeybool
-                // gets flipped and THEN if wC == nameToken runs
-                if (memoryKeyBool == true) {
-                    printf("memkeybool == true loop running\n");
-                    workingMemKeys[i] = wC;
-                    wCCheck(wC, "Line 222");
-                    wC = increment(&memoryFileSplit);
+            printf("MemKeyBool reached\n");
+            // The idea here is that the while loop will run until memkeybool
+            // gets flipped and THEN if wC == nameToken runs
+            if (memoryKeyBool == true) {
+                printf("memkeybool == true loop running\n");
+                workingMemKeys[0] = wC;
+                wCCheck(wC, "Line 225");
+                wC = increment(&memoryFileSplit);
 
-                }
+            }
+        }
                 if (wC == NAMETOKEN && nameTokenOne == true && memoryKeyBool == true) {
-
+                    printf("Line 230 reached");
                     wC = increment(&memoryFileSplit);
                 }
-            } // this is the end of the letter check
 
 
 
 
         } // This is the end of the inner for loop
 
-        wCCheck(wC, "Line 232");
-        printf("Tracker: %d\n", tracker);
+        wCCheck(wC, "Line 239");
+        printf("Line 240: Tracker: %d\n", tracker);
         if (wC == COLON)
         {
-            printf("Line 235 reached");
+
+            printf("Line 244 reached");
             wC = increment(&memoryFileSplit);
         }
         if (wC == SPACE) {
@@ -249,7 +254,7 @@ void crawler(FILE *fp)
             wC = increment(&memoryFileSplit);
             while (wC == alphas[0] | wC == NAMETOKEN)
             {
-                associationsReturn[0] = associations(&wC, memoryFileSplit.mainArray, tracker);
+                associationsReturn[0] = associations(wC, memoryFileSplit.mainArray, tracker);
                 wC = increment(&memoryFileSplit);
             }
 

@@ -251,3 +251,25 @@ Going into alphas and changing the first char to T, the first char in the test i
 confirms this.
 
 I'll give this some thinking.
+
+3/15/2026-
+
+1:16 AM-
+thoughts:
+
+What if I put all of the letters to check for into one array element
+instead of individual array elements? Would it check true the first time then?
+
+
+3/16/2026-
+
+It turns out the answer was isalpha from ctype.h, I just didn't know that even existed the last time I was in
+here. I am still only like a month into learning this language!
+
+Anyway i got a bit farther into the lexing process today, actually recognizing some letters and I fixed up wC
+usage within the assocations loop. This morning was solid progress! But I've already been programming for hours
+overall at this point as I was working on Parts&Stock before this and I have other things to do today as well,
+so, divide my time I must.
+
+Hopefully i'll be back here later tonight!
+
