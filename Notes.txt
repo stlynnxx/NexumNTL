@@ -281,3 +281,28 @@ of a headache and it actually gave the information that at some point it is hitt
 default case which it should not be as that indicates that it at some point is not able
 to recognize wC as anything at all. But it is more information to move forward with than
 I had whenever I started and a place to pick back up at tomorrow!
+
+3/18/2026-
+
+It's the middle of the night and I should be asleep so of course I decided to look at the code
+a bit more and I made a few more changes that at least got us farther into the lexing process;
+we moved the closing brace on the opening if (isalpha(wC) != true) and added an
+if (isalpha(wC) != true && memoryKeyBool == true) after for conditional handling which
+got us farther in the process. I don't know why I'm still seeing the repeating char at the end
+but maybe tomorrow I'll figure it out.
+
+LoopTracker should be of assistance. I should really wind down for bed though.
+
+Actually, it already showed me a lot tonight; I somehow got some wires crossed and
+had two different strategies going. The for loop would work for looping through the file
+one char at a time and running a single process each time but that's not what crawler does,
+hence the name. Running crawler one time should lex the entire file, so doing a for
+loop the size of the file is not the move.
+
+Kinda embarassed it took me so long to see what I was doing.
+
+Anyway.
+
+I threw a while loop around the switch because I realized the switch choice doesn't hold up
+as well without the for loop and got a pretty gnarly sigsegv so, that really should be both
+my cue to wrap up tonight and where to start again tomorrow/later.

@@ -196,15 +196,23 @@ void crawler(FILE *fp) {
         printf("Mem Test %d: %c\n", i, memoryFileSplit.mainArray[i]);
         printf("----\n");
     }*/
-    for (int i = 0; i < len; i++) {
-        if (wC == NAMETOKEN) {
-            if (isalpha(wC) != true) {
+    // int loopTracker = 0;
+
+       // loopTracker++;
+       // printf("Loop tracker: %d\n", loopTracker);
+        if (wC == NAMETOKEN | isalpha(wC) == true) {
+            if (isalpha(wC) != true | memoryKeyBool == false) {
                 // This used to be in an if wC == NAMETOKEN loop but
                 // After I added the one above I found it redundant.
                 nameTokenOne = true;
                 // printf("wC == nameToken running\n");
                 wC = increment(&memoryFileSplit);
                 wCCheck(wC, "Line 207");
+            }
+            if (isalpha(wC) != true && memoryKeyBool == true) {
+                memoryKeyBool = false;
+                wC = increment(&memoryFileSplit);
+            }
 
 
                 // wC should be at [2] which should always be a letter
@@ -224,78 +232,60 @@ void crawler(FILE *fp) {
                         wCCheck(wC, "Line 224");
 
                     }
-                }
-                if (wC == NAMETOKEN && nameTokenOne == true && memoryKeyBool == true) {
-                    printf("Line 229 reached");
-                    wC = increment(&memoryFileSplit);
-                    wCCheck(wC, "Line 231");
-                }
 
-
-                wCCheck(wC, "Line 239");
-                printf("Line 240: Tracker: %d\n", tracker);
-
-                switch (wC) {
-                    case COLON:
-                        printf("Line 240 reached");
+                    if (wC == NAMETOKEN && nameTokenOne == true) {
+                        printf("Line 229 reached");
                         wC = increment(&memoryFileSplit);
-                        break;
-                    case SPACE:
-                        printf("243");
-                        wC = increment(&memoryFileSplit);
-                        break;
-                    case NAMETOKEN:
-                        printf("246");
-                        if (nameTokenOne == true) {
+                        wCCheck(wC, "Line 231");
+                    }
+
+
+                    wCCheck(wC, "Line 239");
+                    printf("Line 240: Tracker: %d\n", tracker);
+                    bool whateverBool = true;
+                    bool incrementOrNah = false;
+                    while (whateverBool == true) {
+                        if (incrementOrNah == true) {
                             wC = increment(&memoryFileSplit);
-                            while (wC == alphas[0] | wC == NAMETOKEN) {
-                                associationsReturn[0] = associations(wC, memoryFileSplit.mainArray, tracker);
-                                wC = increment(&memoryFileSplit);
-                            }
                         }
+                        if (isalpha(wC) != true) {
+                            switch (wC) {
+                                case COLON:
+                                    printf("Line 240 reached");
+                                    wC = increment(&memoryFileSplit);
+                                    break;
+                                case SPACE:
+                                    printf("243");
+                                    wC = increment(&memoryFileSplit);
+                                    break;
+                                case NAMETOKEN:
+                                    printf("246");
+                                    if (nameTokenOne == true) {
+                                        wC = increment(&memoryFileSplit);
+                                        while (wC == alphas[0] | wC == NAMETOKEN) {
+                                            associationsReturn[0] = associations(wC, memoryFileSplit.mainArray, tracker);
+                                            wC = increment(&memoryFileSplit);
+                                        }
+                                    }
 
-                        break;
-                    case CLOSEBRACE:
-                        printf("249");
-                        wC = increment(&memoryFileSplit);
-                        break;
-                    case ENDOFFILE:
-                        printf("252");
-                        endLinePoint = tracker;
-                        break;
-                    default:
-                        printf("Default Error");
-                        break;
+                                    break;
+                                case CLOSEBRACE:
+                                    printf("249");
+                                    wC = increment(&memoryFileSplit);
+                                    break;
+                                case ENDOFFILE:
+                                    printf("252");
+                                    endLinePoint = tracker;
+                                    break;
+                                default:
+                                    printf("Default Error");
+                                    break;
+                            }
+                            incrementOrNah = true;
+                        }
+                    }
                 }
-                /*
-            if (wC == COLON)
-            {
 
-                printf("Line 244 reached");
-                wC = increment(&memoryFileSplit);
-            }
-            if (wC == SPACE) {
-                wC = increment(&memoryFileSplit);
-            }
-            if (wC == NAMETOKEN && nameTokenOne == true)
-            {
-                printf("Line 244 reached");
-                wC = increment(&memoryFileSplit);
-                while (wC == alphas[0] | wC == NAMETOKEN)
-                {
-                    associationsReturn[0] = associations(wC, memoryFileSplit.mainArray, tracker);
-                    wC = increment(&memoryFileSplit);
-                }
-
-            }
-            if (wC == CLOSEBRACE) {
-                wC = increment(&memoryFileSplit);
-            }
-            if (wC == ENDOFFILE) {
-                endLinePoint = tracker;
-
-            }*/
-            }
         }// This is the end of the nametoken if loop
 
 
@@ -304,7 +294,7 @@ void crawler(FILE *fp) {
 
 
     }
-}
+
 
 void catalyst()
     {   printf("Catalyst Reached\n");
