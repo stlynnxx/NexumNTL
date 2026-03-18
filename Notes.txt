@@ -273,3 +273,11 @@ so, divide my time I must.
 
 Hopefully i'll be back here later tonight!
 
+3/17/2026-
+
+The last 24 hours haven't really gone as I'd wanted so it's late and I'm just doing some light work;
+I moved all of the if statements inside of crawler into a nice and tidy switch statement that is far less
+of a headache and it actually gave the information that at some point it is hitting the
+default case which it should not be as that indicates that it at some point is not able
+to recognize wC as anything at all. But it is more information to move forward with than
+I had whenever I started and a place to pick back up at tomorrow!
