@@ -306,3 +306,15 @@ Anyway.
 I threw a while loop around the switch because I realized the switch choice doesn't hold up
 as well without the for loop and got a pretty gnarly sigsegv so, that really should be both
 my cue to wrap up tonight and where to start again tomorrow/later.
+
+3/19/2026-
+
+We're back! I just got a pretty crazy printout to the terminal to start haha, literally thousands of lines but it's a good starting point;
+it seems we're reading through the file and then some, so. That's where we start!
+
+Okay, I got things calmed down and in a bit better place. It seems that right now whenever we reach the while loop we aren't quite at the char we're expecting so the lexer
+just can't proceed correctly from there. So, I need to identify the discrepancy, and then handle logic flow a bit better around the while loop.
+
+I ended up pretty much doing a total refactor of the assocations loop which was dearly needed. I still have more work to do
+but I'm closer! When we get back i'm going back to the switch in the crawler.
+

@@ -32,7 +32,7 @@ void create(const char *path) {
 void format(FILE *fp, InputForm *form) {
      fprintf(fp, "%s\n", "");
      char memoryKeyPrefix[20] = "{'";
-     char memoryKeySuffix[20] = "': {";
+     char memoryKeySuffix[20] = "':{";
      fprintf(fp, "%s", memoryKeyPrefix);
      fprintf(fp,"%s", form->memoryKey);
      fprintf(fp, "%s", memoryKeySuffix);

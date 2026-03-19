@@ -46,93 +46,92 @@ void *loadNexFile(FILE *fp, MemoryFileSplit *split) {
 
 }
 
-char associations(char wC, char fileArray[2000], int tracker) {
-
+char associations(char wC, char fileArray[2000], int tracker)
+{
     // Whenever associations is called initally wC will be on
     // the first association's opening name token
     bool associationBool = false;
     bool associatorBool = false;
     bool nameTokenBool = false;
+    bool nameTokenOne = false;
+    bool nameTokenTwo = false;
+
     int letterCounter = 0;
     int size;
     int exportSize;
     int associatorLetterCounter = 0;
     int associatiorStartPoint;
+    int associatorEndPoint;
+    int workingAssociatorIdx = 0;
     char workingAssociations[50];
+    int workingAssocationsIdx = 0;
     int associationsSizes[100];
     char workingAssociators[200];
     char export[250];
+    bool repeatBool = true;
     wC = wC;
-    if (wC == NAMETOKEN)
-    {
-        tracker++;
-        wC = fileArray[tracker];
-        // At this point wC will be on the first char of the association
-            }
-
-    for (int i = 0; i < alphasLength; i++) {
-        // This is the same loop I'm using for the alpha check
-        // for the memory key with the bool swapped out
-
-
-        if (wC == NAMETOKEN) {
-            wC = fileArray[tracker];
-            if (wC == NAMETOKEN) {
-                nameTokenBool = true;
-                tracker++;
-            }
-            if (wC == alphas[i]) {
-                associationBool = true;
-                workingAssociations[i] = fileArray[i];
-                letterCounter++;
-                tracker++;
-            }
-        }
-        if (wC == ASSOCIATOR) {
-            associatorBool = true;
-            // This will record the index where the associator token was discovered
-            associatiorStartPoint = tracker;
-            // This will move tracker to the first letter of the associator
-            tracker++;
-            wC = fileArray[tracker];
-            if (wC == alphas[i])
-            {
-                    associatorLetterCounter++;
-                    workingAssociators[i] = wC;
-
-            }
-            if (wC == COMMA)
-                {
-                    // This puts tracker at the point of the comma which
-                    // in this context is acting as a delimiliter for the associator
-                    tracker = tracker + associatorLetterCounter + 1;
+    while (repeatBool == true) {
+        switch (wC)
+        {
+            case NAMETOKEN:
+                nameTokenOne = true;
+                if (nameTokenOne == true) {
+                    tracker++;
                     wC = fileArray[tracker];
-
+                    break;
                 }
-            tracker++;
-            wC = fileArray[tracker];
-            if (wC == SPACE) {
+                if ((nameTokenOne == true) && (nameTokenTwo == true)) {
+                    break;
+                }
+
+                break;
+            case ASSOCIATOR:
+                associatorBool = true;
+                // This will record the index where the associator token was discovered
+                associatiorStartPoint = tracker;
+                // This will move tracker to the first letter of the associator
                 tracker++;
                 wC = fileArray[tracker];
-            }
-            if (wC == NAMETOKEN) {
-                // This will need to repeat earlier logic an indefinte amount of times.
+                while (associationBool == true) {
+                    if (isalpha(wC) == true)
+                    {
+                        associatorLetterCounter++;
+                        workingAssociators[workingAssociatorIdx] = wC;
+                        workingAssociatorIdx++;
+                        tracker++;
+                        wC = fileArray[tracker];
+                    }
+                    if (isalpha(wC) == false) {
+                        associationBool = false;
+                    }
+                }
+                break;
+            case COMMA:
+                tracker = tracker + associatorLetterCounter + 1;
+                wC = fileArray[tracker];
+                break;
+            default:
+                if (isalpha(wC) == true) {
+                    while (isalpha(wC) == true) {
 
-            }
+                        workingAssociations[workingAssocationsIdx] = fileArray[tracker];
+                        wC = fileArray[tracker];
+                        tracker++;
+                        workingAssocationsIdx++;
+                    }
+                }
+                nameTokenTwo = true;
 
 
 
-
-
+                break;
+        } // End of switch
+        if ((isalpha(wC) == false) && (wC != NAMETOKEN) && (wC != ASSOCIATOR)) {
+            repeatBool = false;
         }
+    } // While loop closing brace
 
-        // Instead of looking for a specific delimiter to end the assocations loop
-        // this ends it if wc is neither a letter or nameToken
-        if (wC != alphas[i] | wC != NAMETOKEN | wC != ASSOCIATOR) {
-            i = alphasLength + 1;
-        }
 
-    }
     size = sizeof(workingAssociations) / sizeof(workingAssociations[0]);
     for (int i = 0; i < size ; i++) {
         export[i] = workingAssociations[i];
@@ -143,6 +142,7 @@ char associations(char wC, char fileArray[2000], int tracker) {
     // Tracker at this point should be on the closing brace of the line in question
     return export[0];
 }
+
 char setr(MemoryFileSplit *split) {
     char wC;
     wC = split->mainArray[0];
@@ -158,19 +158,21 @@ void wCCheck(char wC, char location[30]) {
     printf("wC Check %s: %c\n", location, wC);
 
 }
+void associator() {}
 void crawler(FILE *fp) {
     MemoryFileSplit memoryFileSplit;
     char associationsReturn[2000];
     char workingCheck[5];
     char wC;
     char workingMemKeys[200];
-    bool memoryKeyBool;
-    bool assocationBool;
+    bool memoryKeyBool = false;
+    bool assocationBool = false;
 
-    int nameTokenPoint;
-    bool nameTokenOne;
+    int nameTokenPoint = 0;
+    bool nameTokenOne = false;
+    bool nameTokenTwo = false;
     int letterCounter = 0;
-    int endLinePoint;
+    int endLinePoint = 0;
 
     // loadNexFile loads the working file into memoryFileSplit.mainArray
     loadNexFile(fp, &memoryFileSplit);
@@ -200,14 +202,15 @@ void crawler(FILE *fp) {
 
        // loopTracker++;
        // printf("Loop tracker: %d\n", loopTracker);
-        if (wC == NAMETOKEN | isalpha(wC) == true) {
-            if (isalpha(wC) != true | memoryKeyBool == false) {
+        if (wC == NAMETOKEN || isalpha(wC) == true) {
+            if (isalpha(wC) != true || memoryKeyBool == false) {
+
                 // This used to be in an if wC == NAMETOKEN loop but
                 // After I added the one above I found it redundant.
                 nameTokenOne = true;
                 // printf("wC == nameToken running\n");
                 wC = increment(&memoryFileSplit);
-                wCCheck(wC, "Line 207");
+                wCCheck(wC, "Line 207"); // As of here the wC is correct; it is at the first letter of the first memkey
             }
             if (isalpha(wC) != true && memoryKeyBool == true) {
                 memoryKeyBool = false;
@@ -221,53 +224,87 @@ void crawler(FILE *fp) {
                     memoryKeyBool = true;
                     wCCheck(wC, "Line 214");
                     wC = increment(&memoryFileSplit); // This should increment by one per call
-                    wCCheck(wC, "Line 217");
+                    wCCheck(wC, "Line 225");
                     // The idea here is that the while loop will run until memkeybool
                     // gets flipped and THEN if wC == nameToken runs
-                    if (memoryKeyBool == true) {
+                    while (memoryKeyBool == true) {
+                        int wmcIdx = 0;
                         printf("memkeybool == true loop running\n");
-                        workingMemKeys[0] = wC;
-                        wCCheck(wC, "Line 222");
+                        workingMemKeys[wmcIdx] = wC;
+                        wCCheck(wC, "Line 231");
                         wC = increment(&memoryFileSplit);
-                        wCCheck(wC, "Line 224");
-
+                        wmcIdx++;
+                        wCCheck(wC, "Line 233");
+                        if (wC == NAMETOKEN) {
+                            memoryKeyBool = false;
+                        }
                     }
 
                     if (wC == NAMETOKEN && nameTokenOne == true) {
-                        printf("Line 229 reached");
+                        nameTokenTwo = true;
+                        printf("Line 238 reached");
                         wC = increment(&memoryFileSplit);
-                        wCCheck(wC, "Line 231");
+                        wCCheck(wC, "Line 247"); // this should put wC at a colon
+                    }
+                    bool colonCheck = false;
+                    bool spaceCheck = false;
+                    bool openBraceToken = false;
+                    if (wC == COLON) {
+                        colonCheck = true;
+                        wC = increment(&memoryFileSplit); // this should place wC at a space
+                        wCCheck(wC, "Line 255");
+                    }
+                    /*if (wC == SPACE) {
+                        spaceCheck = true;
+                        wC = increment(&memoryFileSplit);
+                        wCCheck(wC, "Line 260");
+                    }*/
+                    if (wC == OPENBRACE) {
+                        openBraceToken = true;
+                        wC = increment(&memoryFileSplit);
+                        wCCheck(wC, "Line 265");
                     }
 
 
-                    wCCheck(wC, "Line 239");
-                    printf("Line 240: Tracker: %d\n", tracker);
-                    bool whateverBool = true;
+                    // I intend to move these to the top of the function eventually
+                    bool whileBool = true;
                     bool incrementOrNah = false;
-                    while (whateverBool == true) {
+                    bool commaCheck = false;
+                    bool associatorCheck = false;
+
+                    // For the first pass of the while loop wC should be a nameToken
+                    // going in. On the second pass it should be a comma, which means we should NOT increment
+                    // On the third pass wC should be either a nameToken, an end brace, or an associator
+
+                    while (whileBool == true) {
                         if (incrementOrNah == true) {
                             wC = increment(&memoryFileSplit);
                         }
-                        if (isalpha(wC) != true) {
+                        if (isalpha(wC) == false) {
+                            wCCheck(wC, "Line 281\n");
                             switch (wC) {
                                 case COLON:
                                     printf("Line 240 reached");
                                     wC = increment(&memoryFileSplit);
                                     break;
-                                case SPACE:
+                                /*case SPACE:
                                     printf("243");
                                     wC = increment(&memoryFileSplit);
-                                    break;
+                                    break;*/
+
                                 case NAMETOKEN:
+                                case ASSOCIATOR:
                                     printf("246");
+                                    if (wC == ASSOCIATOR) {
+                                        associatorCheck = true;
+                                    }
                                     if (nameTokenOne == true) {
-                                        wC = increment(&memoryFileSplit);
-                                        while (wC == alphas[0] | wC == NAMETOKEN) {
+                                        // wC = increment(&memoryFileSplit);
+                                        while (isalpha(wC) == true || wC == NAMETOKEN) {
                                             associationsReturn[0] = associations(wC, memoryFileSplit.mainArray, tracker);
                                             wC = increment(&memoryFileSplit);
                                         }
                                     }
-
                                     break;
                                 case CLOSEBRACE:
                                     printf("249");
@@ -277,20 +314,26 @@ void crawler(FILE *fp) {
                                     printf("252");
                                     endLinePoint = tracker;
                                     break;
-                                default:
+                                case COMMA:
+                                    wC = increment(&memoryFileSplit);
+                                    commaCheck = true;
+                                    break;
+
+
+                                    default:
                                     printf("Default Error");
                                     break;
                             }
-                            incrementOrNah = true;
+
                         }
                     }
                 }
 
         }// This is the end of the nametoken if loop
 
-
-        printf("%s\n", associationsReturn);
-        printf("%s\n", workingMemKeys);
+        printf("Fallen off of switch, 0");
+        // printf("%s\n", associationsReturn);
+        // printf("%s\n", workingMemKeys);
 
 
     }
