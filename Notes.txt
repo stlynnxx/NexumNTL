@@ -318,3 +318,23 @@ just can't proceed correctly from there. So, I need to identify the discrepancy,
 I ended up pretty much doing a total refactor of the assocations loop which was dearly needed. I still have more work to do
 but I'm closer! When we get back i'm going back to the switch in the crawler.
 
+3/21/2026-
+
+I've been tweaking little bugs in the flow and now I've got the crawler switch actually running
+and routing to cases; the way that the nametoken case was being handled was no good so
+that's where I'm at now.
+
+Honestly I think I need to isolate the associator logic from the associations loop.
+
+I did that and moved workingAssociator the Breakdown struct and went back and did the
+same for associations so that neither function needs to return anything, they can
+both just be called with the current set or arguments for that pass and then interact
+with the structs.
+
+3/22/2026-
+
+12:42 AM-
+
+For some reason line 292 is now printing e (it wasnt when I started tonight), so that's
+where I should probably pick back up when I'm fresh. For now I'm tired and frustrated so
+that's probably a good stopping point.
