@@ -338,3 +338,11 @@ with the structs.
 For some reason line 292 is now printing e (it wasnt when I started tonight), so that's
 where I should probably pick back up when I'm fresh. For now I'm tired and frustrated so
 that's probably a good stopping point.
+
+3/23/2026-
+
+I went through the lexer line by line and figured out why wC was so far off and got it fixed and now we're getting all the way
+through the associations loop! Next I need to add some numeric handling logic and then the lexer should actually, finally done.
+
+What a crazy experience.
+
