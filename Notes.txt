@@ -357,9 +357,7 @@ I think it's going to lie in keeping tracker updated, and moving from associatio
 Since we're having some sort of indexing issue, I've decided to switch tracker back to a local variable for simplicity's sake, especially considering
 that the code that made me want it global in the first place is no longer being used. Might as well!
 
-And now it works!
 
-I am actually crying right now
 
 
 
