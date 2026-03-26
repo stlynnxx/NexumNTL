@@ -346,3 +346,20 @@ through the associations loop! Next I need to add some numeric handling logic an
 
 What a crazy experience.
 
+We added some isalnum stuff here and there and made it a bit farther and also a bit father back it felt like;
+wC is off coming out of the associations loop and I'm thinking that the issue lies in updating tracker as tracker is
+printing 16 before the loop but only 18; with the test input I'm using it should be incrementing by at least 6, so that tells me that there's an issue there.
+
+I think it's going to lie in keeping tracker updated, and moving from association to association.
+
+3/26/2026-
+
+Since we're having some sort of indexing issue, I've decided to switch tracker back to a local variable for simplicity's sake, especially considering
+that the code that made me want it global in the first place is no longer being used. Might as well!
+
+And now it works!
+
+I am actually crying right now
+
+
+

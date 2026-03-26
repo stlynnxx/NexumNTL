@@ -34,8 +34,6 @@ typedef struct {
 } Breakdown;
 
 
-int tracker = 0;
-
 
 void *loadNexFile(FILE *fp, MemoryFileSplit *split) {
     fseek(fp, 0, SEEK_END);
@@ -47,16 +45,16 @@ void *loadNexFile(FILE *fp, MemoryFileSplit *split) {
 
 }
 
-char increment(MemoryFileSplit *split, int *tracker) {
+char increment(MemoryFileSplit *split, int tracker) {
     char wC;
-    (*tracker)++;
-    wC = split->mainArray[*tracker];
+    tracker++;
+    wC = split->mainArray[tracker];
     return wC;
 }
 
 
 
-void associations(char wC, MemoryFileSplit *split, Breakdown *breakdown, int *tracker)
+void associations(char wC, MemoryFileSplit *split, Breakdown *breakdown, int tracker)
 {
     // Whenever associations is called initally wC will be on
     // the first association's opening name token
@@ -80,6 +78,7 @@ void associations(char wC, MemoryFileSplit *split, Breakdown *breakdown, int *tr
 
     bool repeatBool = true;
     wC = wC;
+    printf("Tracker check line 83: %d\n", tracker);
     while (repeatBool == true) {
         switch (wC)
         {
@@ -88,6 +87,7 @@ void associations(char wC, MemoryFileSplit *split, Breakdown *breakdown, int *tr
                 if (nameTokenOne != true) {
                     nameTokenOne = true;
                     wC = increment(split, tracker); // This puts wC at the first char
+                    printf("Tracker check 001: %d\n", tracker);
                     break;
                 }
 
@@ -101,10 +101,10 @@ void associations(char wC, MemoryFileSplit *split, Breakdown *breakdown, int *tr
 
 
             case COMMA:
-                *tracker = *tracker + associatorLetterCounter + 1;
+                tracker = tracker + associatorLetterCounter + 1;
 
-                wC = split->mainArray[*tracker];
-                split->mainArray[*tracker] = wC;
+                wC = split->mainArray[tracker];
+                split->mainArray[tracker] = wC;
                 break;
 
             default:
@@ -113,9 +113,19 @@ void associations(char wC, MemoryFileSplit *split, Breakdown *breakdown, int *tr
 
 
                         breakdown->associations[workingAssocationsIdx] = wC;
+                        printf("Tracker check 118: %d\n", tracker);
                         wC = increment(split, tracker);
+                        printf("Tracker Check line 120: %d\n", tracker);
                         workingAssocationsIdx++;
                     }
+                }
+                if (isalpha(wC) != true && isalnum(wC)) {
+                    breakdown->associations[workingAssociatorIdx] = wC;
+                    printf("Tracker check 126: %d\n", tracker);
+                    wC = increment(split, tracker);
+                    printf("Tracker check 128: %d\n", tracker);
+
+                    workingAssocationsIdx++;
                 }
                 nameTokenTwo = true;
                 repeatBool = false;
@@ -124,10 +134,7 @@ void associations(char wC, MemoryFileSplit *split, Breakdown *breakdown, int *tr
 
                 break;
         } // End of switch
-        /*printf("associations loop bottom: wC=%c (%d), repeatBool=%d\n", wC, (int)wC, repeatBool);
-        if ((isalpha(wC) == false) && (wC != NAMETOKEN) && (wC != ASSOCIATOR)) {
-            repeatBool = false;
-        }*/
+
     } // While loop closing brace
 } // End of the associations loop
 
@@ -141,7 +148,7 @@ void wCCheck(char wC, char location[30]) {
     printf("wC Check %s: %c\n", location, wC);
 
 }
-void associator(char wC,int *tracker, MemoryFileSplit *split, Breakdown *breakdown) {
+void associator(char wC,int tracker, MemoryFileSplit *split, Breakdown *breakdown) {
     bool associatorBool = false;
     int associatorLetterCounter = 0;
     int associatorStartPoint = 0;
@@ -150,7 +157,7 @@ void associator(char wC,int *tracker, MemoryFileSplit *split, Breakdown *breakdo
 
     associatorBool = true;
     // This will record the index where the associator token was discovered
-    associatorStartPoint = *tracker;
+    associatorStartPoint = tracker;
     // This will move tracker to the first letter of the associator
     wC = increment(split, tracker);
 
@@ -161,8 +168,17 @@ void associator(char wC,int *tracker, MemoryFileSplit *split, Breakdown *breakdo
             breakdown->workingAssociators[workingAssociatorIdx] = wC;
 
             workingAssociatorIdx++;
-            (*tracker)++;
+            (tracker)++;
             wC = increment(split, tracker);
+        }
+        if (isalpha(wC) != true && isalnum(wC)) {
+            associatorLetterCounter++;
+            breakdown->workingAssociators[workingAssociatorIdx] = wC;
+
+            workingAssociatorIdx++;
+            (tracker)++;
+            wC = increment(split, tracker);
+
         }
         if (isalpha(wC) == false) {
             associatorBool = false;
@@ -172,6 +188,8 @@ void associator(char wC,int *tracker, MemoryFileSplit *split, Breakdown *breakdo
 void crawler(FILE *fp) {
     MemoryFileSplit memoryFileSplit;
     Breakdown breakdown;
+
+    int tracker = 0;
     char associationsReturn[2000];
     char workingCheck[5];
     char wC;
@@ -209,7 +227,7 @@ void crawler(FILE *fp) {
     wCCheck(wC, "Line 190"); // This should be mainArray[0], so, {
     printf("Tracker Check %d\n", tracker);
     // this function increments tracker by one and updates wC to mainArray[1]
-    wC = increment(&memoryFileSplit, &tracker);
+    wC = increment(&memoryFileSplit, tracker);
     wCCheck(wC, "Line 194"); // Here wC should be at mainArray[1] which should be '
     // Dear god don't leave this uncommented unless we really need it
     /*printf("---Testing Area---\n");
@@ -230,7 +248,7 @@ void crawler(FILE *fp) {
             // After I added the one above I found it redundant.
             nameTokenOne = true;
             // printf("wC == nameToken running\n");
-            wC = increment(&memoryFileSplit, &tracker);
+            wC = increment(&memoryFileSplit, tracker);
             wCCheck(wC, "if memkey == false"); // As of here the wC is correct; it is at the first letter of the first memkey (2)
         }
 
@@ -240,7 +258,7 @@ void crawler(FILE *fp) {
             printf("wC == alphas[i] running\n");
             memoryKeyBool = true;
             // wCCheck(wC, "Line 226");
-            wC = increment(&memoryFileSplit, &tracker); // This should increment by one per call [3]
+            wC = increment(&memoryFileSplit, tracker); // This should increment by one per call [3]
             wCCheck(wC, "First Check inside alphas"); // Should be second char of memkey
             if (isalpha(wC)) {
                 breakdown.memoryKey[0] = wC;
@@ -252,11 +270,16 @@ void crawler(FILE *fp) {
                 printf("memkeybool == true loop running\n");
                 // This needs to be updated so it appends to Breakdown instead
                 breakdown.memoryKey[wmcIdx] = wC;
-                wC = increment(&memoryFileSplit, &tracker);
+                wC = increment(&memoryFileSplit, tracker);
 
                 wmcIdx++;
                 wCCheck(wC, "while loop check");
 
+                if (isalnum(wC)) {
+                    breakdown.memoryKey[wmcIdx] = wC;
+                    wmcIdx++;
+                    wC = increment(&memoryFileSplit, tracker);
+                }
                 if (wC == NAMETOKEN) {
                     wCCheck(wC, "NAMETOKEN two check one");
                     nameTokenTwo = true;
@@ -267,7 +290,7 @@ void crawler(FILE *fp) {
             if (isalpha(wC) != true && nameTokenTwo == true) {
                 wCCheck(wC, "Post NAMETOKEN 2 If one");
                 memoryKeyBool = false;
-                wC = increment(&memoryFileSplit, &tracker);
+                wC = increment(&memoryFileSplit, tracker);
                 wCCheck(wC, "Post NAMETOKEN 2 If Two");
                 // wC will be at COLON
             }
@@ -278,28 +301,30 @@ void crawler(FILE *fp) {
             if (wC == COLON) {
                 wCCheck(wC, "COLON check one");
                 colonCheckOne = true;
-                wC = increment(&memoryFileSplit, &tracker); // this should place wC at an open brace
+                wC = increment(&memoryFileSplit, tracker); // this should place wC at an open brace
                 wCCheck(wC, "COLON Check Two");
             }
 
             if (wC == OPENBRACE) {
                 wCCheck(wC, "OPENBRACE check one");
                 openBraceToken = true;
-                wC = increment(&memoryFileSplit, &tracker);
+                wC = increment(&memoryFileSplit, tracker);
                 wCCheck(wC, "OPENBRACE check two"); // wC here is a nameToken
             }
 
             // For the first pass of the while loop wC should be a nameToken
             // going in. On the second pass it should be a comma, which means we should NOT increment
             // On the third pass wC should be either a nameToken, an end brace, or an associator
+            if (isalpha(wC)) {
+                perror("Alpha Fail");
+                exit(EXIT_FAILURE);
+            }
+
 
             while (whileBool == true) {
 
                 wCCheck(wC, "Line 293"); // Should still be a nameToken
-                if (isalpha(wC)) {
-                    perror("Alpha Fail");
-                    exit(EXIT_FAILURE);
-                }
+
                 // printf("wC decimal: %d, NAMETOKEN decimal: %d\n", (int)wC, (int)NAMETOKEN);
                 if (isalpha(wC) == false) {
                     // wCCheck(wC, "Line 295\n");
@@ -307,18 +332,22 @@ void crawler(FILE *fp) {
                         case NAMETOKEN:
                             printf("NAMETOKEN CASE HIT: %d\n", (int)wC);
                             printf("Nametoken reached\n");
-                            associations(wC, &memoryFileSplit, &breakdown, &tracker);
-                            wC = increment(&memoryFileSplit, &tracker);
-                            printf("After associations, wC: %c \n", wC); // At this point wC is returning an open brace
+
+                            //
+                            printf("Tracker check pre associations: %d\n", tracker);
+                            associations(wC, &memoryFileSplit, &breakdown, tracker);
+                            printf("Tracker check post associations: %d\n", tracker);
+                            wC = increment(&memoryFileSplit, tracker);
+                           wCCheck(wC, "Final NAMETOKEN check"); // At this point wC is returning an open brace
                             break;
                         case ASSOCIATOR:
                             printf("Associator reached");
-                            associator(wC, &tracker, &memoryFileSplit, &breakdown);
+                            associator(wC, tracker, &memoryFileSplit, &breakdown);
 
                             break;
                         case CLOSEBRACE:
                             printf("310");
-                            wC = increment(&memoryFileSplit, &tracker);
+                            wC = increment(&memoryFileSplit, tracker);
                             break;
                         case ENDOFFILE:
                             printf("314");
@@ -327,7 +356,7 @@ void crawler(FILE *fp) {
                             break;
                         case COMMA:
                             printf("Line 319");
-                            wC = increment(&memoryFileSplit, &tracker);
+                            wC = increment(&memoryFileSplit, tracker);
                             commaCheck = true;
                             break;
                         default:
@@ -338,6 +367,7 @@ void crawler(FILE *fp) {
 
                 } if (isalpha(wC)) {
                     printf("isalpha true! :o");
+                    exit(1);
                 }
 
             }
@@ -351,8 +381,10 @@ void crawler(FILE *fp) {
 
 
         printf("Fallen off of switch, 0");
-        // printf("%s\n", associationsReturn);
-        // printf("%s\n", workingMemKeys);
+        printf("%s\n", memoryFileSplit.mainArray);
+        printf("%s\n", breakdown.memoryKey);
+        printf("%s\n", breakdown.associations);
+        printf("%s\n", breakdown.workingAssociators);
 
 
     }
