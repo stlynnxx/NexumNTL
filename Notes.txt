@@ -357,6 +357,16 @@ I think it's going to lie in keeping tracker updated, and moving from associatio
 Since we're having some sort of indexing issue, I've decided to switch tracker back to a local variable for simplicity's sake, especially considering
 that the code that made me want it global in the first place is no longer being used. Might as well!
 
+3/27/2026-
+
+It's been a long month, but the lexer is finally lexing!
+
+I had to scrape out some old not longer useful code from the associations loop
+in order to fix the indexing issue, but. I got it going and lexing! Now it needs adjusting
+and refining, which will come over time and with integrating the parser.
+
+Woo!! I'm thrilled!!
+
 
 
 

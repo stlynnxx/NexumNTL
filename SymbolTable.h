@@ -1,5 +1,6 @@
 #ifndef AST_H
 #define AST_H
+#include <stddef.h>
 
 
 typedef enum {
@@ -10,7 +11,7 @@ typedef enum {
     COMMA = ',',
     ASSOCIATOR = '@',
     LINEDELMITER = '\n',
-    ENDOFFILE = '\0',
+    ENDOFFILE = 'NULL',
     COLON = ':',
     SPACE = ' ',
     }Symbols;
