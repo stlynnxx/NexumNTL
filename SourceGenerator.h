@@ -4,5 +4,5 @@
 
 #ifndef NEXUMNTL_SOURCEGENERATOR_H
 #define NEXUMNTL_SOURCEGENERATOR_H
-void runner(const char *path);
+void sgRun(const char *path);
 #endif //NEXUMNTL_SOURCEGENERATOR_H

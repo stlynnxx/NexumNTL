@@ -8,7 +8,7 @@
 
 int main() {
     // This initiates the Source Generator
-    runner("Testing2.nex");
+    sgRun("Testing2.nex");
     // This initiates the Lexer
     catalyst();
 

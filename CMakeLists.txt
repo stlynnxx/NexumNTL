@@ -10,5 +10,7 @@ add_executable(NexumNTL main.c
         SymbolTable.c
         SymbolTable.h
         SourceGenerator.c
-        SourceGenerator.h)
+        SourceGenerator.h
+        Parser.c
+        Parser.h)
 target_compile_options(NexumNTL PRIVATE -Wall)

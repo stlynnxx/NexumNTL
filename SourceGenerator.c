@@ -73,7 +73,7 @@ void append(const char *path) {
     fclose(fp);
 }
 
-void runner(const char *path) {
+void sgRun(const char *path) {
     create(path);
     append(path);
 }

@@ -20,7 +20,7 @@
 #define COLUMN 20
 
 
-
+/*
 typedef struct {
     char mainArray[2000];
     char splitArray[MAX_ASSOC][MAX_ASSOC_LEN];
@@ -33,7 +33,7 @@ typedef struct {
     char workingAssociators[200];
     int tracker;
 } Breakdown;
-
+*/
 
 
 void *loadNexFile(FILE *fp, MemoryFileSplit *split) {

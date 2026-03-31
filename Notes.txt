@@ -367,7 +367,16 @@ and refining, which will come over time and with integrating the parser.
 
 Woo!! I'm thrilled!!
 
+3/31/26, 12:14 AM-
 
+I've been working on encoding for the next step over the last few days and
+it just hasn't involving coding but I came here tonight and setup Parser.c and
+Parser.h just because I wanted to, really.
+
+I'm pretty sleepy and need to wake up at a decent time in the morning though,
+so, I probably won't be doing much beyond that.
+
+More later today!
 
 
 
