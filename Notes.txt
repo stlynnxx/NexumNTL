@@ -378,5 +378,16 @@ so, I probably won't be doing much beyond that.
 
 More later today!
 
+4/2/2026-
 
+This morning so far I've written out the switch logic and started covering some
+of the fall through logic for the parser as well. It's not perfect by any means but the bones are certainly
+there! The switch checks for firsts and then appends a morpheme determined by context
+and if it falls through then we proceed with identifying exactly what we're working
+with prior to appending to the array in the struct.
 
+It feels like this morning was good progress! The sun and the open window don't hinder
+those vibes, either.
+
+We also added the secondaries array to SymbolTable.h, which will be used for determining
+lowercase letters that are not included in firsts.
