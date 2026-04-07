@@ -57,15 +57,25 @@ typedef enum  {
     ly = 0x0F,
     that = 0x10,
     ment = 0x11,
-    ffor = 0x12,
+    for_ = 0x12,
     ness = 0x13,
     on = 0x14,
     able = 0x15,
     as = 0x16,
+    with = 0x17,
+    un = 0x18,
+    th = 0x19,
+    he = 0x1A,
+    at = 0x1B,
+    en = 0x1C,
+    nd = 0x1D,
+    or = 0x1E,
+    al = 0x1F,
+
 } free_morphemes;
 
 // We should resize this later
-extern const char firsts[40] = {'t','i','a','o','e','r','l','m','f','n'};
+extern const char firsts[40] = {'t','i','a','o','e','r','l','m','f','n', 'u'};
 extern const char secondaries[80] = {
     'b', 'c', 'd', 'g', 'h', 'j', 'k', 'p', 'q', 's', 'u', 'v', 'w', 'x', 'y', 'z'
 };

@@ -383,7 +383,7 @@ void crawler(FILE *fp) {
     }
 
 
-void catalyst()
+void lRun()
     {   printf("Catalyst Reached\n");
         FILE *fp = fopen("Testing2.nex", "r");
         crawler(fp);

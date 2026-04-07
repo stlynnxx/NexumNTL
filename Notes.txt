@@ -391,3 +391,15 @@ those vibes, either.
 
 We also added the secondaries array to SymbolTable.h, which will be used for determining
 lowercase letters that are not included in firsts.
+
+4/7/2026-
+
+1:03 AM:
+
+I haven't done anything too crazy or too heavy tonight, just figuring out the encoding
+a bit more and refining the for loop a bit. I set up a proper index value for appending the the
+scratch array. I also set up a dead simple for loop for handling uppers that fires before
+the morpheme switch.
+
+Our next move is to ensure that if we fall through the morpheme switch that we identify the
+letter correctly and append to scratch afterwards before looping back around.

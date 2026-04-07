@@ -11,8 +11,8 @@
 #include <stdlib.h>
 
 typedef struct {
-    char wordOne[80];
-    char wordTwo[80];
+    char scratchOne[80];
+    char scratchTwo[80];
 } builder;
 
 
@@ -30,6 +30,7 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
     int commaPoint;
     assocSize = sizeof(breakdown->associations) / sizeof(breakdown->associations[0]);
     char selection[200]; // Similar to wC in Lexer
+    int scratchOneIdx = 0; // The index for appending to the first scratch array
     for (int a = 0; a < assocSize; a++) {
         selection[a] = breakdown->associations[a]; // Sets the current working character
         switch (selection[a]) {
@@ -89,6 +90,7 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
         bool firstFound = false;
         char wC;
 
+
         for (int c = 0; c < assocSize; c++) {
             if (selection[c] == firsts[firstsIdx]) {
                 firstFound = true;
@@ -97,6 +99,13 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                 wC = selection[c];
                 int inc = c + 1;
                 int wCU = inc;
+                if (isupper(wC)) {
+                    builderr.scratchOne[scratchOneIdx] = wC;
+                    scratchOneIdx++;
+
+                }
+
+
                 if (wC == firsts[firstsIdx]) {
                     // This switch covers the lowercase morphemes only. I'm thinking
                     // We should allow default to fall through to a second switch to
@@ -105,36 +114,43 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                         case 't':
                             wC = selection[wCU];
                             if (wC == 'o') {
-                                builderr.wordOne[0] = to;
+                                builderr.scratchOne[scratchOneIdx] = to;
+                                scratchOneIdx++;
 
                             }
                             if (wC == 'i') {
-                                builderr.wordTwo[0] = tion;
+                                builderr.scratchTwo[scratchOneIdx] = tion;
+                                scratchOneIdx++;
                             }
                             if (wC == 'h') {
                                 inc = inc + 1;
                                 wC = selection[inc];
                                 if (wC == 'e') {
-                                    builderr.wordOne[0] = the;
+                                    builderr.scratchOne[scratchOneIdx] = the;
+                                    scratchOneIdx++;
                                 }
                                 if (wC == 'a') {
-                                    builderr.wordTwo[0] = that;
+                                    builderr.scratchTwo[scratchOneIdx] = that;
+                                    scratchOneIdx++;
                                 }
                             }
                             break;
                         case 'i':
                             wC = selection[wCU];
                             if (wC == 's') {
-                                builderr.wordOne[0] = is;
+                                builderr.scratchOne[scratchOneIdx] = is;
+                                scratchOneIdx++;
                             }
                             if (wC == 'n') {
                                 inc = inc + 1;
                                 wC = selection[inc];
                                 if (wC != 'g') {
-                                    builderr.wordOne[0] = in;
+                                    builderr.scratchOne[scratchOneIdx] = in;
+                                    scratchOneIdx++;
                                 }
                                 if (wC == 'g') {
-                                    builderr.wordOne[0] = ing;
+                                    builderr.scratchOne[scratchOneIdx] = ing;
+                                    scratchOneIdx++;
                                 }
                             }
 
@@ -142,61 +158,73 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                         case 'a':
                             wC = selection[wCU];
                             if (wC == 's') {
-                                builderr.wordOne[0] = as;
+                                builderr.scratchOne[scratchOneIdx] = as;
+                                scratchOneIdx++;
                             }
                             if (wC == 'n') {
-                                builderr.wordOne[0] = and;
+                                builderr.scratchOne[scratchOneIdx] = and;
+                                scratchOneIdx++;
                             }
                             if (wC == 'b') {
-                                builderr.wordOne[0] = able;
+                                builderr.scratchOne[scratchOneIdx] = able;
+                                scratchOneIdx++;
                             }
                             break;
                         case 'o':
                             wC = selection[wCU];
                             if (wC == 'f') {
-                                builderr.wordOne[0] = of;
+                                builderr.scratchOne[scratchOneIdx] = of;
+                                scratchOneIdx++;
                             }
                             if (wC == 'n') {
-                                builderr.wordOne[0] = on;
+                                builderr.scratchOne[scratchOneIdx] = on;
+                                scratchOneIdx++;
                             }
                             break;
                         case 'e':
                             wC = selection[wCU];
                             if (wC == 'd') {
-                                builderr.wordOne[0] = ed;
+                                builderr.scratchOne[scratchOneIdx] = ed;
+                                scratchOneIdx++;
                             }
                             if (wC == 'r') {
-                                builderr.wordOne[0] = er;
+                                builderr.scratchOne[scratchOneIdx] = er;
+                                scratchOneIdx++;
                             }
                             break;
                         case 'r':
                             wC = selection[wCU];
                             if (wC == 'e') {
-                                builderr.wordOne[0] = re;
+                                builderr.scratchOne[scratchOneIdx] = re;
+                                scratchOneIdx++;
                             }
                             break;
                         case 'l':
                             wC = selection[wCU];
                             if (wC == 'y') {
-                                builderr.wordOne[0] = ly;
+                                builderr.scratchOne[scratchOneIdx] = ly;
+                                scratchOneIdx++;
                             }
                             break;
                         case 'm':
                             wC = selection[wCU];
                             if (wC == 'e') {
-                                builderr.wordOne[0] = ment;
+                                builderr.scratchOne[scratchOneIdx] = ment;
+                                scratchOneIdx++;
                             }
                             break;
                         case 'f':
                             wC = selection[wCU];
                             if (wC == 'f') {
-                                builderr.wordOne[0] = ffor;
+                                builderr.scratchOne[scratchOneIdx] = for_;
+                                scratchOneIdx++;
                             }
                             break;
                         case 'n':
                             wC = selection[wCU];
                             if (wC == 'e') {
-                                builderr.wordOne[0] = ness;
+                                builderr.scratchOne[scratchOneIdx] = ness;
+                                scratchOneIdx++;
                             }
                             break;
                         default:
@@ -206,16 +234,20 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                     } // End of Switch
 
 
+
+
+
                     if (isalpha(selection[c])) {
                         if (isupper(selection[c])) {
-                            builderr.wordOne[0] = selection[c];
+                            builderr.scratchOne[scratchOneIdx] = selection[c];
+                            scratchOneIdx++;
                         }
 
                         if (islower(selection[c])) {
                             // We need to loop through secondaries and check for a match
                             for (int seconds = 0; seconds < sizeof(secondaries) / sizeof(secondaries[0]); seconds++) {
                                 if (selection[c] == secondaries[seconds]) {
-                                    builderr.wordOne[0] = secondaries[seconds];
+                                    builderr.scratchOne[0] = secondaries[seconds];
                                 }
                             }
                         }

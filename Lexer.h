@@ -4,7 +4,7 @@
 
 #ifndef NEXUMNTL_LEXER_H
 #define NEXUMNTL_LEXER_H
-void catalyst();
+void lRun();
 #define MAX_ASSOC 200
 #define MAX_ASSOC_LEN 200
 #define ROW 20
