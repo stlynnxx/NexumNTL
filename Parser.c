@@ -15,9 +15,6 @@ typedef struct {
     char scratchTwo[80];
 } builder;
 
-
-
-
 void parseAssocs(Breakdown *breakdown, Working *working) {
     free_morphemes fmorphemes;
     builder builderr;
@@ -29,149 +26,153 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
     int countsIdx = 0; // The index for appending to the above array
     int commaPoint;
     assocSize = sizeof(breakdown->associations) / sizeof(breakdown->associations[0]);
-    char selection[200]; // Similar to wC in Lexer
+    char wC; // Similar to wC in Lexer
     int scratchOneIdx = 0; // The index for appending to the first scratch array
-    for (int a = 0; a < assocSize; a++) {
-        selection[a] = breakdown->associations[a]; // Sets the current working character
-        switch (selection[a]) {
-            case NAMETOKEN:
-                if (firstNameTokenCheck == false) {
-                    firstNameTokenCheck = true;
-                }
-                if (firstNameTokenCheck == true && secondNameTokenCheck == false) {
-                   working->assoc[a] = COMMA; // This will act as a delimiter for associations within the array within the struct
-                   secondNameTokenCheck = true;
-                    if (secondNameTokenCheck == true) {
-                        firstNameTokenCheck = false;
-                        secondNameTokenCheck = false;
-                    }
-                }
-
-                break;
-            default:
-                if (isalpha(selection[a]) || isalnum(selection[a])) {
-                    working->assoc[a] = selection[a];
-                }
-                if (isalpha(selection[a]) != true) {
-                    printf("Unrecognized token %s\n", selection);
-                }
-                break;
+    bool run = true;
+    int breakdownIdx = 0;
+    int workIdx = breakdownIdx + 1;
 
 
-        } // End of switch
 
-    } // End of for
-    for (int b = 0; b < sizeof(working->assoc) / sizeof(working->assoc[0]); b++) {
-        // These if statements get the char counts for the associations
-        if (isalpha(working->assoc[b])) {
-            assocCharCount++;
+
+    while (run == true) {
+        wC = breakdown->associations[breakdownIdx]; // This sets the current working character
+
+        if (wC == NAMETOKEN) {
+            if (firstNameTokenCheck == false) {
+                firstNameTokenCheck = true;
+
+            }
+            if (firstNameTokenCheck == true && secondNameTokenCheck == false) {
+                working->assoc[workIdx] = COMMA; // This will act as a delimiter for associations within the array within the struct, needs an index
+                secondNameTokenCheck = true;
+                if (secondNameTokenCheck == true) {
+                    firstNameTokenCheck = false;
+                    secondNameTokenCheck = false;
+                }
+            }
+
         }
-        if (isalnum(working->assoc[b])) {
-            assocCharCount++;
+        else {
+            perror("Parser nametoken error");
         }
-        if (working->assoc[b] == COMMA) {
-            commaPoint = working->assoc[b];
-            counts[countsIdx] = assocCharCount;
-            countsIdx++;
-            assocCharCount = 0;
-        }
-        // The k for loop is isolating assocations
-        for (int k = 0; k <= commaPoint - 1; k++) {
-            working->association[k] = working->assoc[b];
 
-        } // End of k for
+
+        breakdownIdx++;
+        wC = breakdown->associations[breakdownIdx];
+
+
+        // I don't remember why I wrote this so it's commented out hoping it'll become obvious that I do or don't need it
+
+        /*
+        for (int b = 0; b < assocSize; b++) {
+            // These if statements get the char counts for the associations
+            if (isalpha(working->assoc[b])) {
+                assocCharCount++;
+            }
+            if (isalnum(working->assoc[b])) {
+                assocCharCount++;
+            }
+            if (breakdown->associations[b] == COMMA) {
+                commaPoint = breakdown->associations[b];
+                counts[countsIdx] = assocCharCount;
+                countsIdx++;
+                assocCharCount = 0;
+            }
+            // The k for loop is isolating assocations
+            for (int k = 0; k <= commaPoint - 1; k++) {
+                breakdown->associations[k] = breakdown->associations[b];
+
+            } // End of k for
+            */
 
         // Here we will need to reference the symbol table for encodings and translate to .nexcode
 
         // For checking for macro'd morphemes (mm's) we should have a list of all of the first letters of
         // the mm's and if there's a match advance one letter at a time checking for mm matches
-        int firstsIdx = 0;
-        int firstFoundIdx = 0;
-        bool firstFound = false;
-        char wC;
 
 
-        for (int c = 0; c < assocSize; c++) {
-            if (selection[c] == firsts[firstsIdx]) {
-                firstFound = true;
-                firstsIdx++;
-                firstFoundIdx = c;
-                wC = selection[c];
-                int inc = c + 1;
-                int wCU = inc;
-                if (isupper(wC)) {
-                    builderr.scratchOne[scratchOneIdx] = wC;
-                    scratchOneIdx++;
 
-                }
+        // This is checking to see if the current char being examined is a capital letter,
+        // and append it to the scratch if so
+        if (isupper(wC)) {
+            builderr.scratchOne[scratchOneIdx] = wC;
+            scratchOneIdx++;
+        }
 
+        int firstSize = sizeof(firsts) / sizeof(firsts[0]);
+        for (int i = 0; i < firstSize; i++) {
+            if (wC == firsts[i]) {
+                // This switch covers the lowercase morphemes only. I'm thinking
+                // We should allow default to fall through to a second switch to
+                // sift through, or a loop
+                switch (wC) {
+                    case 't':
+                        // We need to incremenet here
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
 
-                if (wC == firsts[firstsIdx]) {
-                    // This switch covers the lowercase morphemes only. I'm thinking
-                    // We should allow default to fall through to a second switch to
-                    // sift through, or a loop
-                    switch (wC) {
-                        case 't':
-                            wC = selection[wCU];
-                            if (wC == 'o') {
-                                builderr.scratchOne[scratchOneIdx] = to;
+                        if (wC == 'o') {
+                            builderr.scratchOne[scratchOneIdx] = to;
+                            scratchOneIdx++;
+
+                        }
+                        if (wC == 'i') {
+                            builderr.scratchTwo[scratchOneIdx] = tion;
+                            scratchOneIdx++;
+                        }
+                        if (wC == 'h') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 'e') {
+                                builderr.scratchOne[scratchOneIdx] = the;
+                                scratchOneIdx++;
+                            }
+                            if (wC == 'a') {
+                                builderr.scratchTwo[scratchOneIdx] = that;
                                 scratchOneIdx++;
 
                             }
-                            if (wC == 'i') {
-                                builderr.scratchTwo[scratchOneIdx] = tion;
-                                scratchOneIdx++;
+                    break;
+                    case 'i':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 's') {
+                            builderr.scratchOne[scratchOneIdx] = is;
+                            scratchOneIdx++;
+                        }
+                        if (wC == 'n') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                        }
+                        if (wC != 'g') {
+                            builderr.scratchOne[scratchOneIdx] = in;
+                            scratchOneIdx++;
                             }
-                            if (wC == 'h') {
-                                inc = inc + 1;
-                                wC = selection[inc];
-                                if (wC == 'e') {
-                                    builderr.scratchOne[scratchOneIdx] = the;
-                                    scratchOneIdx++;
-                                }
-                                if (wC == 'a') {
-                                    builderr.scratchTwo[scratchOneIdx] = that;
-                                    scratchOneIdx++;
-                                }
-                            }
-                            break;
-                        case 'i':
-                            wC = selection[wCU];
-                            if (wC == 's') {
-                                builderr.scratchOne[scratchOneIdx] = is;
-                                scratchOneIdx++;
-                            }
-                            if (wC == 'n') {
-                                inc = inc + 1;
-                                wC = selection[inc];
-                                if (wC != 'g') {
-                                    builderr.scratchOne[scratchOneIdx] = in;
-                                    scratchOneIdx++;
-                                }
-                                if (wC == 'g') {
+                        if (wC == 'g') {
                                     builderr.scratchOne[scratchOneIdx] = ing;
                                     scratchOneIdx++;
                                 }
+                    break;
+                    case 'a':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 's') {
+                            builderr.scratchOne[scratchOneIdx] = as;
+                            scratchOneIdx++;
+                        }
+                        if (wC == 'n') {
+                            builderr.scratchOne[scratchOneIdx] = and;
+                            scratchOneIdx++;
                             }
-
-                            break;
-                        case 'a':
-                            wC = selection[wCU];
-                            if (wC == 's') {
-                                builderr.scratchOne[scratchOneIdx] = as;
-                                scratchOneIdx++;
-                            }
-                            if (wC == 'n') {
-                                builderr.scratchOne[scratchOneIdx] = and;
-                                scratchOneIdx++;
-                            }
-                            if (wC == 'b') {
-                                builderr.scratchOne[scratchOneIdx] = able;
-                                scratchOneIdx++;
-                            }
-                            break;
-                        case 'o':
-                            wC = selection[wCU];
+                        if (wC == 'b') {
+                            builderr.scratchOne[scratchOneIdx] = able;
+                            scratchOneIdx++;
+                        }
+                    break;
+                    case 'o':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
                             if (wC == 'f') {
                                 builderr.scratchOne[scratchOneIdx] = of;
                                 scratchOneIdx++;
@@ -180,108 +181,104 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                                 builderr.scratchOne[scratchOneIdx] = on;
                                 scratchOneIdx++;
                             }
-                            break;
-                        case 'e':
-                            wC = selection[wCU];
-                            if (wC == 'd') {
-                                builderr.scratchOne[scratchOneIdx] = ed;
-                                scratchOneIdx++;
-                            }
-                            if (wC == 'r') {
-                                builderr.scratchOne[scratchOneIdx] = er;
-                                scratchOneIdx++;
-                            }
-                            break;
-                        case 'r':
-                            wC = selection[wCU];
-                            if (wC == 'e') {
-                                builderr.scratchOne[scratchOneIdx] = re;
-                                scratchOneIdx++;
-                            }
-                            break;
-                        case 'l':
-                            wC = selection[wCU];
-                            if (wC == 'y') {
-                                builderr.scratchOne[scratchOneIdx] = ly;
-                                scratchOneIdx++;
-                            }
-                            break;
-                        case 'm':
-                            wC = selection[wCU];
-                            if (wC == 'e') {
-                                builderr.scratchOne[scratchOneIdx] = ment;
-                                scratchOneIdx++;
-                            }
-                            break;
-                        case 'f':
-                            wC = selection[wCU];
-                            if (wC == 'f') {
-                                builderr.scratchOne[scratchOneIdx] = for_;
-                                scratchOneIdx++;
-                            }
-                            break;
-                        case 'n':
-                            wC = selection[wCU];
-                            if (wC == 'e') {
-                                builderr.scratchOne[scratchOneIdx] = ness;
-                                scratchOneIdx++;
-                            }
-                            break;
-                        default:
-                            printf("Falling through");
-                            break;
-
+                    break;
+                    case 'e':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'd') {
+                            builderr.scratchOne[scratchOneIdx] = ed;
+                            scratchOneIdx++;
+                        }
+                        if (wC == 'r') {
+                            builderr.scratchOne[scratchOneIdx] = er;
+                            scratchOneIdx++;
+                        }
+                    break;
+                    case 'r':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'e') {
+                            builderr.scratchOne[scratchOneIdx] = re;
+                            scratchOneIdx++;
+                        }
+                    break;
+                    case 'l':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'y') {
+                            builderr.scratchOne[scratchOneIdx] = ly;
+                            scratchOneIdx++;
+                        }
+                    break;
+                    case 'm':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'e') {
+                            builderr.scratchOne[scratchOneIdx] = ment;
+                            scratchOneIdx++;
+                        }
+                    break;
+                    case 'f':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'f') {
+                            builderr.scratchOne[scratchOneIdx] = for_;
+                            scratchOneIdx++;
+                        }
+                    break;
+                    case 'n':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'e') {
+                            builderr.scratchOne[scratchOneIdx] = ness;
+                            scratchOneIdx++;
+                        }
+                    break;
+                    default:
+                             // if the currently examined char does not branch out
+                             // to one of the shortened morphemes, then we fall through
+                             // to the next check
+                    printf("Falling through");
+                    break;
                     } // End of Switch
 
+                            if (islower(wC)) {
+                                // We need to loop through secondaries and check for a match
+                                for (int seconds = 0; seconds < sizeof(secondaries) / sizeof(secondaries[0]); seconds++) {
+                                    if (wC == secondaries[seconds]) {
+                                        builderr.scratchOne[0] = secondaries[seconds];
+                                    }
+                                }
+                            }
+                            else {
+                                exit(1);
+                            }
 
 
+                        }
 
-
-                    if (isalpha(selection[c])) {
-                        if (isupper(selection[c])) {
-                            builderr.scratchOne[scratchOneIdx] = selection[c];
+                        if (isalnum(wC)) {
+                            builderr.scratchOne[scratchOneIdx] = wC;
                             scratchOneIdx++;
                         }
 
-                        if (islower(selection[c])) {
-                            // We need to loop through secondaries and check for a match
-                            for (int seconds = 0; seconds < sizeof(secondaries) / sizeof(secondaries[0]); seconds++) {
-                                if (selection[c] == secondaries[seconds]) {
-                                    builderr.scratchOne[0] = secondaries[seconds];
-                                }
-                            }
-                        }
-                        else {
-                            exit(1);
-                        }
 
 
-                    }
-
-                    if (isalnum(selection[c])) {
-
-                    }
-
-
-
-
-
-                c = assocSize;
+                }
             }
         }
-
-
-
-
-
-
-        }
-
-
-    } // End of j for
-
+    }
 
 }
+
+         // End of j for
+// End of a loop
+
+
+
+
+
+
 
 int main() {
     // This establishes the Breakdown and Working instacnes and
@@ -289,10 +286,6 @@ int main() {
     Breakdown breakdown;
     Working working;
     parseAssocs(&breakdown, &working);
-
-
-
-
     return 0;
 }
 
