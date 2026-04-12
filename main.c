@@ -8,7 +8,7 @@
 
 int prun() {
     // This initiates the Source Generator
-    sgRun("Testing2.nex");
+    sgRun("Testing2.nex", "Test.nexcode");
     // This initiates the Lexer
     lRun();
     prun();

@@ -29,6 +29,7 @@ void create(const char *path) {
 }
 
 
+
 // This is what is actually being appended to the file
 void format(FILE *fp, InputForm *form) {
      fprintf(fp, "%s\n", "");
@@ -74,12 +75,17 @@ void append(const char *path) {
     fclose(fp);
 }
 
-void sgRun(const char *path) {
+int sgRun(const char *path, const char *pathTwo) {
     if (nexcodeFlag == false) {
         create(path);
         append(path);
     }
-    if (nexcodeFlag == true) {}
+    if (nexcodeFlag == true) {
+        create(pathTwo);
+
+
+    }
+    return 0;
 }
 
 /*int main() {

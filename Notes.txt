@@ -431,3 +431,10 @@ the flag in the Source Generator
 Also in Parser we should do our appending within the loop
 
 I wound up doing the flag and the scaffolding of the logic for it in the generator
+
+
+4:40PM-
+
+I feel like hot garbage today but I still set up a little bit more of the post flag
+logic in the source generator, but. I probably won't be doing much else, at least not
+for now.
