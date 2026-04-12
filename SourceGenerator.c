@@ -9,6 +9,7 @@
 
 #include "Lexer.h"
 #include "SymbolTable.h"
+#include "Parser.h"
 #define MAX_ASSOC 50
 #define MAX_ASSOC_LEN 200
 
@@ -74,8 +75,11 @@ void append(const char *path) {
 }
 
 void sgRun(const char *path) {
-    create(path);
-    append(path);
+    if (nexcodeFlag == false) {
+        create(path);
+        append(path);
+    }
+    if (nexcodeFlag == true) {}
 }
 
 /*int main() {

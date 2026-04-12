@@ -10,14 +10,15 @@
 #include <ctype.h>
 #include <stdlib.h>
 
+#include "SourceGenerator.h"
+
 typedef struct {
     char scratchOne[80];
     char scratchTwo[80];
 } builder;
 
-void parseAssocs(Breakdown *breakdown, Working *working) {
+void parseAssocs(Breakdown *breakdown, Working *working, builder *builderr) {
     free_morphemes fmorphemes;
-    builder builderr;
     int assocSize; // size of the assoc array in the working struct
     bool firstNameTokenCheck = false;
     bool secondNameTokenCheck = false;
@@ -35,7 +36,8 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
 
 
 
-    while (run == true) {
+    while (run == true)
+    {
         wC = breakdown->associations[breakdownIdx]; // This sets the current working character
 
         if (wC == NAMETOKEN) {
@@ -101,35 +103,38 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
         }
 
         int firstSize = sizeof(firsts) / sizeof(firsts[0]);
-        for (int i = 0; i < firstSize; i++) {
-            if (wC == firsts[i]) {
+        for (int i = 0; i < firstSize; i++)
+        {
+            if (wC == firsts[i])
+            {
                 // This switch covers the lowercase morphemes only. I'm thinking
                 // We should allow default to fall through to a second switch to
                 // sift through, or a loop
-                switch (wC) {
+                switch (wC)
+                {
                     case 't':
                         // We need to incremenet here
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
 
                         if (wC == 'o') {
-                            builderr.scratchOne[scratchOneIdx] = to;
+                            builderr->scratchOne[scratchOneIdx] = to;
                             scratchOneIdx++;
 
                         }
                         if (wC == 'i') {
-                            builderr.scratchTwo[scratchOneIdx] = tion;
+                            builderr->scratchTwo[scratchOneIdx] = tion;
                             scratchOneIdx++;
                         }
                         if (wC == 'h') {
                             breakdownIdx++;
                             wC = breakdown->associations[breakdownIdx];
                             if (wC == 'e') {
-                                builderr.scratchOne[scratchOneIdx] = the;
+                                builderr->scratchOne[scratchOneIdx] = the;
                                 scratchOneIdx++;
                             }
                             if (wC == 'a') {
-                                builderr.scratchTwo[scratchOneIdx] = that;
+                                builderr->scratchTwo[scratchOneIdx] = that;
                                 scratchOneIdx++;
 
                             }
@@ -138,7 +143,7 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                         if (wC == 's') {
-                            builderr.scratchOne[scratchOneIdx] = is;
+                            builderr->scratchOne[scratchOneIdx] = is;
                             scratchOneIdx++;
                         }
                         if (wC == 'n') {
@@ -146,11 +151,11 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                             wC = breakdown->associations[breakdownIdx];
                         }
                         if (wC != 'g') {
-                            builderr.scratchOne[scratchOneIdx] = in;
+                            builderr->scratchOne[scratchOneIdx] = in;
                             scratchOneIdx++;
                             }
                         if (wC == 'g') {
-                                    builderr.scratchOne[scratchOneIdx] = ing;
+                                    builderr->scratchOne[scratchOneIdx] = ing;
                                     scratchOneIdx++;
                                 }
                     break;
@@ -158,15 +163,15 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                         if (wC == 's') {
-                            builderr.scratchOne[scratchOneIdx] = as;
+                            builderr->scratchOne[scratchOneIdx] = as;
                             scratchOneIdx++;
                         }
                         if (wC == 'n') {
-                            builderr.scratchOne[scratchOneIdx] = and;
+                            builderr->scratchOne[scratchOneIdx] = and;
                             scratchOneIdx++;
                             }
                         if (wC == 'b') {
-                            builderr.scratchOne[scratchOneIdx] = able;
+                            builderr->scratchOne[scratchOneIdx] = able;
                             scratchOneIdx++;
                         }
                     break;
@@ -174,11 +179,11 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                             if (wC == 'f') {
-                                builderr.scratchOne[scratchOneIdx] = of;
+                                builderr->scratchOne[scratchOneIdx] = of;
                                 scratchOneIdx++;
                             }
                             if (wC == 'n') {
-                                builderr.scratchOne[scratchOneIdx] = on;
+                                builderr->scratchOne[scratchOneIdx] = on;
                                 scratchOneIdx++;
                             }
                     break;
@@ -186,11 +191,11 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                         if (wC == 'd') {
-                            builderr.scratchOne[scratchOneIdx] = ed;
+                            builderr->scratchOne[scratchOneIdx] = ed;
                             scratchOneIdx++;
                         }
                         if (wC == 'r') {
-                            builderr.scratchOne[scratchOneIdx] = er;
+                            builderr->scratchOne[scratchOneIdx] = er;
                             scratchOneIdx++;
                         }
                     break;
@@ -198,7 +203,7 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                         if (wC == 'e') {
-                            builderr.scratchOne[scratchOneIdx] = re;
+                            builderr->scratchOne[scratchOneIdx] = re;
                             scratchOneIdx++;
                         }
                     break;
@@ -206,7 +211,7 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                         if (wC == 'y') {
-                            builderr.scratchOne[scratchOneIdx] = ly;
+                            builderr->scratchOne[scratchOneIdx] = ly;
                             scratchOneIdx++;
                         }
                     break;
@@ -214,7 +219,7 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                         if (wC == 'e') {
-                            builderr.scratchOne[scratchOneIdx] = ment;
+                            builderr->scratchOne[scratchOneIdx] = ment;
                             scratchOneIdx++;
                         }
                     break;
@@ -222,7 +227,7 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                         if (wC == 'f') {
-                            builderr.scratchOne[scratchOneIdx] = for_;
+                            builderr->scratchOne[scratchOneIdx] = for_;
                             scratchOneIdx++;
                         }
                     break;
@@ -230,7 +235,7 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                         if (wC == 'e') {
-                            builderr.scratchOne[scratchOneIdx] = ness;
+                            builderr->scratchOne[scratchOneIdx] = ness;
                             scratchOneIdx++;
                         }
                     break;
@@ -246,7 +251,7 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                                 // We need to loop through secondaries and check for a match
                                 for (int seconds = 0; seconds < sizeof(secondaries) / sizeof(secondaries[0]); seconds++) {
                                     if (wC == secondaries[seconds]) {
-                                        builderr.scratchOne[0] = secondaries[seconds];
+                                        builderr->scratchOne[0] = secondaries[seconds];
                                     }
                                 }
                             }
@@ -258,8 +263,11 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                         }
 
                         if (isalnum(wC)) {
-                            builderr.scratchOne[scratchOneIdx] = wC;
+                            builderr->scratchOne[scratchOneIdx] = wC;
                             scratchOneIdx++;
+                        }
+                        if (wC == ENDOFFILE) {
+                            run = false;
                         }
 
 
@@ -267,25 +275,28 @@ void parseAssocs(Breakdown *breakdown, Working *working) {
                 }
             }
         }
+
+
     }
 
+
+
+// End of j for
+// End of a loop
+void flag() {
+    nexcodeFlag = true;
 }
 
-         // End of j for
-// End of a loop
 
-
-
-
-
-
-
-int main() {
-    // This establishes the Breakdown and Working instacnes and
+int prun() {
+    // This establishes the struct instances and
     // passes them into parseAssocs
     Breakdown breakdown;
     Working working;
-    parseAssocs(&breakdown, &working);
+    builder builderr;
+    parseAssocs(&breakdown, &working, &builderr);
+
+
     return 0;
 }
 

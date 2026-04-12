@@ -6,11 +6,13 @@
 
 
 
-int main() {
+int prun() {
     // This initiates the Source Generator
     sgRun("Testing2.nex");
     // This initiates the Lexer
     lRun();
+    prun();
+
 
   return 0;
  }

@@ -420,3 +420,14 @@ when to end the loop and when to not, however, I am quite tired and think I have
 
 That will have to be where I start off next time!
 
+4/12/2026-
+
+3:08AM-
+I'm pretty tired so I'm not doing anything crazy and who knows how useful anything I do will
+actually be. I think we should put a flag in SourceGenerator.h that we can flip/check
+to know if we're going from .nex to .nexcode and then let the logic flow according to
+the flag in the Source Generator
+
+Also in Parser we should do our appending within the loop
+
+I wound up doing the flag and the scaffolding of the logic for it in the generator
