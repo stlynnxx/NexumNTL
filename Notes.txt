@@ -438,3 +438,7 @@ I wound up doing the flag and the scaffolding of the logic for it in the generat
 I feel like hot garbage today but I still set up a little bit more of the post flag
 logic in the source generator, but. I probably won't be doing much else, at least not
 for now.
+
+
+ I wound up creating checker within parser and setting up some of the logic within that
+ we made the idx variables global so we need to be very intentional with those.
