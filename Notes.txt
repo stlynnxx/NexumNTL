@@ -466,3 +466,11 @@ We should do prefixes with the upper check
 
 And suffixes in the lower check
 
+11:35 AM-
+
+So far today I've built out more tokens in the switches, and fixed some ifs and such.
+We wrote out a good amount of code! I think I've gotten a good majority of the prefixes
+handled and now I've moved on to the suffixes in the islower check.
+
+Good shit!
+

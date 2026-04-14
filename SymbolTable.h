@@ -74,11 +74,20 @@ typedef enum  {
     ance = 'anc',
     anti = 'ant',
     less = 'le',
+    Inter = 'Ine',
     Trans = 'Tr',
     Super = 'Su',
-
-
-
+    Under = 'Und',
+    Ante = 'Ant',
+    Anti = 'Ani',
+    Circum = 'Cir',
+    Intra = 'Inr',
+    Magni = 'Mg',
+    Micro = 'Mic',
+    Multi = 'Mu',
+    Pseudo = 'Pse',
+    Retro = 'Ret',
+    Milli = 'Mil',
 
 } free_morphemes;
 
