@@ -71,8 +71,17 @@ typedef enum  {
     nd = 0x1D,
     or = 0x1E,
     al = 0x1F,
+    ance = 'anc',
+    anti = 'ant',
+    less = 'le',
+    Trans = 'Tr',
+    Super = 'Su',
+
+
+
 
 } free_morphemes;
+
 
 // We should resize this later
 extern const char firsts[40] = {'t','i','a','o','e','r','l','m','f','n', 'u'};

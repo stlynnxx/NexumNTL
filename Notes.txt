@@ -442,3 +442,27 @@ for now.
 
  I wound up creating checker within parser and setting up some of the logic within that
  we made the idx variables global so we need to be very intentional with those.
+
+
+4/13/2026-
+
+11:52 PM-
+
+I fixed the weird redlines in parser, they were being caused by curly brace wonkyness.
+
+I'm thinking now, should I do some more encoding? I have the non printing values all
+used, but that doesn't mean I couldn't take more common multi char lowercase strings
+and simply shorten them to shorter lowercase strings, similar to how I first started
+before I was doing the non printing values.
+
+4/14/2026-
+
+I need to think about what I intend to dowith wC after the switch/ after the switch cases.
+Do I want to keep it where it is, or move it back?
+
+I'm pretty sleepy so that's not a choice to make right now, honestly.
+
+We should do prefixes with the upper check
+
+And suffixes in the lower check
+
