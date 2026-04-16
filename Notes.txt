@@ -456,7 +456,7 @@ and simply shorten them to shorter lowercase strings, similar to how I first sta
 before I was doing the non printing values.
 
 4/14/2026-
-
+12:00 AM-
 I need to think about what I intend to dowith wC after the switch/ after the switch cases.
 Do I want to keep it where it is, or move it back?
 
@@ -474,3 +474,12 @@ handled and now I've moved on to the suffixes in the islower check.
 
 Good shit!
 
+4/15/2026-
+
+Today I've been working on getting more multi letter morphemes encoded and hardcoded
+into the tokenizing logic. I reconsidered some of the tokens I had recorded
+previously, and shifted towards a simplified mental model for the encoding pattern;
+First letter of plaintext, capitalized, follow by a numeric. If we are working
+ with {Letter}{Digit}, then if we allow digit to hit 9, we roll back over
+ adding the second letter of the working plaintext, capitalized, before the numeric,
+ starting numbers at 0. Symbols are also fair game in place of numerics for specialized cases.
