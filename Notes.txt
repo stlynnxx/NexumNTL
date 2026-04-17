@@ -483,3 +483,13 @@ First letter of plaintext, capitalized, follow by a numeric. If we are working
  with {Letter}{Digit}, then if we allow digit to hit 9, we roll back over
  adding the second letter of the working plaintext, capitalized, before the numeric,
  starting numbers at 0. Symbols are also fair game in place of numerics for specialized cases.
+
+
+4/16/2026-
+
+Today was more work on the tree, but I made a decent amount of progress, at least!
+
+And once I finish this it's all that much closer to being done!
+
+But I've had a long day and I'm pretty sleepy already, so i'm gonna call it quits
+for today, probably. Until next time!
