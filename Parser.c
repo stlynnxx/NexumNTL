@@ -176,12 +176,48 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                      }
                  }
                  break;
+            case 'G':
+                 breakdownIdx++;
+                 wC = breakdown->associations[breakdownIdx];
+                 if (wC == 'r') {
+                     breakdownIdx++;
+                     wC = breakdown->associations[breakdownIdx];
+                     if (wC == 'e') {
+                         breakdownIdx++;
+                         wC = breakdown->associations[breakdownIdx];
+                         if (wC == 's') {
+                             breakdownIdx++;
+                             wC = breakdown->associations[breakdownIdx];
+                             if (wC == 's') {
+                                 builderr->scratchOne[scratchOneIdx] = Gress;
+                             }
+                         }
+                     }
+
+                 }
+            case 'H':
+                breakdownIdx++;
+                wC = breakdown->associations[breakdownIdx];
+                if (wC == 'e') {
+                    builderr->scratchOne[scratchOneIdx] = He;
+                }
+
             case 'I':
                 breakdownIdx++;
                 wC = breakdown->associations[breakdownIdx];
-                if (wC == 'n') {
+                if (wC == 'n' && wCPeek != 'g') {
+                    builderr->scratchOne[scratchOneIdx] = In;
+                }
+                if (wC == 'n' && wCPeek == 'g')
+                    {
                     breakdownIdx++;
                     wC = breakdown->associations[breakdownIdx];
+                    if (wC == 'g') {
+                        builderr->scratchOne[scratchOneIdx] = Ing;
+                    }
+                    if (wC == 's') {
+                        builderr->scratchOne[scratchOneIdx] = Is;
+                    }
 
                     if (wC == 't') {
                         breakdownIdx++;
@@ -486,6 +522,30 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                             }
                         }
                         break;
+                    case 'g':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'r') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 'e') {
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 's') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 's') {
+                                        builderr->scratchOne[scratchOneIdx] = gress;
+                                    }
+                                }
+                            }
+                        }
+                    case 'h':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'e') {
+                            builderr->scratchOne[scratchOneIdx] = he;
+                        }
                     case 'i':
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
