@@ -81,8 +81,7 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                     }
                 }
 
-
-            break;
+                    break;
             case 'C':
                 breakdownIdx++;
                 wC = breakdown->associations[breakdownIdx];
@@ -153,15 +152,18 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
             case 'E':
                  breakdownIdx++;
                  wC = breakdown->associations[breakdownIdx];
-                 if (wC == 'd') {
-                     builderr->scratchOne[scratchOneIdx] = Ed;
+                 switch (wC) {
+                     case 'd':
+                         builderr->scratchOne[scratchOneIdx] = Ed;
+                     break;
+                     case 'r':
+                         builderr->scratchOne[scratchOneIdx] = Er;
+                     break;
+                     case 'n':
+                         builderr->scratchOne[scratchOneIdx] = En;
+                     break;
                  }
-                 if (wC == 'n') {
-                     builderr->scratchOne[scratchOneIdx] = En;
-                 }
-                 if (wC == 'r') {
-                     builderr->scratchOne[scratchOneIdx] = Er;
-                 }
+                            break;
             case 'F':
                  breakdownIdx++;
                  wC = breakdown->associations[breakdownIdx];
@@ -195,12 +197,14 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                      }
 
                  }
+                            break;
             case 'H':
                 breakdownIdx++;
                 wC = breakdown->associations[breakdownIdx];
                 if (wC == 'e') {
                     builderr->scratchOne[scratchOneIdx] = He;
                 }
+                            break;
 
             case 'I':
                 breakdownIdx++;
@@ -231,6 +235,43 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                 break;
 
 
+            case 'J':
+                 breakdownIdx++;
+                 wC = breakdown->associations[breakdownIdx];
+                 if (wC == 'e') {
+                     breakdownIdx++;
+                     wC = breakdown->associations[breakdownIdx];
+                     if (wC == 'c') {
+                         breakdownIdx++;
+                         wC = breakdown->associations[breakdownIdx];
+                         if (wC == 't') {
+                             builderr->scratchOne[scratchOneIdx] = Ject;
+                         }
+                     }
+                 }
+                        break;
+
+            case 'L':
+                  breakdownIdx++;
+                  wC = breakdown->associations[breakdownIdx];
+                  if (wC == 'e') {
+                      breakdownIdx++;
+                      wC = breakdown->associations[breakdownIdx];
+                      if (wC == 's') {
+                          breakdownIdx++;
+                          wC = breakdown->associations[breakdownIdx];
+                          if (wC == 's') {
+                              builderr->scratchOne[scratchOneIdx] = Less;
+                          }
+                      }
+                  }
+                  if (wC == 'y') {
+                      builderr->scratchOne[scratchOneIdx] = Ly;
+                  }
+                        break;
+
+
+
             case 'M':
                 breakdownIdx++;
                 wC = breakdown->associations[breakdownIdx];
@@ -248,6 +289,24 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                     }
                     if (wC == 'i') {
                         builderr->scratchOne[scratchOneIdx] = Magni;
+                    }
+                    if (wC == 'r') {
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'k') {
+                            builderr->scratchOne[scratchOneIdx] = Mark;
+                        }
+                    }
+                }
+                if (wC == 'e') {
+                    breakdownIdx++;
+                    wC = breakdown->associations[breakdownIdx];
+                    if (wC == 'n') {
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 't') {
+                            builderr->scratchOne[scratchOneIdx] = Ment;
+                        }
                     }
                 }
                 if (wC == 'i') {
@@ -284,6 +343,35 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                     }
                 }
                 break;
+            case 'N':
+                breakdownIdx++;
+                wC = breakdown->associations[breakdownIdx];
+                if (wC == 'e') {
+                    breakdownIdx++;
+                    wC = breakdown->associations[breakdownIdx];
+                    if (wC == 's') {
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 's') {
+                            builderr->scratchOne[scratchOneIdx] == Ness;
+                        }
+                    }
+                }
+                break;
+            case 'O':
+                 breakdownIdx++;
+                 wC = breakdown->associations[breakdownIdx];
+                 if (wC == 'f') {
+                     builderr->scratchOne[scratchOneIdx] = Of;
+                 }
+                 if (wC == 'n') {
+                     builderr->scratchOne[scratchOneIdx] = On;
+                 }
+                 if (wC == 'r') {
+                     builderr->scratchOne[scratchOneIdx] = Or;
+                 }
+
+
             case 'P':
                 breakdownIdx++;
                 wC = breakdown->associations[breakdownIdx];
@@ -296,7 +384,10 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
             case 'R':
                 breakdownIdx++;
                 wC = breakdown->associations[breakdownIdx];
-                if (wC == 'e') {
+                if (wC == 'e' && wCPeek != 'e') {
+                    builderr->scratchOne[scratchOneIdx] = Re;
+                }
+                if (wC == 'e' && wCPeek == 'e') {
                     breakdownIdx++;
                     wC = breakdown->associations[breakdownIdx];
                     if (wC == 't') {
@@ -312,10 +403,43 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                     }
                 }
                 break;
+            case 'S':
+                 breakdownIdx++;
+                 wC = breakdown->associations[breakdownIdx];
+                 if (wC == 'u') {
+                     breakdownIdx++;
+                     wC = breakdown->associations[breakdownIdx];
+                     if (wC == 'p') {
+                         breakdownIdx++;
+                         wC = breakdown->associations[breakdownIdx];
+                         if (wC == 'e') {
+                             breakdownIdx++;
+                             wC = breakdown->associations[breakdownIdx];
+                             if (wC == 'r') {
+                                 builderr->scratchOne[scratchOneIdx] = Super;
+                             }
+                         }
+
+                     }
+                 }
+
 
             case 'T':
                 breakdownIdx++;
                 wC = breakdown->associations[breakdownIdx];
+                if (wC == 'o') {
+                    builderr->scratchOne[scratchOneIdx] = To;
+                }
+                if (wC == 'h' && wCPeek != 'e') {
+                    builderr->scratchOne[scratchOneIdx] = Th;
+                }
+                if (wC == 'h' && wCPeek == 'e') {
+                    builderr->scratchOne[scratchOneIdx] = The;
+
+                }
+                if (wC == 'h' && wCPeek == 'a') {
+                    builderr->scratchOne[scratchOneIdx] = That;
+                }
                 if (wC == 'r') {
                     breakdownIdx++;
                     wC = breakdown->associations[breakdownIdx];
@@ -332,27 +456,14 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                             builderr->scratchOne[scratchOneIdx] = Trans;
                             }
                 break;
-            case 'S':
-                breakdownIdx++;
-                wC = breakdown->associations[breakdownIdx];
-                if (wC == 'u') {
-                    breakdownIdx++;
-                    wC = breakdown->associations[breakdownIdx];
-
-                    if (wC == 'p') {
-                        breakdownIdx++;
-                        wC = breakdown->associations[breakdownIdx];
-                        if (wC == 'e') {
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'r') {
-                            builderr->scratchOne[scratchOneIdx] = Super;
-                }
-                break;
             case 'U':
                 breakdownIdx++;
                 wC = breakdown->associations[breakdownIdx];
-                if (wC == 'n') {
+                if (wC == 'n' && wCPeek != 'd') {
+                    builderr->scratchOne[scratchOneIdx] = Un;
+                }
+
+                if (wC == 'n' && wCPeek == 'd') {
                     breakdownIdx++;
                     wC = breakdown->associations[breakdownIdx];
 
@@ -368,6 +479,37 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                             builderr->scratchOne[scratchOneIdx] = Under;
                 }
                 break;
+                case 'V':
+                    breakdownIdx++;
+                    wC = breakdown->associations[breakdownIdx];
+                    if (wC == 'e') {
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'r') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 't') {
+                                builderr->scratchOne[scratchOneIdx] = Vert;
+
+                            }
+                        }
+                    }
+                            break;
+                case 'W':
+                    breakdownIdx++;
+                    wC = breakdown->associations[breakdownIdx];
+                    if (wC == 'i') {
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 't') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 'h') {
+                                builderr->scratchOne[scratchOneIdx] = With;
+                            }
+                        }
+                    }
+
 
                 default:
                 perror("Uppers");
@@ -565,7 +707,39 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                             builderr->scratchOne[scratchOneIdx] = ing;
                             scratchOneIdx++;
                         }
+                        if (wC == 't') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 'e') {
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'r') {
+                                    builderr->scratchOne[scratchOneIdx] = inter;
+                                }
+                            }
+                            if (wC == 'r') {
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'a') {
+                                    builderr->scratchOne[scratchOneIdx] = intra;
+                                }
+                            }
+                        }
                         break;
+                    case 'j':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'e') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 'c') {
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 't') {
+                                    builderr->scratchOne[scratchOneIdx] = ject;
+                                }
+                            }
+                        }
                     case 'l':
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
@@ -583,14 +757,88 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                     case 'm':
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'a') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 'g') {
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'n') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 'i') {
+                                        builderr->scratchOne[scratchOneIdx] = magni;
+                                    }
+                                }
+                            }
+                            if (wC == 'r') {
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'k') {
+                                    builderr->scratchOne[scratchOneIdx] = mark;
+                                }
+                            }
+                        }
                         if (wC == 'e') {
-                            builderr->scratchOne[scratchOneIdx] = ment;
-                            scratchOneIdx++;
+                            breakdown++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 'n') {
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 't') {
+                                    builderr->scratchOne[scratchOneIdx] = ment;
+
+                                }
+                            }
+                        }
+                        if (wC == 'i') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 'c') {
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'r') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 'o') {
+                                        builderr->scratchOne[scratchOneIdx] = micro;
+                                    }
+                                }
+                            }
+                            if (wC == 'l') {
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'l') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 'i') {
+                                        builderr->scratchOne[scratchOneIdx] = milli;
+                                    }
+                                }
+                            }
+                            if (wC == 'u') {
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'l') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 't') {
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'i') {
+                                            builderr->scratchOne[scratchOneIdx] = multi;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     break;
                     case 'n':
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'd') {
+                            builderr->scratchOne[scratchOneIdx] = nd;
+                        }
                         if (wC == 'e') {
                             builderr->scratchOne[scratchOneIdx] = ness;
                             scratchOneIdx++;
@@ -599,23 +847,63 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                     case 'o':
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
-                        if (wC == 'f') {
-                            builderr->scratchOne[scratchOneIdx] = of;
-                            scratchOneIdx++;
-                        }
-                        if (wC == 'n') {
-                            builderr->scratchOne[scratchOneIdx] = on;
-                            scratchOneIdx++;
+                        switch (wC) {
+                            case 'f':
+                                builderr->scratchOne[scratchOneIdx] = of;
+                                break;
+                            case 'r':
+                                builderr->scratchOne[scratchOneIdx] = or;
+                                break;
+                            case 'n':
+                                builderr->scratchOne[scratchOneIdx] = on;
+                                break;
+                            default:
+                                perror("'o' switch");
+                                break;
                         }
                         break;
                     case 'r':
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
-                        if (wC == 'e') {
+                        if (wC == 'e' && wCPeek != 't') {
                             builderr->scratchOne[scratchOneIdx] = re;
                             scratchOneIdx++;
                         }
+                        if (wC == 'e' && wCPeek == 't') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 't') {
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'r') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 'o') {
+                                        builderr->scratchOne[scratchOneIdx] = retro;
+                                    }
+                                }
+                            }
+                        }
                         break;
+                    case 's':
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'u') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 'p') {
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'e') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 'r') {
+                                        builderr->scratchOne[scratchOneIdx] = super;
+                                    }
+                                }
+                            }
+                        }
+
                     case 't':
                         // We need to incremenet here
                         breakdownIdx++;
@@ -641,6 +929,8 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
 
                         }
                         break;
+
+
                 default:
                 // if the currently examined char does not branch out
                 // to one of the shortened morphemes, then we fall through
@@ -705,7 +995,10 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                 case 'u':
                     breakdownIdx++;
                     wC = breakdown->associations[breakdownIdx];
-                    if (wC == 'n') {
+                    if (wC == 'n' && wCPeek != 'd') {
+                        builderr->scratchOne[scratchOneIdx] = un;
+                    }
+                    if (wC == 'n' && wCPeek == 'd') {
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                         if (wC == 'd') {
@@ -720,6 +1013,38 @@ char checker(builder *builderr, Breakdown *breakdown, char wC) {
                             }
                         }
                     }
+                    break;
+                    case 'v':
+                    breakdownIdx++;
+                    wC = breakdown->associations[breakdownIdx];
+                    if (wC == 'e') {
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 'r') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 't') {
+                                builderr->scratchOne[scratchOneIdx] = vert;
+                            }
+                        }
+                    }
+                    break;
+                    case 'w':
+                    breakdownIdx++;
+                    wC = breakdown->associations[breakdownIdx];
+                    if (wC == 'i') {
+                        breakdownIdx++;
+                        wC = breakdown->associations[breakdownIdx];
+                        if (wC == 't') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 'h') {
+                                builderr->scratchOne[scratchOneIdx] = with;
+                            }
+                        }
+                    }
+
+
             }
         }
       return wC;

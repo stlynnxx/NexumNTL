@@ -499,3 +499,9 @@ for today, probably. Until next time!
 I've been working on the tree again, but as I barely slept last night, I am far too
 sleepy to continue on.
 
+4/18/2026-
+
+Tonight I've finished figuring out the basic tree! Super exciting stuff!
+
+Now we just gotta tighten some stuff and make sure it runs and then afterwards assemble
+the translated output from the parser/tree into a .nexcode file!
