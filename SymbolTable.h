@@ -61,7 +61,7 @@ typedef enum  {
     er = 0x08, // Added
     en = 0x1C, // Added
     for_ = 0x12, //Added
-    form = 'F1', // Added
+    form = 'F2', // Added
     gress = 'G1', // Added
     he = 0x1A, // Added
     ing = 0x02, // Added
@@ -79,7 +79,7 @@ typedef enum  {
     micro = 'M6', // Added
     multi = 'M8', // Added
     nd = 0x1D, // Added
-    Ness = 'N0', // Added
+     // Added
     ness = 0x13, // Added
     of = 0x05, // Added
     on = 0x14, // Added
@@ -114,8 +114,8 @@ typedef enum  {
     Ed = 'E0',
     En = 'E1',
     Er = 'E2',
-    For_ = 'F!',
-    Form = 'F0',
+    For_ = 'F0',
+    Form = 'F1',
     Gress = 'G0',
     He = 'H0',
     In = 'I0',
@@ -132,10 +132,11 @@ typedef enum  {
     Micro = 'M5',
     Milli = 'M7',
     Multi = 'M9',
-    Nd = 'N0',
-    Of = '01',
-    On = '02',
-    Or = '03',
+    Ness = 'N0',
+    Nd = 'N1',
+    Of = 'O0',
+    On = 'O1',
+    Or = 'O2',
     Pseudo = 'P2',
     Re = 'R0',
     Retro = 'R2',
