@@ -525,3 +525,12 @@ More work cleaning up this trie this morning; I gotta be more careful while buil
 I came back and did some cleaning up in parse. We need to make sure that I add logic for appending
 the scratch to export!
 
+10:45 AM-
+So far this morning I've been working in the for loops within parse, setting one up for associations. associators,
+and memkeys. I set up the writeTarget pointer which allows the program to change the array being written based
+on input, and went through the trie and implemented writeTarget
+
+I guess next we could think about how we plan to export back to
+the source generator, and then have the source generator create the
+bytecode file?
+
