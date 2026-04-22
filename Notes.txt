@@ -518,3 +518,10 @@ More work cleaning up this trie this morning; I gotta be more careful while buil
 
 4/21/2026- More cleanup today, but I'm nearly through it now!
 
+4/22/2026-
+
+12:01 AM:
+
+I came back and did some cleaning up in parse. We need to make sure that I add logic for appending
+the scratch to export!
+
