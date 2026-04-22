@@ -505,3 +505,16 @@ Tonight I've finished figuring out the basic tree! Super exciting stuff!
 
 Now we just gotta tighten some stuff and make sure it runs and then afterwards assemble
 the translated output from the parser/tree into a .nexcode file!
+
+
+4/19/2026-
+
+Today was another day of cleaning up braces and such in the trie! We also start chicken
+pecking out a 2D mains array in SymbolTable.c
+
+4/20/2026-
+
+More work cleaning up this trie this morning; I gotta be more careful while building stuff like this in the future.
+
+4/21/2026- More cleanup today, but I'm nearly through it now!
+
