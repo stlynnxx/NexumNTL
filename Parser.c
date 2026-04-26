@@ -4,13 +4,14 @@
 
 #include "Parser.h"
 #include "Lexer.h"
+#include "SourceGenerator.h"
 #include "SymbolTable.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <ctype.h>
 #include <stdlib.h>
 
-#include "SourceGenerator.h"
+
 
 typedef struct {
     char assocScratch[80];
@@ -1045,7 +1046,11 @@ char checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bu
 
 } // End Checker
 
+void sendToSource() {
+    nexcodeFlag = true;
+    sgRun("Testing2.nexcode");
 
+}
 void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
     free_morphemes fmorphemes;
     int assocSize; // size of the assoc array in the working struct
@@ -1093,8 +1098,10 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
         }
         breakdownIdx++;
         wC = breakdown->memoryKey[breakdownIdx];
-        writeTarget = builderr->memKeyScratch;
+        writeTarget = builderr->memKeyScratch; // Assigns write target
         wC = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
+        export_->memKey[breakdownIdx] = wC; // We need to replace breakdownIdx
+
         breakdownIdx++;
         wC = breakdown->memoryKey[breakdownIdx];
         if (wC == NAMETOKEN) {
@@ -1127,8 +1134,9 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
         }
         breakdownIdx++;
         wC = breakdown->associations[breakdownIdx];
-        writeTarget = builderr->assocScratch;
+        writeTarget = builderr->assocScratch; // Assigns write target
         wC = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
+        export_->assoc[breakdownIdx] = wC; // Probably should replace BreakdownIDX
 
         breakdownIdx++;
         wC = breakdown->memoryKey[breakdownIdx];
@@ -1162,9 +1170,9 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
         }
         breakdownIdx++;
         wC = breakdown->workingAssociators[breakdownIdx];
-        writeTarget = builderr->associatorScratch;
+        writeTarget = builderr->associatorScratch; // Assigns write target
         wC = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
-
+        export_->associators[breakdownIdx] = wC; // Probably should replace breakdownIdx
         breakdownIdx++;
         wC = breakdown->workingAssociators[breakdownIdx];
         if (wC == NAMETOKEN) {
@@ -1218,15 +1226,6 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
 
 }
 
-
-
-
-
-
-
-
-// End of j for
-// End of a loop
 void flag() {
     nexcodeFlag = true;
 }

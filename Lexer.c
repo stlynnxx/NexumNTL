@@ -175,6 +175,7 @@ void associator(char wC,int *tracker, MemoryFileSplit *split, Breakdown *breakdo
         }
     }
 }
+
 void crawler(FILE *fp) {
     MemoryFileSplit memoryFileSplit;
     Breakdown breakdown;

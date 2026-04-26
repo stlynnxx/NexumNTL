@@ -8,7 +8,7 @@
 
 typedef struct {
     char assoc[2000];
-    char association[2000];
+    char associators[2000];
     char memKey[2000];
 } Export;
 #endif //NEXUMNTL_PARSER_H

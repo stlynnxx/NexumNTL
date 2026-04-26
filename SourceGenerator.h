@@ -5,7 +5,7 @@
 #ifndef NEXUMNTL_SOURCEGENERATOR_H
 #define NEXUMNTL_SOURCEGENERATOR_H
 #include <stdbool.h>
-int sgRun(const char *path, const char *pathTwo);
+int sgRun(const char *path);
 bool nexcodeFlag = false;
 
 #endif //NEXUMNTL_SOURCEGENERATOR_H

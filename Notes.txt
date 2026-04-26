@@ -534,3 +534,28 @@ I guess next we could think about how we plan to export back to
 the source generator, and then have the source generator create the
 bytecode file?
 
+We also still need to back up the lexer associator logic and make
+sure it's iron clad as I remember having a mental note
+to possibly expect issues from it.
+
+4/25/2026-
+
+It's been a few days of radio silence as my personal life has kept me away from basically all of my
+work for that period of time, but. That is neither here nor there.
+
+Tonight I am back in here rereading to start, getting caught back up on where I was
+and seeing where I want to proceed to next. That may happen tonight, it may not, I just
+wanted to get the gears turning again either way.
+
+It's good to be back, regardless.
+
+The nexcodeflag in the SG is for determning where to get input from.
+
+I've done some light work tonight, going back to the Source Generator and setting up
+some skeletal work for bringing in the bytecode version from the parser for creating the
+.nexcode file instead of just the .nex file. I created a readBytes function which for now
+just sets up sizes of the arrays within Export and then has loops for looping through them.
+I need to either write logic for adding delimiters/symbols within the loops in SG,
+or make sure they're going into the arrays from parser; my immediate thought is that it will be much more
+simple to do it within the loops but I could change my mind.
+

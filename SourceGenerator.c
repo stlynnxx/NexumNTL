@@ -64,27 +64,34 @@ void openNexFile(FILE *fp, InputForm *form) {
     }
     format(fp, form);
 }
+void readBytes(FILE *fp, InputForm *form, Export *exp) {
+    int sizeAssoc = sizeof(exp->assoc) / sizeof(exp->assoc[0]);
+    int sizeAssociators = sizeof(exp->associators) / sizeof(exp->associators[0]);
+    int sizeMemKeys = sizeof(exp->memKey) / sizeof(exp->memKey[0]);
+    for (int i = 0; i < sizeAssoc; i++) {}
+    for (int i = 0; i < sizeAssociators; i++) {}
+    for (int i = 0; i < sizeMemKeys; i++) {}
+}
 // Begins the append process
 void append(const char *path) {
+    Export *exp;
     FILE *fp = fopen(path, "a");
     printf("Appending to: %s\n", path);
     if (fp == NULL)
         return;
     InputForm form = {0};
-    openNexFile(fp, &form);
+    if (nexcodeFlag == false) {
+        openNexFile(fp, &form);
+    }
+    else {
+        readBytes(fp, &form, exp);
+    }
     fclose(fp);
 }
 
-int sgRun(const char *path, const char *pathTwo) {
-    if (nexcodeFlag == false) {
-        create(path);
-        append(path);
-    }
-    if (nexcodeFlag == true) {
-        create(pathTwo);
-
-
-    }
+int sgRun(const char *path) {
+    create(path);
+    append(path);
     return 0;
 }
 
