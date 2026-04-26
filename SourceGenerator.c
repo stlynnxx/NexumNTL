@@ -68,7 +68,9 @@ void readBytes(FILE *fp, InputForm *form, Export *exp) {
     int sizeAssoc = sizeof(exp->assoc) / sizeof(exp->assoc[0]);
     int sizeAssociators = sizeof(exp->associators) / sizeof(exp->associators[0]);
     int sizeMemKeys = sizeof(exp->memKey) / sizeof(exp->memKey[0]);
-    for (int i = 0; i < sizeAssoc; i++) {}
+    for (int i = 0; i < sizeAssoc; i++) {
+        form->memoryKey[i] = exp->memKey[i];
+    }
     for (int i = 0; i < sizeAssociators; i++) {}
     for (int i = 0; i < sizeMemKeys; i++) {}
 }

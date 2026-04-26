@@ -22,7 +22,7 @@ typedef struct {
 // int workIdx = breakdownIdx + 1;
 
 
-char checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *builderr, Breakdown *breakdown, char wC) {
+int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *builderr, Breakdown *breakdown, char wC) {
     int peekIdx = breakdownIdx + 1;
     char wCPeek = breakdown->associations[peekIdx];
     bool isAssociator = false;
@@ -1036,7 +1036,7 @@ char checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bu
                         writeTarget[scratchOneIdx] = wC;
                         scratchOneIdx++;
                     }
-                    return wC;
+                    return breakdownIdx;
                 }
 
                 }
@@ -1099,8 +1099,8 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
         breakdownIdx++;
         wC = breakdown->memoryKey[breakdownIdx];
         writeTarget = builderr->memKeyScratch; // Assigns write target
-        wC = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
-        export_->memKey[breakdownIdx] = wC; // We need to replace breakdownIdx
+        breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
+        export_->memKey[breakdownIdx] = writeTarget[breakdownIdx]; // We need to replace breakdownIdx
 
         breakdownIdx++;
         wC = breakdown->memoryKey[breakdownIdx];
@@ -1135,8 +1135,8 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
         breakdownIdx++;
         wC = breakdown->associations[breakdownIdx];
         writeTarget = builderr->assocScratch; // Assigns write target
-        wC = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
-        export_->assoc[breakdownIdx] = wC; // Probably should replace BreakdownIDX
+        breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
+        export_->assoc[breakdownIdx] = writeTarget[breakdownIdx]; // Probably should replace BreakdownIDX
 
         breakdownIdx++;
         wC = breakdown->memoryKey[breakdownIdx];
@@ -1171,8 +1171,8 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
         breakdownIdx++;
         wC = breakdown->workingAssociators[breakdownIdx];
         writeTarget = builderr->associatorScratch; // Assigns write target
-        wC = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
-        export_->associators[breakdownIdx] = wC; // Probably should replace breakdownIdx
+        breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
+        export_->associators[breakdownIdx] = writeTarget[breakdownIdx]; // Probably should replace breakdownIdx
         breakdownIdx++;
         wC = breakdown->workingAssociators[breakdownIdx];
         if (wC == NAMETOKEN) {

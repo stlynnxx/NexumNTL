@@ -559,3 +559,10 @@ I need to either write logic for adding delimiters/symbols within the loops in S
 or make sure they're going into the arrays from parser; my immediate thought is that it will be much more
 simple to do it within the loops but I could change my mind.
 
+I came back and made some small changes in the parser with what the checker function is
+returning and did some whiteboarding for formatting logic to add the nametokens
+and commas into export from the parser side. I'll need to set up some more counts and
+it'll take a bit of doing but it's unavoidable.
+
+Good day back!
+
