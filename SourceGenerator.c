@@ -18,6 +18,7 @@ typedef struct {
     char memoryKey[200];
     int assocationCount;
     char associations[MAX_ASSOC][MAX_ASSOC_LEN];
+    char associators[];
     } InputForm;
 
 
@@ -65,14 +66,29 @@ void openNexFile(FILE *fp, InputForm *form) {
     format(fp, form);
 }
 void readBytes(FILE *fp, InputForm *form, Export *exp) {
+    // The following variables are establishing the sizes for the arrays within the struct
     int sizeAssoc = sizeof(exp->assoc) / sizeof(exp->assoc[0]);
     int sizeAssociators = sizeof(exp->associators) / sizeof(exp->associators[0]);
     int sizeMemKeys = sizeof(exp->memKey) / sizeof(exp->memKey[0]);
+    // Control Vars
+    bool memNameFlag = false;
+    // Here we are looping through the arrays individually
     for (int i = 0; i < sizeAssoc; i++) {
+        if (i == 0) {
+            exp->memKey[i] = NAMETOKEN;
+            memNameFlag = true;
+        }
+        if (i > 0) {
+            if (form->memoryKey[i] )
+            form->memoryKey[i] = exp->memKey[i];
+        }
+    }
+    for (int i = 0; i < sizeAssociators; i++) {
+        form->associators[i] = exp->associators[i];
+    }
+    for (int i = 0; i < sizeMemKeys; i++) {
         form->memoryKey[i] = exp->memKey[i];
     }
-    for (int i = 0; i < sizeAssociators; i++) {}
-    for (int i = 0; i < sizeMemKeys; i++) {}
 }
 // Begins the append process
 void append(const char *path) {

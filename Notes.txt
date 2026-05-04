@@ -566,3 +566,43 @@ it'll take a bit of doing but it's unavoidable.
 
 Good day back!
 
+4/29/2026-
+
+I've been away again due to personal upheaval. I typically try and keep these entries more on the technical side,
+but. The reason I've been gone is dealing with a breakup, and I'm taking some time
+to find my footing and new routine. But Nexum and Eclectic Intelligence have long been a place
+of stability and regularity for me, and will be even moreso moving forward, but my living situation
+isn't entirely stable so I need to work on that primarily at the moment.
+
+I did come in here and read some code this morning, just to take sure the gears don't rust
+in the meantime.
+
+I will not give this project up in the face of adversity. I've put far too much into it now.
+
+
+"I choose to live and to
+ Grow, take and give and to
+ Move, learn and love and to
+ Cry, kill and die and to
+ Be paranoid and to
+ Lie, hate and fear and to
+ Do what it takes to move through
+ I choose to live and to
+ Lie, kill and give and to
+ Die, learn and love and to
+ Do what it takes to step through"
+
+5/3/2026-
+
+It's been my first day back writing actual code on anything at all since the project. I'm quite happy to be able to
+focus my thoughts enough to be back, but I'm not going to push myself too hard this morning. Balance is the key to everything.
+
+At first I spent some time reading back over my notes and code and seeing where I left off, and then tried just jumping back in from there.
+I need to add delimiters for the nexcode version and I was toying with adding them within readBytes in the SG but I'm not sure that's the correct
+approach; I suspect that I may need to add a "scanning" phase to Parser which identifies the end of the working lexeme for demiliter placement,
+and then we can pass that all to the SG instead of just an array of strings.
+
+Wait I forgot in the madness that I whiteboarded some code for adding delimiters SG side and it's still on the board!
+I should try that before I do anything else.
+
+
