@@ -523,80 +523,431 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
         int firstSize = sizeof(firsts) / sizeof(firsts[0]);
         if (islower(wC) == true) {
             for (int i = 0; i < firstSize; i++) {
-                if (wC == firsts[i]) {                                                {
-                    // This switch covers the lowercase morphemes only. I'm thinking
-                    // We should allow default to fall through to a second switch to
-                    // sift through, or a loop
-                    switch (wC) {
-                        case 'a':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            switch (wC) {
-                                case 'b':
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'l') {
+                if (wC == firsts[i]) {
+                    {
+                        // This switch covers the lowercase morphemes only. I'm thinking
+                        // We should allow default to fall through to a second switch to
+                        // sift through, or a loop
+                        switch (wC) {
+                            case 'a':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                switch (wC) {
+                                    case 'b':
                                         breakdownIdx++;
                                         wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'l') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 'e') {
+                                                writeTarget[scratchOneIdx] = able;
+                                            }
+                                        }
+                                        break;
+                                    case 'l':
+                                        writeTarget[scratchOneIdx] = al;
+                                        break;
+                                    case 's':
+                                        writeTarget[scratchOneIdx] = as;
+                                        break;
+                                    case 't':
+                                        writeTarget[scratchOneIdx] = at;
+                                        break;
+                                    case 'n':
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'd') {
+                                            writeTarget[scratchOneIdx] = and;
+                                        }
+                                        if (wC == 't') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 'i') {
+                                                writeTarget[scratchOneIdx] = anti;
+                                            }
+                                        }
                                         if (wC == 'e') {
-                                            writeTarget[scratchOneIdx] = able;
+                                            writeTarget[scratchOneIdx] = ante;
                                         }
-                                    }
-                                    break;
-                                case 'l':
-                                    writeTarget[scratchOneIdx] = al;
-                                    break;
-                                case 's':
-                                    writeTarget[scratchOneIdx] = as;
-                                    break;
-                                case 't':
-                                    writeTarget[scratchOneIdx] = at;
-                                    break;
-                                case 'n':
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'd') {
-                                        writeTarget[scratchOneIdx] = and;
-                                    }
-                                    if (wC == 't') {
+                                        if (wC == 'c') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 'e') {
+                                                writeTarget[scratchOneIdx] = ance;
+                                            }
+                                        }
+                                        break;
+                                } // EOS A
+                                break;
+                            case 'c':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                switch (wC) {
+                                    case 'e':
                                         breakdownIdx++;
                                         wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 'i') {
-                                            writeTarget[scratchOneIdx] = anti;
+                                        if (wC == 'd') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 'e') {
+                                                writeTarget[scratchOneIdx] = cede;
+                                            }
                                         }
-                                    }
-                                    if (wC == 'e') {
-                                        writeTarget[scratchOneIdx] = ante;
-                                    }
+                                        if (wC == 's') {
+                                            writeTarget[scratchOneIdx] = cess;
+                                        }
+                                        break;
+                                    case 'i':
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'r') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 'c') {
+                                                breakdownIdx++;
+                                                wC = breakdown->associations[breakdownIdx];
+                                                if (wC == 'u') {
+                                                    breakdownIdx++;
+                                                    wC = breakdown->associations[breakdownIdx];
+                                                    if (wC == 'm') {
+                                                        writeTarget[scratchOneIdx] = circum;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case 'l':
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'u') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 'd') {
+                                                breakdownIdx++;
+                                                wC = breakdown->associations[breakdownIdx];
+                                                if (wC == 'e') {
+                                                    writeTarget[scratchOneIdx] = clude;
+                                                }
+                                            }
+                                        }
+                                        break;
+                                } // EOS c
+                                break;
+                            case 'd':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'i') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
                                     if (wC == 'c') {
                                         breakdownIdx++;
                                         wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 'e') {
-                                            writeTarget[scratchOneIdx] = ance;
+                                        if (wC == 't') {
+                                            writeTarget[scratchOneIdx] = dict;
                                         }
                                     }
-                                    break;
-                            } // EOS A
-                            break;
-                        case 'c':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            switch (wC) {
-                                case 'e':
+                                }
+                                break;
+                            case 'e':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                switch (wC) {
+                                    case 'd':
+                                        writeTarget[scratchOneIdx] = ed;
+                                        break;
+                                    case 'n':
+                                        writeTarget[scratchOneIdx] = en;
+                                        break;
+                                    case 'r':
+                                        writeTarget[scratchOneIdx] = er;
+                                        break;
+                                } // EOS e
+                                break;
+                            case 'f':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'o') {
                                     breakdownIdx++;
                                     wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'd') {
+                                    if (wC == 'r' && wCPeek != 'm') {
+                                        writeTarget[scratchOneIdx] = for_;
+                                    }
+                                    if (wC == 'r' && wCPeek == 'm') {
+                                        writeTarget[scratchOneIdx] = form;
+                                    }
+                                }
+                                break;
+                            case 'g':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'r') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 'e') {
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 's') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 's') {
+                                                writeTarget[scratchOneIdx] = gress;
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            case 'h':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'e') {
+                                    writeTarget[scratchOneIdx] = he;
+                                }
+                                break;
+                            case 'i':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'n' && wCPeek != 't' | wCPeek != 'g') {
+                                    writeTarget[scratchOneIdx] = in;
+                                }
+                                if (wC == 'n' && wCPeek == 's') {
+                                    writeTarget[scratchOneIdx] = is;
+                                    scratchOneIdx++;
+                                }
+                                if (wC == 'n' && wCPeek == 't') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 'e') {
+                                        writeTarget[scratchOneIdx] = inter;
+                                    }
+                                    if (wC == 'r') {
+                                        writeTarget[scratchOneIdx] = intra;
+                                    }
+                                }
+                                if (wC == 'n' && wCPeek == 'g') {
+                                    writeTarget[scratchOneIdx] = ing;
+                                }
+                                break;
+                            case 'j':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'e') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 'c') {
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 't') {
+                                            writeTarget[scratchOneIdx] = ject;
+                                        }
+                                    }
+                                }
+                                break;
+                            case 'l':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'y') {
+                                    writeTarget[scratchOneIdx] = ly;
+                                    scratchOneIdx++;
+                                }
+                                if (wC == 'e') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 's') {
+
+
+                                        writeTarget[scratchOneIdx] = less;
+                                    }
+                                }
+                                break;
+                            case 'm':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                switch (wC) {
+                                    case 'a':
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'g') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 'n') {
+                                                breakdownIdx++;
+                                                wC = breakdown->associations[breakdownIdx];
+                                                if (wC == 'i') {
+                                                    writeTarget[scratchOneIdx] = magni;
+                                                }
+                                            }
+                                        }
+                                        if (wC == 'r') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 'k') {
+                                                writeTarget[scratchOneIdx] = mark;
+                                            }
+                                        }
+                                        break;
+                                    case 'e':
+                                        breakdown++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'n') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 't') {
+                                                writeTarget[scratchOneIdx] = ment;
+                                            }
+                                        }
+                                        break;
+                                    case 'i':
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'c') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 'r') {
+                                                breakdownIdx++;
+                                                wC = breakdown->associations[breakdownIdx];
+                                                if (wC == 'o') {
+                                                    writeTarget[scratchOneIdx] = micro;
+                                                }
+                                            }
+                                            if (wC == 'l') {
+                                                breakdownIdx++;
+                                                wC = breakdown->associations[breakdownIdx];
+                                                if (wC == 'l') {
+                                                    breakdownIdx++;
+                                                    wC = breakdown->associations[breakdownIdx];
+                                                    if (wC == 'i') {
+                                                        writeTarget[scratchOneIdx] = milli;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    case 'u':
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'l') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 't') {
+                                                breakdownIdx++;
+                                                wC = breakdown->associations[breakdownIdx];
+                                                if (wC == 'i') {
+                                                    writeTarget[scratchOneIdx] = multi;
+                                                }
+                                            }
+                                        }
+                                        break;
+
+                                } // EOS M                                   break; // Ends case m
+                            case 'n':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'd') {
+                                    writeTarget[scratchOneIdx] = nd;
+                                }
+                                if (wC == 'e') {
+                                    writeTarget[scratchOneIdx] = ness;
+                                    scratchOneIdx++;
+                                }
+                                break;
+                            case 'o':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                switch (wC) {
+                                    case 'f':
+                                        writeTarget[scratchOneIdx] = of;
+                                        break;
+                                    case 'r':
+                                        writeTarget[scratchOneIdx] = or;
+                                        break;
+                                    case 'n':
+                                        writeTarget[scratchOneIdx] = on;
+                                        break;
+                                    default:
+                                        perror("'o' switch");
+                                        break;
+                                } // EOS
+                                break;
+                            case 'r':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'e' && wCPeek != 't') {
+                                    writeTarget[scratchOneIdx] = re;
+                                    scratchOneIdx++;
+                                }
+                                if (wC == 'e' && wCPeek == 't') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 't') {
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'r') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 'o') {
+                                                writeTarget[scratchOneIdx] = retro;
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            case 's':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'u') {
+                                    breakdownIdx++;
+                                    wC = breakdown->associations[breakdownIdx];
+                                    if (wC == 'p') {
                                         breakdownIdx++;
                                         wC = breakdown->associations[breakdownIdx];
                                         if (wC == 'e') {
-                                            writeTarget[scratchOneIdx] = cede;
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 'r') {
+                                                writeTarget[scratchOneIdx] = super;
+                                            }
                                         }
                                     }
-                                    if (wC == 's') {
-                                        writeTarget[scratchOneIdx] = cess;
-                                    }
-                                    break;
-                                case 'i':
+                                }
+                                break;
+                            case 't':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                switch (wC) {
+                                    case 'o':
+                                        writeTarget[scratchOneIdx] = to;
+                                        scratchOneIdx++;
+                                        break;
+                                    case 'i':
+                                        writeTarget[scratchOneIdx] = tion;
+                                        scratchOneIdx++;
+                                        break;
+                                    case 'h':
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'e') {
+                                            writeTarget[scratchOneIdx] = the;
+                                            scratchOneIdx++;
+                                        }
+                                        if (wC == 'a') {
+                                            writeTarget[scratchOneIdx] = that;
+                                            scratchOneIdx++;
+                                        }
+                                        break;
+                                } // EOS
+                                break;
+                            default:
+                                // if the currently examined char does not branch out
+                                // to one of the shortened morphemes, then we fall through
+                                // to the next check
+                                printf("Falling through");
+                                break;
+                        } // EOS Main
+                        switch (wC) {
+                            case 'c':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'i') {
                                     breakdownIdx++;
                                     wC = breakdown->associations[breakdownIdx];
                                     if (wC == 'r') {
@@ -606,443 +957,95 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                             breakdownIdx++;
                                             wC = breakdown->associations[breakdownIdx];
                                             if (wC == 'u') {
-                                                breakdownIdx++;
-                                                wC = breakdown->associations[breakdownIdx];
-                                                if (wC == 'm') {
-                                                    writeTarget[scratchOneIdx] = circum;
-                                                }
+                                                writeTarget[scratchOneIdx] = circum;
                                             }
                                         }
                                     }
-                                    break;
-                                case 'l':
+                                }
+                                break;
+                            case 's':
+                                breakdownIdx++;
+                                wC = breakdown->associations[breakdownIdx];
+                                if (wC == 'u') {
                                     breakdownIdx++;
                                     wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'u') {
+                                    if (wC == 'p') {
                                         breakdownIdx++;
                                         wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 'd') {
+                                        if (wC == 'e') {
                                             breakdownIdx++;
                                             wC = breakdown->associations[breakdownIdx];
-                                            if (wC == 'e') {
-                                                writeTarget[scratchOneIdx] = clude;
+                                            if (wC == 'r') {
+                                                writeTarget[scratchOneIdx] = super;
                                             }
                                         }
                                     }
-                                    break;
-                            } // EOS c
-                            break;
-                        case 'd':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'i') {
+                                }
+                                break;
+                            case 'u':
                                 breakdownIdx++;
                                 wC = breakdown->associations[breakdownIdx];
-                                if (wC == 'c') {
+                                if (wC == 'n' && wCPeek != 'd') {
+                                    writeTarget[scratchOneIdx] = un;
+                                }
+                                if (wC == 'n' && wCPeek == 'd') {
                                     breakdownIdx++;
                                     wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 't') {
-                                        writeTarget[scratchOneIdx] = dict;
+                                    if (wC == 'd') {
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'e') {
+                                            breakdownIdx++;
+                                            wC = breakdown->associations[breakdownIdx];
+                                            if (wC == 'r') {
+                                                writeTarget[scratchOneIdx] = under;
+                                            }
+                                        }
                                     }
                                 }
-                            }
-                            break;
-                        case 'e':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            switch (wC) {
-                                case 'd':
-                                    writeTarget[scratchOneIdx] = ed;
-                                    break;
-                                case 'n':
-                                    writeTarget[scratchOneIdx] = en;
-                                    break;
-                                case 'r':
-                                    writeTarget[scratchOneIdx] = er;
-                                    break;
-                            } // EOS e
-                            break;
-                        case 'f':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'o') {
-                                breakdownIdx++;
-                                wC = breakdown->associations[breakdownIdx];
-                                if (wC == 'r' && wCPeek != 'm') {
-                                    writeTarget[scratchOneIdx] = for_;
-                                }
-                                if (wC == 'r' && wCPeek == 'm') {
-                                    writeTarget[scratchOneIdx] = form;
-                                }
-                            }
-                            break;
-                        case 'g':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'r') {
+                                break;
+                            case 'v':
                                 breakdownIdx++;
                                 wC = breakdown->associations[breakdownIdx];
                                 if (wC == 'e') {
                                     breakdownIdx++;
                                     wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 's') {
-                                        breakdownIdx++;
-                                        wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 's') {
-                                            writeTarget[scratchOneIdx] = gress;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case 'h':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'e') {
-                                writeTarget[scratchOneIdx] = he;
-                            }
-                            break;
-                        case 'i':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'n' && wCPeek != 't' | wCPeek != 'g') {
-                                writeTarget[scratchOneIdx] = in;
-                            }
-                            if (wC == 'n' && wCPeek == 's') {
-                                writeTarget[scratchOneIdx] = is;
-                                scratchOneIdx++;
-                            }
-                            if (wC == 'n' && wCPeek == 't') {
-                                breakdownIdx++;
-                                wC = breakdown->associations[breakdownIdx];
-                                if (wC == 'e') {
-                                    writeTarget[scratchOneIdx] = inter;
-                                }
-                                if (wC == 'r') {
-                                    writeTarget[scratchOneIdx] = intra;
-                                }
-                            }
-                            if (wC == 'n' && wCPeek == 'g') {
-                                writeTarget[scratchOneIdx] = ing;
-                            }
-                            break;
-                        case 'j':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'e') {
-                                breakdownIdx++;
-                                wC = breakdown->associations[breakdownIdx];
-                                if (wC == 'c') {
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 't') {
-                                        writeTarget[scratchOneIdx] = ject;
-                                    }
-                                }
-                            }
-                            break;
-                        case 'l':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'y') {
-                                writeTarget[scratchOneIdx] = ly;
-                                scratchOneIdx++;
-                            }
-                            if (wC == 'e') {
-                                breakdownIdx++;
-                                wC = breakdown->associations[breakdownIdx];
-                                if (wC == 's') {
-                                    writeTarget[scratchOneIdx] = less;
-                                }
-                            }
-                            break;
-                        case 'm':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            switch (wC) {
-                                case 'a':
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'g') {
-                                        breakdownIdx++;
-                                        wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 'n') {
-                                            breakdownIdx++;
-                                            wC = breakdown->associations[breakdownIdx];
-                                            if (wC == 'i') {
-                                                writeTarget[scratchOneIdx] = magni;
-                                            }
-                                        }
-                                    }
                                     if (wC == 'r') {
                                         breakdownIdx++;
                                         wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 'k') {
-                                            writeTarget[scratchOneIdx] = mark;
-                                        }
-                                    }
-                                    break;
-                                case 'e':
-                                    breakdown++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'n') {
-                                        breakdownIdx++;
-                                        wC = breakdown->associations[breakdownIdx];
                                         if (wC == 't') {
-                                            writeTarget[scratchOneIdx] = ment;
-                                        }
-                                    }
-                                    break;
-                                case 'i':
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'c') {
-                                        breakdownIdx++;
-                                        wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 'r') {
-                                            breakdownIdx++;
-                                            wC = breakdown->associations[breakdownIdx];
-                                            if (wC == 'o') {
-                                                writeTarget[scratchOneIdx] = micro;
-                                            }
-                                        }
-                                        if (wC == 'l') {
-                                            breakdownIdx++;
-                                            wC = breakdown->associations[breakdownIdx];
-                                            if (wC == 'l') {
-                                                breakdownIdx++;
-                                                wC = breakdown->associations[breakdownIdx];
-                                                if (wC == 'i') {
-                                                    writeTarget[scratchOneIdx] = milli;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    break;
-                                case 'u':
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'l') {
-                                        breakdownIdx++;
-                                        wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 't') {
-                                            breakdownIdx++;
-                                            wC = breakdown->associations[breakdownIdx];
-                                            if (wC == 'i') {
-                                                writeTarget[scratchOneIdx] = multi;
-                                            }
-                                        }
-                                    }
-                                    break;
-
-                            } // EOS M                                   break; // Ends case m
-                        case 'n':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'd') {
-                                writeTarget[scratchOneIdx] = nd;
-                            }
-                            if (wC == 'e') {
-                                writeTarget[scratchOneIdx] = ness;
-                                scratchOneIdx++;
-                            }
-                            break;
-                        case 'o':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            switch (wC) {
-                                case 'f':
-                                    writeTarget[scratchOneIdx] = of;
-                                    break;
-                                case 'r':
-                                    writeTarget[scratchOneIdx] = or;
-                                    break;
-                                case 'n':
-                                    writeTarget[scratchOneIdx] = on;
-                                    break;
-                                default:
-                                    perror("'o' switch");
-                                    break;
-                            } // EOS
-                            break;
-                        case 'r':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'e' && wCPeek != 't') {
-                                writeTarget[scratchOneIdx] = re;
-                                scratchOneIdx++;
-                            }
-                            if (wC == 'e' && wCPeek == 't') {
-                                breakdownIdx++;
-                                wC = breakdown->associations[breakdownIdx];
-                                if (wC == 't') {
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'r') {
-                                        breakdownIdx++;
-                                        wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 'o') {
-                                            writeTarget[scratchOneIdx] = retro;
+                                            writeTarget[scratchOneIdx] = vert;
                                         }
                                     }
                                 }
-                            }
-                            break;
-                        case 's':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'u') {
+                                break;
+                            case 'w':
                                 breakdownIdx++;
                                 wC = breakdown->associations[breakdownIdx];
-                                if (wC == 'p') {
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'e') {
-                                        breakdownIdx++;
-                                        wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 'r') {
-                                            writeTarget[scratchOneIdx] = super;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case 't':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            switch (wC) {
-                                case 'o':
-                                    writeTarget[scratchOneIdx] = to;
-                                    scratchOneIdx++;
-                                    break;
-                                case 'i':
-                                    writeTarget[scratchOneIdx] = tion;
-                                    scratchOneIdx++;
-                                    break;
-                                case 'h':
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'e') {
-                                        writeTarget[scratchOneIdx] = the;
-                                        scratchOneIdx++;
-                                    }
-                                    if (wC == 'a') {
-                                        writeTarget[scratchOneIdx] = that;
-                                        scratchOneIdx++;
-                                    }
-                                    break;
-                            } // EOS
-                            break;
-                        default:
-                            // if the currently examined char does not branch out
-                            // to one of the shortened morphemes, then we fall through
-                            // to the next check
-                            printf("Falling through");
-                            break;
-                    } // EOS Main
-                    switch (wC) {
-                        case 'c':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'i') {
-                                breakdownIdx++;
-                                wC = breakdown->associations[breakdownIdx];
-                                if (wC == 'r') {
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'c') {
-                                        breakdownIdx++;
-                                        wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 'u') {
-                                            writeTarget[scratchOneIdx] = circum;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case 's':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'u') {
-                                breakdownIdx++;
-                                wC = breakdown->associations[breakdownIdx];
-                                if (wC == 'p') {
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'e') {
-                                        breakdownIdx++;
-                                        wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 'r') {
-                                            writeTarget[scratchOneIdx] = super;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case 'u':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'n' && wCPeek != 'd') {
-                                writeTarget[scratchOneIdx] = un;
-                            }
-                            if (wC == 'n' && wCPeek == 'd') {
-                                breakdownIdx++;
-                                wC = breakdown->associations[breakdownIdx];
-                                if (wC == 'd') {
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'e') {
-                                        breakdownIdx++;
-                                        wC = breakdown->associations[breakdownIdx];
-                                        if (wC == 'r') {
-                                            writeTarget[scratchOneIdx] = under;
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        case 'v':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'e') {
-                                breakdownIdx++;
-                                wC = breakdown->associations[breakdownIdx];
-                                if (wC == 'r') {
+                                if (wC == 'i') {
                                     breakdownIdx++;
                                     wC = breakdown->associations[breakdownIdx];
                                     if (wC == 't') {
-                                        writeTarget[scratchOneIdx] = vert;
+                                        breakdownIdx++;
+                                        wC = breakdown->associations[breakdownIdx];
+                                        if (wC == 'h') {
+                                            writeTarget[scratchOneIdx] = with;
+                                        }
                                     }
                                 }
-                            }
-                            break;
-                        case 'w':
-                            breakdownIdx++;
-                            wC = breakdown->associations[breakdownIdx];
-                            if (wC == 'i') {
-                                breakdownIdx++;
-                                wC = breakdown->associations[breakdownIdx];
-                                if (wC == 't') {
-                                    breakdownIdx++;
-                                    wC = breakdown->associations[breakdownIdx];
-                                    if (wC == 'h') {
-                                        writeTarget[scratchOneIdx] = with;
-                                    }
-                                }
-                            }
-                            break;
-                    } // EOS Main
-                    if (isalnum(wC)) {
-                        writeTarget[scratchOneIdx] = wC;
-                        scratchOneIdx++;
+                                break;
+                        } // EOS Main
+                        if (isalnum(wC)) {
+                            writeTarget[scratchOneIdx] = wC;
+                            scratchOneIdx++;
+                        }
+                        return breakdownIdx;
                     }
-                    return breakdownIdx;
-                }
-
                 }
             }
         }
     }
+
 
 } // End Checker
 
@@ -1051,6 +1054,8 @@ void sendToSource() {
     sgRun("Testing2.nexcode");
 
 }
+
+
 void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
     free_morphemes fmorphemes;
     int assocSize; // size of the assoc array in the working struct

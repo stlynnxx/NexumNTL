@@ -154,6 +154,13 @@ typedef enum  {
 
 } free_morphemes;
 
+typedef struct {
+    char name;
+} Words;
+typedef struct {
+    int count;
+} Counts;
+
 
 // We should resize this later
 extern const char firsts[40] = {'t','i','a','o','e','r','l','m','f','n', 'u'};
