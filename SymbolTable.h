@@ -44,6 +44,7 @@ struct MemoryKey
 
 typedef enum  {
     // Added
+    able = 0x15,
     al = 0x1F, // Added
     as = 0x16, // Added
     at = 0x1B, // Added
@@ -51,7 +52,6 @@ typedef enum  {
     ante = 'A7', // Added
     anti = 'A11', // Added
     and = 0x03, // Added
-    able = 0x15, // Added
     cede = 'C1', // Added
     cess = 'C3', // Added
     circum = 'C5', // Added
@@ -154,11 +154,29 @@ typedef enum  {
 
 } free_morphemes;
 
+
+char *upperWords[] = {
+    "Able", "Al", "As", "At", "Ance", "And", "Ante", "Anti", "Cede", "Cess",
+    "Circum", "Clude", "Dict", "Ed", "En", "Er", "For_", "Form", "Gress", "He",
+    "In", "Ing", "Inter", "Intra", "Is", "Ject", "Less", "Ly", "Magni", "Mark", "Ment",
+    "Micro", "Milli", "Multi", "Ness", "Nd"
+};
+char *lowerWords[] = {
+    "able", "al", "As", "At", "ance", "and", "ante", "anti", "cede", "cess",
+    "circum", "clude", "dict", "ed", "en", "er", "for_", "form", "gress", "he",
+    "in", "ing", "inter", "intra", "is", "ject", "less", "ly", "magni", "mark",
+    "ment", "micro", "milli", "multi", "ness", "nd"
+};
+int counts[] = {
+    4,2,2,2,4,3,4,4,4,4,6,5,4,2,2,2,4,4,5,2,2,3,5,5,2,4,4,2,5,4,
+    4,5,5,5,4,2
+
+};
 typedef struct {
-    char name;
+    char *word[];
 } Words;
 typedef struct {
-    int count;
+    int counts[];
 } Counts;
 
 

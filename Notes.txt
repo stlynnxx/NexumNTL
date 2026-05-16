@@ -609,11 +609,18 @@ I should try that before I do anything else.
 
 12:29Am- I didn't do much in the way of actual code writing, but , I did show up.
 
-I wanted to implemented the logic written on the whiteboard and was going back over it
+I wanted to implement the logic written on the whiteboard and was going back over it
 and remembering what I was going for whenever I realized the count array idea isn't enough;
 I believe a hash table is the actual answer and so that's where I'm at now!
 
 I did make some structs in SymbolTable.h in order to get started with that, but i'm getting pretty
 sleepy at this point. I will try to be back after some rest! There's much to be done in the morning.
 
+
+5/15/2026-
+
+I'm pretty sleepy and life has only gotten more complicated since my last entry, but,
+I made some progress tonight setting up the arrays for the words and word counts. I know what
+I have at the moment isn't exactly a traditional hash table as I'd discussed before, but I'm
+still feeling out ideas here. Nothing needs to be perfect on the first try!
 
