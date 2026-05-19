@@ -1058,9 +1058,9 @@ void sendToSource() {
 
 void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
     free_morphemes fmorphemes;
-    int assocSize; // size of the assoc array in the working struct
-    int memKeySize; // size of mem key array in breakdown
-    int associatorsSize;
+    size_t assocSize; // size of the assoc array in the working struct
+    size_t memKeySize; // size of mem key array in breakdown
+    size_t associatorsSize;
     bool firstNameTokenCheck = false;
     bool secondNameTokenCheck = false;
     bool closeBraceCheck = false;

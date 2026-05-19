@@ -3,8 +3,13 @@
 
 
 
-#include <stddef.h>
 
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TABLE_SIZE 256
 
 typedef enum {
     OPENBRACE = '{',
@@ -155,23 +160,103 @@ typedef enum  {
 } free_morphemes;
 
 
-char *upperWords[] = {
+char *upperKeys[] = {
     "Able", "Al", "As", "At", "Ance", "And", "Ante", "Anti", "Cede", "Cess",
     "Circum", "Clude", "Dict", "Ed", "En", "Er", "For_", "Form", "Gress", "He",
     "In", "Ing", "Inter", "Intra", "Is", "Ject", "Less", "Ly", "Magni", "Mark", "Ment",
     "Micro", "Milli", "Multi", "Ness", "Nd"
 };
-char *lowerWords[] = {
+char *upperValues[] = {
+    "A0", "A1", "A2", "A3", "A4", "A6", "A8", "AX",
+    "C0", "C2", "C4", "C6", "D0", "E0", "E1", "E2",
+    "F0", "F1", "G0", "H0", "I0", "I1", "I2", "I3",
+    "I4", "J0", "L0", "L2", "M0", "M2", "M4", "M5",
+    "M7", "M9", "N0", "N1", "O0", "O1", "O2", "P2",
+    "R0", "R2", "S2", "T0", "T1", "T2", "T3", "T4",
+    "U0", "U1", "V0", "W0"
+};
+char *lowerKeys[] = {
     "able", "al", "As", "At", "ance", "and", "ante", "anti", "cede", "cess",
     "circum", "clude", "dict", "ed", "en", "er", "for_", "form", "gress", "he",
     "in", "ing", "inter", "intra", "is", "ject", "less", "ly", "magni", "mark",
     "ment", "micro", "milli", "multi", "ness", "nd"
 };
+unsigned char lowerValues[] = {0x15, 0x1F, 0x1B, "A5",};
 int counts[] = {
     4,2,2,2,4,3,4,4,4,4,6,5,4,2,2,2,4,4,5,2,2,3,5,5,2,4,4,2,5,4,
     4,5,5,5,4,2
-
 };
+
+size_t uppersSize = sizeof(*upperKeys) / sizeof(*upperKeys[0]);
+size_t lowersSize = sizeof(*lowerKeys) / sizeof(*lowerKeys[0]);
+size_t countsSize = sizeof(*counts) / sizeof(counts[0]);
+
+
+typedef struct Entry {
+    char *key;
+    char *value;
+    struct Entry *next; // collision chaining
+} Entry;
+
+typedef struct {
+    Entry *buckets[TABLE_SIZE];
+} HashTable;
+
+// Hash function
+unsigned int hash(const char *key) {
+    unsigned int h = 0;
+    while (*key) {
+        h = (h * 31) + *key++;
+    }
+    return h % TABLE_SIZE;
+}
+
+// Insert a pair
+void insert(HashTable *table,const char *key,const char *value) {
+    unsigned int idx = hash(key);
+    Entry *entry = malloc(sizeof(Entry));
+    entry->key = strdup(key);
+    entry->value = strdup(value);
+    entry->next = table->buckets[idx];
+    table->buckets[idx] = entry;
+}
+// Lookup by key
+char *lookup(HashTable *table, const char *key) {
+    unsigned int idx = hash(key);
+    Entry *entry = table->buckets[idx];
+    while (entry) {
+        if (strcmp(entry->key, key) == 0) {
+            return entry->value;
+
+        }
+        entry = entry->next;
+    }
+    return NULL; // not found
+}
+// Usage
+int useHashTable() {
+    HashTable table = {0}; // initializes all buckets to 0
+
+    // Uppers loop
+    for (int i = 0; i < uppersSize; i++) {
+        insert(&table, upperKeys[i], NULL);
+    }
+    // Lowers loop
+    for (int j = 0; j <uppersSize; j++) {}
+    // Counts loop
+    for (int k = 0; k < uppersSize; k++) {}
+
+    /* Example inserts
+    insert(&table, "under", "U0");
+    insert(&table, "re", "RO");*/
+
+    /* Example lookups
+     * lookup(&table, "under");
+     */
+}
+
+
+
 typedef struct {
     char *word[];
 } Words;
