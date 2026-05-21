@@ -181,7 +181,7 @@ char *lowerKeys[] = {
     "in", "ing", "inter", "intra", "is", "ject", "less", "ly", "magni", "mark",
     "ment", "micro", "milli", "multi", "ness", "nd"
 };
-unsigned char lowerValues[] = {0x15, 0x1F, 0x1B, "A5",};
+unsigned char lowerValues[] = {0x15, 0x1F, 0x1B, 'A5',};
 int counts[] = {
     4,2,2,2,4,3,4,4,4,4,6,5,4,2,2,2,4,4,5,2,2,3,5,5,2,4,4,2,5,4,
     4,5,5,5,4,2
@@ -239,12 +239,14 @@ int useHashTable() {
 
     // Uppers loop
     for (int i = 0; i < uppersSize; i++) {
-        insert(&table, upperKeys[i], NULL);
+        insert(&table, upperKeys[i], upperValues[i]);
     }
     // Lowers loop
-    for (int j = 0; j <uppersSize; j++) {}
+    for (int j = 0; j < lowersSize; j++) {
+        insert(&table, lowerKeys[j], lowerValues[j]);
+    }
     // Counts loop
-    for (int k = 0; k < uppersSize; k++) {}
+    for (int k = 0; k < countsSize; k++) {}
 
     /* Example inserts
     insert(&table, "under", "U0");

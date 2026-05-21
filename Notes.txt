@@ -627,5 +627,14 @@ still feeling out ideas here. Nothing needs to be perfect on the first try!
 5/19/2026-
 
 This morning I've been working on implementing a proper hash table for storing the keys and values
-for the encoding spec. I should piclk back up tomorrow on the lowerValues array! I'm thinking
+for the encoding spec. I should pick back up tomorrow on the lowerValues array! I'm thinking
 that an array actually may not be the best choice for that, but I've many things to get to today so, until next time!
+
+5/20/2026-
+I've had to do a lot of strenuous work today and I'm quite tired so I won't be doing much tonight unfortunately,
+but let it be known that I did at least show up.
+
+I cleaned up the loops within the useHashTable function and have run into an issue with using the int j as the index
+on an unsigned char array that I need to do some more reading on. I'm also just struggling to keep my eyes open, so, that's
+where we are for the night. Maybe i'll be able to come back tomorrow!
+
