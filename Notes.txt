@@ -638,3 +638,17 @@ I cleaned up the loops within the useHashTable function and have run into an iss
 on an unsigned char array that I need to do some more reading on. I'm also just struggling to keep my eyes open, so, that's
 where we are for the night. Maybe i'll be able to come back tomorrow!
 
+5/31/2026-
+
+I've been back in here a bit this morning, I replaced the lowerValues array with an
+enum/union setup that I should be able to integrate with the downstream work and is
+more robust than the array would've been, anyway.
+
+Not bad for my first day back on this project!
+
+I expanded the lowerValues array to also include keys and keytypes at the struct level.
+I built it to be able to do both upper and lower keys, so I'm thinking lowerValues
+will be changed into just Values and handle both uppers and lowers, but. I have much more to do  today
+so that will probably be for the next session.
+
+It's good to be back!

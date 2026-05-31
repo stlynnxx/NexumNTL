@@ -181,7 +181,84 @@ char *lowerKeys[] = {
     "in", "ing", "inter", "intra", "is", "ject", "less", "ly", "magni", "mark",
     "ment", "micro", "milli", "multi", "ness", "nd"
 };
-unsigned char lowerValues[] = {0x15, 0x1F, 0x1B, 'A5',};
+typedef enum {
+    VALUE_HEX,
+    VALUE_STRING,
+} ValueType;
+typedef enum {
+    KEY_UPPER,
+    KEY_LOWER
+} Keytype;
+typedef struct {
+    Keytype type;
+    union {
+        const char *lowerKey;
+        const char *upperKey;
+    };
+} Key;
+typedef struct {
+    ValueType type;
+    Key key;
+    union {
+        unsigned int hex;
+        char *string;
+    } datatype;
+} Value;
+Value lowerValues[] = {
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "able"}, .datatype.hex = 0x15},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "al"}, .datatype.hex = 0x1F},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "as"}, .datatype.hex = 0x16},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "at"}, .datatype.hex = 0x1B},
+    {.type = VALUE_STRING,  .key = { .type = KEY_LOWER, .lowerKey = "ance" }, .datatype.string = "A5"},
+    {.type = VALUE_STRING, .key = { .type = KEY_LOWER, .lowerKey = "ante"}, .datatype.string = "A7"},
+    {.type = VALUE_STRING, .key = { .type = KEY_LOWER, .lowerKey = "anti"}, .datatype.string = "A11"},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "and"}, .datatype.hex = 0x03},
+    {.type = VALUE_STRING, .key = {.type =  KEY_LOWER, .lowerKey = "cede"}, .datatype.string = "C1"},
+    {.type = VALUE_STRING, .key = { .type= KEY_LOWER, .lowerKey = "cess"}, .datatype.string = "C3"},
+    {.type = VALUE_STRING, .key = { .type= KEY_LOWER, .lowerKey = "circum"}, .datatype.string = "C5"},
+    {.type = VALUE_STRING, .key = {. type= KEY_LOWER, .lowerKey = "clude"}, .datatype.string = "C7"},
+    {.type = VALUE_STRING, .key = { .type = KEY_LOWER, .lowerKey = "dict"}, .datatype.string = "D1"},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "ed"}, .datatype.hex = 0x06},
+    {.type = VALUE_HEX, .key = {.type = KEY_LOWER, .lowerKey = "er"}, .datatype.hex = 0x08},
+    {.type = VALUE_HEX, .key = {.type = KEY_LOWER, .lowerKey = "en"}, .datatype.hex = 0x1C},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "for_"}, .datatype.hex = 0x12},
+    {.type = VALUE_STRING, .key = {.type = KEY_LOWER, .lowerKey = "form"}, .datatype.string = "F2"},
+    {.type = VALUE_STRING, .key = {.type = KEY_LOWER, .lowerKey = "gress"}, .datatype.string = "G1"},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "he"}, .datatype.hex = 0x1A},
+    {.type = VALUE_HEX, .key = {.type = KEY_LOWER, .lowerKey = "ing"},.datatype.hex = 0x02},
+    {.type = VALUE_HEX, .key = {.type = KEY_LOWER, .lowerKey = "is"}, .datatype.hex = 0x0E},
+    {.type = VALUE_HEX, .key = {.type = KEY_LOWER, .lowerKey =  "in"}, .datatype.hex = 0x0B},
+    {.type = VALUE_STRING, .key = {.type = KEY_LOWER, .lowerKey = "inter"}, .datatype.string = "I1"},
+    {.type = VALUE_STRING, .key = {.type = KEY_LOWER, .lowerKey = "intra"}, .datatype.string = "I3"},
+    {.type = VALUE_STRING, .key = { .type = KEY_LOWER, .lowerKey = "ject"}, .datatype.string = "J1"},
+    {.type= VALUE_STRING, .key = {.type = KEY_LOWER, .lowerKey = "less"}, .datatype.string = "L1"},
+    {.type = VALUE_HEX, .key = {.type = KEY_LOWER, .lowerKey = "ly"}, .datatype.hex = 0x0F},
+    {.type = VALUE_STRING, .key = {.type = KEY_LOWER, .lowerKey = "magni"}, .datatype.string = "M1"},
+    {.type = VALUE_STRING, .key = { .type = KEY_LOWER, .lowerKey = "mark"}, .datatype.string = "M3"},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "ment"}, .datatype.hex = 0x11},
+    {.type = VALUE_STRING, .key = {.type = KEY_LOWER, .lowerKey = "milli"}, .datatype.string = "M6"},
+    {.type = VALUE_STRING, .key = {.type = KEY_LOWER, .lowerKey = "micro"}, .datatype.string = "M7"},
+    {.type = VALUE_STRING, .key = {.type = KEY_LOWER, .lowerKey = "multi"}, .datatype.string = "M8"},
+    {.type = VALUE_HEX, .key = {.type = KEY_LOWER, .lowerKey = "nd"}, .datatype.hex = 0x1D},
+    {.type = VALUE_HEX, .key = {.type = KEY_LOWER,.lowerKey = "ness"}, .datatype.hex = 0x13},
+    {.type = VALUE_HEX, .key = {.type = KEY_LOWER, .lowerKey = "of"}, .datatype.hex = 0x05},
+    {.type = VALUE_HEX, .key = {.type = KEY_LOWER, .lowerKey = "on"}, .datatype.hex = 0x14},
+    {.type = VALUE_HEX, .key = {.type = KEY_LOWER, .lowerKey = "or"}, .datatype.hex = 0x1E},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "re"}, .datatype.hex = 0x0C},
+    {.type = VALUE_STRING, .key = {.type = KEY_LOWER, .lowerKey = "retro"}, .datatype.string = "R3"},
+    {.type = VALUE_STRING, .key = {.type = KEY_LOWER, .lowerKey = "super"}, .datatype.string = "S3"},
+    {.type = VALUE_HEX, .key = {.type = KEY_LOWER, .lowerKey = "to"},  .datatype.hex = 0x07},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "tion"}, .datatype.hex = 0x04},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "th"}, .datatype.hex = 0x19},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "the"}, .datatype.hex = 0x01},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "that"}, .datatype.hex = 0x10},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "un"}, .datatype.hex = 0x18},
+    {.type = VALUE_STRING, .key = { .type = KEY_LOWER, .lowerKey = "under"}, .datatype.string = "U2"},
+    {.type = VALUE_STRING, .key = { .type = KEY_LOWER, .lowerKey = "vert"}, .datatype.string = "V1"},
+    {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "with"}, .datatype.hex = 0x17}
+};
+
+
 int counts[] = {
     4,2,2,2,4,3,4,4,4,4,6,5,4,2,2,2,4,4,5,2,2,3,5,5,2,4,4,2,5,4,
     4,5,5,5,4,2
@@ -190,7 +267,6 @@ int counts[] = {
 size_t uppersSize = sizeof(*upperKeys) / sizeof(*upperKeys[0]);
 size_t lowersSize = sizeof(*lowerKeys) / sizeof(*lowerKeys[0]);
 size_t countsSize = sizeof(*counts) / sizeof(counts[0]);
-
 
 typedef struct Entry {
     char *key;
