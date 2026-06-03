@@ -652,3 +652,10 @@ will be changed into just Values and handle both uppers and lowers, but. I have 
 so that will probably be for the next session.
 
 It's good to be back!
+
+
+6/3/2026-
+
+This morning I finished out the Values array! Or, the first version, at least, as I can't promise that
+later additions or revisions won't come as the project expands, but. It is where I need it to be at the moment!
+
