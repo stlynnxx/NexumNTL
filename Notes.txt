@@ -659,3 +659,11 @@ It's good to be back!
 This morning I finished out the Values array! Or, the first version, at least, as I can't promise that
 later additions or revisions won't come as the project expands, but. It is where I need it to be at the moment!
 
+6/6/2026-
+
+This morning so far it's only been light work, adding word counts for all of the keys in the
+values array within symboltable.h. I thought of building a loop to count them and set the word
+counts at startup but I figured it was more effecient to just take the time to hardcode them
+instead of spending the same or more time adding something that adds more overhead.
+
+That might be all we do today, it might not.
