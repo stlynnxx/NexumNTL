@@ -667,3 +667,13 @@ counts at startup but I figured it was more effecient to just take the time to h
 instead of spending the same or more time adding something that adds more overhead.
 
 That might be all we do today, it might not.
+
+6/8/2026-
+
+I don't have a ton of time today and won't this week overall so I wanted to be in here for at least a
+little while this morning.
+
+I set up a union for handling string value vs hex value for the encoded morphemes,
+and next I need to address redoing the lookup loops!
+
+

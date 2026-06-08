@@ -25,8 +25,6 @@ typedef enum {
     }Symbols;
 
 typedef struct {
-
-
 }Encodings;
 
 extern const char alphas[];
@@ -204,9 +202,23 @@ size_t uppersSize = sizeof(*upperKeys) / sizeof(*upperKeys[0]);
 size_t lowersSize = sizeof(*lowerKeys) / sizeof(*lowerKeys[0]);
 size_t countsSize = sizeof(*counts) / sizeof(counts[0]);
 
+
+
+
+
+typedef union {
+    int hexVal;
+    char *string;
+} Vals;
+
+
 typedef struct Entry {
     char *key;
+    /*
     char *value;
+    int *hexValue;
+    */
+    Vals values;
     struct Entry *next; // collision chaining
 } Entry;
 
@@ -224,11 +236,12 @@ unsigned int hash(const char *key) {
 }
 
 // Insert a pair
-void insert(HashTable *table,const char *key,const char *value) {
+void insert(HashTable *table,const char *key,const char *value, const int *hexVal) {
     unsigned int idx = hash(key);
     Entry *entry = malloc(sizeof(Entry));
     entry->key = strdup(key);
-    entry->value = strdup(value);
+    entry->values.string = strdup(value);
+    entry->values.hexVal = *hexVal;
     entry->next = table->buckets[idx];
     table->buckets[idx] = entry;
 }
@@ -255,8 +268,12 @@ int useHashTable() {
     }
     // Lowers loop
     for (int j = 0; j < lowersSize; j++) {
-        insert(&table, lowerKeys[j], Values[j]);
-    }
+        if (Values[j].datatype.string) {
+            insert(&table, lowerKeys[j], Values[j].datatype.string);
+        }
+        if (Values[j].datatype.hex) {
+            insert(&table, lowerKeys[j], );
+        }}
     // Counts loop
     for (int k = 0; k < countsSize; k++) {}
 
