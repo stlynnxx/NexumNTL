@@ -676,4 +676,8 @@ little while this morning.
 I set up a union for handling string value vs hex value for the encoded morphemes,
 and next I need to address redoing the lookup loops!
 
+6/13/2026-
 
+I've done a little bit of work in here this morning, but truly not much as I need to get started on the moving process
+soon while it's still early. But I did setup a lookup function for values so I can pull
+the data from Values and set up the inserting appropriately.

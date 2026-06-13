@@ -1,14 +1,9 @@
 #ifndef AST_H
 #define AST_H
-
-
-
-
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #define TABLE_SIZE 256
 
 typedef enum {
@@ -29,8 +24,8 @@ typedef struct {
 
 extern const char alphas[];
 extern const int alphasLength;
-struct MemoryKey
-{
+
+struct MemoryKey {
     int x;
     // char associationBank[20];
     struct associatonBank{
@@ -202,15 +197,10 @@ size_t uppersSize = sizeof(*upperKeys) / sizeof(*upperKeys[0]);
 size_t lowersSize = sizeof(*lowerKeys) / sizeof(*lowerKeys[0]);
 size_t countsSize = sizeof(*counts) / sizeof(counts[0]);
 
-
-
-
-
 typedef union {
     int hexVal;
     char *string;
 } Vals;
-
 
 typedef struct Entry {
     char *key;
@@ -258,10 +248,34 @@ char *lookup(HashTable *table, const char *key) {
     }
     return NULL; // not found
 }
+
+size_t vSize = sizeof(Values) / sizeof(Values[0]);
+const char *getKeyString(Value *v)
+{
+    if (v->key.type == KEY_UPPER) {
+        return v->key.upperKey;
+    }
+    else if (v->key.type == KEY_LOWER) {
+        return v->key.lowerKey;
+    }
+    else if (v->datatype.hex) {
+        return v->datatype.hex;
+    }
+    else if (v->datatype.string) {
+        return v->datatype.string;
+    }
+}
+
+
 // Usage
 int useHashTable() {
     HashTable table = {0}; // initializes all buckets to 0
 
+
+
+    for (int ii = 0; ii < vSize; ii++) {
+        insert(&table,)
+    }
     // Uppers loop
     for (int i = 0; i < uppersSize; i++) {
         insert(&table, upperKeys[i], upperValues[i]);
@@ -272,7 +286,7 @@ int useHashTable() {
             insert(&table, lowerKeys[j], Values[j].datatype.string);
         }
         if (Values[j].datatype.hex) {
-            insert(&table, lowerKeys[j], );
+            insert(&table, lowerKeys[j],);
         }}
     // Counts loop
     for (int k = 0; k < countsSize; k++) {}
