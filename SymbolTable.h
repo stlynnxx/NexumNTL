@@ -86,6 +86,26 @@ typedef struct {
         char *string;
     } datatype;
 } Value;
+
+char values_matrix[20][20] = {{"Able", "Al", "As", "At", "Ance", "ance", "And", "Ante", "ante", "Anti", "anti"},
+{"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"},
+{"Cede", "cede"},
+{"Dict"},
+{"Ed"},
+{"For_"},
+{"Gress"},
+{"He"},
+{"In"},
+{"Less"},
+{"Magni"},
+{"Ness"},
+{"Of"},
+{"Re"},
+{"Super"},
+{"Th"},
+{"Un"},
+{"Vert"},
+{"With"}};
 Value Values[] = {
     {.type = VALUE_STRING, .key = {.type = KEY_UPPER, .upperKey = "Able", .letterCount = 4}, .datatype.string = "A0"},
     {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "able", .letterCount = 4}, .datatype.hex = 0x15},
@@ -99,10 +119,10 @@ Value Values[] = {
     {.type = VALUE_STRING,  .key = { .type = KEY_LOWER, .lowerKey = "ance", .letterCount = 4 }, .datatype.string = "A5"},
     {.type = VALUE_STRING, .key = {.type = KEY_UPPER, .upperKey = "And", .letterCount = 3}, .datatype.string = "A6"},
     {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "and", .letterCount = 3}, .datatype.hex = 0x03},
-    {.type = VALUE_STRING, .key = { .type = KEY_UPPER, .upperKey = "Ante", .letterCount = 4}, .datatype.string = "A8"},
-    {.type = VALUE_STRING, .key = { .type = KEY_LOWER, .lowerKey = "ante", .letterCount = 4}, .datatype.string = "A7"},
-    {.type = VALUE_STRING, .key = {.type = KEY_UPPER, .upperKey = "Anti", .letterCount = 4}, .datatype.string = "AX"},
-    {.type = VALUE_STRING, .key = { .type = KEY_LOWER, .lowerKey = "anti", .letterCount = 4}, .datatype.string = "A11"},
+    {.type = VALUE_STRING, .key = { .type = KEY_UPPER, .upperKey = "Ante", .letterCount = 4}, .datatype.string = "A7"},
+    {.type = VALUE_STRING, .key = { .type = KEY_LOWER, .lowerKey = "ante", .letterCount = 4}, .datatype.string = "A8"},
+    {.type = VALUE_STRING, .key = {.type = KEY_UPPER, .upperKey = "Anti", .letterCount = 4}, .datatype.string = "A9"},
+    {.type = VALUE_STRING, .key = { .type = KEY_LOWER, .lowerKey = "anti", .letterCount = 4}, .datatype.string = "AX"},
     {.type = VALUE_STRING, .key = { .type = KEY_UPPER, .upperKey = "Cede", .letterCount = 4}, .datatype.string = "C0"},
     {.type = VALUE_STRING, .key = {.type =  KEY_LOWER, .lowerKey = "cede", .letterCount = 4}, .datatype.string = "C1"},
     {.type = VALUE_STRING, .key = { .type = KEY_UPPER, .upperKey = "Cess", .letterCount = 4}, .datatype.string = "C2"},
@@ -188,6 +208,9 @@ Value Values[] = {
     {.type = VALUE_STRING, .key = {.type = KEY_UPPER, .upperKey = "With", .letterCount = 4}, .datatype.string = "W0"},
     {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "with", .letterCount = 4}, .datatype.hex = 0x17}
 };
+
+
+
 int counts[] = {
     4,2,2,2,4,3,4,4,4,4,6,5,4,2,2,2,4,4,5,2,2,3,5,5,2,4,4,2,5,4,
     4,5,5,5,4,2

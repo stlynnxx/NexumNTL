@@ -681,3 +681,11 @@ and next I need to address redoing the lookup loops!
 I've done a little bit of work in here this morning, but truly not much as I need to get started on the moving process
 soon while it's still early. But I did setup a lookup function for values so I can pull
 the data from Values and set up the inserting appropriately.
+
+6/24/2026-
+
+I'm playing with idea of replacing the values array with a 2D Array/Matrix that implies the encoded morpheme. For
+example, Row A Column 0 holds the entry "Able", which means that "Able" encodes to A0, and vice versa.
+The only drawback that I'm seeing so far is that the values array with the structs is able to hold much more robust
+information that may be useful. I'm going to build out the matrix model a bit more and see where all it goes and
+then decide which one to move forward with from there.
