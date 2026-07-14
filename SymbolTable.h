@@ -87,9 +87,10 @@ typedef struct {
     } datatype;
 } Value;
 
-char values_matrix[20][20] = {{"Able", "Al", "As", "At", "Ance", "ance", "And", "Ante", "ante", "Anti", "anti"},
+char values_matrix[20][20] = {
+    {"Able", "Al", "As", "At", "Ance", "ance", "And", "Ante", "ante", "Anti", "anti", "NULL"},
 {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"},
-{"Cede", "cede", "Cess", "cess", "Circum", "circum", "Clude", "clude"},
+{"Cede", "cede", "Cess", "cess", "Circum", "circum", "Clude", "clude", "NULL"},
 {"Dict"},
 {"Ed", "ed", "Er", "er", "En", "en"},
 {"For_", "Form", "form"},
@@ -106,6 +107,27 @@ char values_matrix[20][20] = {{"Able", "Al", "As", "At", "Ance", "ance", "And", 
 {"Un", "un", "Under", "under"},
 {"Vert", "vert"},
 {"With", "with"}};
+int counts_matrix[20][20] = {
+    {4,2,2,2,4,4,3,4,4,4,4,0},
+    {0,0,0,0,0,0,0,0,0,0,0,0},
+    {4,4,4,4,6,6,5,5,0,0,0,0},
+    {4,0,0,0,0,0,0,0,0,0,0,0},
+    {2,2,2,2,2,2,0,0,0,0,0,0},
+    {4,4,4,0,0,0,0,0,0,0,0,0},
+    {5,5,0,0,0,0,0,0,0,0,0,0},
+    {2,2,0,0,0,0,0,0,0,0,0,0},
+    {2,2,3,3,2,2,5,5,5,5,0,0},
+    {4,4,2,2,0,0,0,0,0,0,0,0},
+    {5,5,4,4,4,4,5,5,5,5,5,5},
+    {4,4,2,2,0,0,0,0,0,0,0,0},
+    {2,2,2,2,2,2,0,0,0,0,0,0},
+    {2,2,5,5,0,0,0,0,0,0,0,0},
+    {5,5,0,0,0,0,0,0,0,0,0,0},
+    {2,2,4,4,3,3,4,4,2,2,0,0},
+    {2,2,5,5,0,0,0,0,0,0,0,0},
+    {4,4,0,0,0,0,0,0,0,0,0,0},
+    {4,4,0,0,0,0,0,0,0,0,0,0}
+};
 Value Values[] = {
     {.type = VALUE_STRING, .key = {.type = KEY_UPPER, .upperKey = "Able", .letterCount = 4}, .datatype.string = "A0"},
     {.type = VALUE_HEX, .key = { .type = KEY_LOWER, .lowerKey = "able", .letterCount = 4}, .datatype.hex = 0x15},

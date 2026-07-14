@@ -689,3 +689,14 @@ example, Row A Column 0 holds the entry "Able", which means that "Able" encodes 
 The only drawback that I'm seeing so far is that the values array with the structs is able to hold much more robust
 information that may be useful. I'm going to build out the matrix model a bit more and see where all it goes and
 then decide which one to move forward with from there.
+
+7/13/2026-
+
+My personal life has kept me away from here since my last entry but I am wanting to get back in the routine
+of working in here regularly again.
+
+Looking back at my last entry- why don't I set up a complimentary array that holds letter counts?
+For example, if array one at A0 holds "Able",  then in array 2 A0 holds "4", and so on.
+
+I set up the counts array and started filling in missing null entries in both arrays. That's where I should
+pick back up at tomorrow!
