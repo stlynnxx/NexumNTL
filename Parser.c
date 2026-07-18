@@ -22,7 +22,20 @@ typedef struct {
 // int workIdx = breakdownIdx + 1;
 
 
+// This will be for checking if a given search term is within the values matrix
+char valuesSearch (char searchTerm[80]) {
+    int rows = 26;
+    int cols  = sizeof(values_matrix[0] / sizeof(values_matrix[0][0]);
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            if (values_matrix[i][j]) == searchTerm){
+                return values_matrix[i][j];}
+        }
+    }
+
+}
 int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *builderr, Breakdown *breakdown, char wC) {
+    int encodedScratch;
     int peekIdx = breakdownIdx + 1;
     char wCPeek = breakdown->associations[peekIdx];
     bool isAssociator = false;
@@ -42,7 +55,9 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                             breakdownIdx++;
                             wC = breakdown->associations[breakdownIdx];
                             if (wC == 'e') {
+                                encodedScratch = valuesSearch("Able");
                                 writeTarget[scratchOneIdx] = Able;
+
                             }
                         }
                         break;

@@ -87,26 +87,35 @@ typedef struct {
     } datatype;
 } Value;
 
-char values_matrix[20][20] = {
-    {"Able", "Al", "As", "At", "Ance", "ance", "And", "Ante", "ante", "Anti", "anti", "NULL"},
-{"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"},
-{"Cede", "cede", "Cess", "cess", "Circum", "circum", "Clude", "clude", "NULL"},
-{"Dict"},
-{"Ed", "ed", "Er", "er", "En", "en"},
-{"For_", "Form", "form"},
-{"Gress", "gress"},
-{"He", "he"},
-{"In", "in", "Ing", "ing", "Is", "is", "Inter", "inter", "Intra", "intra"},
-{"Less", "less", "Ly", "ly"},
-{"Magni", "magni", "Mark", "mark", "Ment", "ment", "Micro", "micro", "Milli", "milli", "Multi", "multi"},
-{"Ness", "ness", "Nd", "nd"},
-{"Of", "of", "On", "on", "Or", "or"},
-{"Re", "re", "Retro", "retro"},
-{"Super", "super"},
-{"Th", "th", "That", "that", "The", "the", "Tion", "tion", "To","to"},
-{"Un", "un", "Under", "under"},
-{"Vert", "vert"},
-{"With", "with"}};
+char values_matrix[40][40] = {
+    {"Able", "Al", "As", "At", "Ance", "ance", "And", "Ante", "ante", "Anti", "anti", "NULL"}, // A
+{"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // B
+{"Cede", "cede", "Cess", "cess", "Circum", "circum", "Clude", "clude", "NULL", "NULL", "NULL", "NULL"}, // C
+{"Dict", "NULL", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // D
+{"Ed", "ed", "Er", "er", "En", "en", "NULL","NULL","NULL","NULL","NULL","NULL"}, // E
+{"For_", "Form", "form", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL",}, // F
+{"Gress", "gress", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL",}, // G
+{"He", "he", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL",}, // H
+{"In", "in", "Ing", "ing", "Is", "is", "Inter", "inter", "Intra", "intra", "NULL","NULL"}, // I
+{"NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL",}, // J
+{"NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL",}, // K
+{"Less", "less", "Ly", "ly","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // L
+{"Magni", "magni", "Mark", "mark", "Ment", "ment", "Micro", "micro", "Milli", "milli", "Multi", "multi"}, // M
+{"Ness", "ness", "Nd", "nd", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // N
+{"Of", "of", "On", "on", "Or", "or", "NULL","NULL","NULL","NULL","NULL","NULL"}, // O
+{"NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // P
+{"NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // Q
+{"Re", "re", "Retro", "retro","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // R
+{"Super", "super","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // S
+{"Th", "th", "That", "that", "The", "the", "Tion", "tion", "To","to", "NULL","NULL"}, // T
+{"Un", "un", "Under", "under", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // U
+{"Vert", "vert","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // V
+{"With", "with", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // W
+{"NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // X
+{"NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // Y
+{"NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"} // Z
+};
+
 int counts_matrix[20][20] = {
     {4,2,2,2,4,4,3,4,4,4,4,0},
     {0,0,0,0,0,0,0,0,0,0,0,0},

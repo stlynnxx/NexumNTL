@@ -700,3 +700,22 @@ For example, if array one at A0 holds "Able",  then in array 2 A0 holds "4", and
 
 I set up the counts array and started filling in missing null entries in both arrays. That's where I should
 pick back up at tomorrow!
+
+7/17/2026-
+
+I'm in here basically just pecking around a bit late at night tonight;
+I finished adding the null entries into the morpheme array!
+
+I'm getting sleepy so I won't be in here for long tonight probably, but next session
+we should back up and run the program a few times and remind myself of where exactly I'm
+at and where to go next since my personal life has been so crazy as of late.
+
+I can't see that being a bad idea, so.
+
+I went ahead and made the valuesSearch function in Parser.C. I am thinking I will need
+to redo the end step of the parsing process as switching the matrix affected the macros I
+had in place prior, and this function is the first step of that; it is just a bog
+standard 2D matrix lookup that returns the position of the match and with the Nexum
+system that is the translated version!
+
+I'm tired.
