@@ -719,3 +719,19 @@ standard 2D matrix lookup that returns the position of the match and with the Ne
 system that is the translated version!
 
 I'm tired.
+
+7/27/2026-
+
+It's been so frustrating that since April my personal life has kept me from making meaningful progress on the things
+that matter the most to me, like this. But I do still think about my work every day.
+
+This is such an exhausting project and I'm so far removed and distracted right now that I just need to spend some time
+getting to know everything again. But regardless of what caretaking responsibilites are thrust upon me
+outside of the IDEm I need to be making time to spend working on my projects. These things are the world to me.
+
+I've started my refamiliarization at the source generator since it's the start of the process and made a few small changes;
+create had been added into append effectively but i'd still left it as it's own function that was useless so I fixed that
+and I also changed append to be an int type so I can return 1 if the file is unable to be loaded.
+
+I also fixed the mrun/prun conflict in main.c.
+

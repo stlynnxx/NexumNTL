@@ -12,5 +12,6 @@ add_executable(NexumNTL main.c
         SourceGenerator.c
         SourceGenerator.h
         Parser.c
-        Parser.h)
+        Parser.h
+        main.c)
 target_compile_options(NexumNTL PRIVATE -Wall)

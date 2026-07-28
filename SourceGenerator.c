@@ -23,11 +23,13 @@ typedef struct {
 
 
 // This is creating a file
-void create(const char *path) {
+// I've built create into append instead of keeping it it's own function but
+// have for the time being left this in here commented out
+/* void create(const char *path) {
     FILE *fp = fopen(path, "a");
     if (fp != NULL)
         fclose(fp);
-}
+}*/
 
 
 
@@ -91,12 +93,12 @@ void readBytes(FILE *fp, InputForm *form, Export *exp) {
     }
 }
 // Begins the append process
-void append(const char *path) {
+int append(const char *path) {
     Export *exp;
     FILE *fp = fopen(path, "a");
     printf("Appending to: %s\n", path);
     if (fp == NULL)
-        return;
+        return 1;
     InputForm form = {0};
     if (nexcodeFlag == false) {
         openNexFile(fp, &form);
@@ -105,10 +107,11 @@ void append(const char *path) {
         readBytes(fp, &form, exp);
     }
     fclose(fp);
+    return 0;
 }
 
 int sgRun(const char *path) {
-    create(path);
+    // create(path); Create has been merged into append
     append(path);
     return 0;
 }

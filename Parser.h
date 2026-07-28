@@ -5,7 +5,7 @@
 #ifndef NEXUMNTL_PARSER_H
 #define NEXUMNTL_PARSER_H
 
-
+int prun();
 typedef struct {
     char assoc[2000];
     char associators[2000];
