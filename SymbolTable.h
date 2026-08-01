@@ -7,7 +7,32 @@
 #define TABLE_SIZE 256
 
 
-# define Able "A0"
+# define A 0
+# define B 1
+# define C 2
+# define D 3
+# define E 4
+# define F 5
+# define G 6
+# define H 7
+# define I 8
+# define J 9
+# define L 10
+# define M 11
+# define N 12
+# define O 13
+# define P 14
+# define Q 15
+# define R 16
+# define S 17
+# define T 18
+# define U 19
+# define V 20
+# define W 21
+# define X 22
+# define Y 23
+# define Z 24
+
 typedef enum {
     OPENBRACE = '{',
     CLOSEBRACE = '}',
