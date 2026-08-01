@@ -743,7 +743,22 @@ pulling from from the old macros to the values matrix! It's small progress, but 
 
 We will still need to set up a hex array and an encoded array, and set up the actual encoding.
 
+8/01/2026-
 
+After some thinking I've come to the conclusion that I actually need to go a bit of a different direction with
+ the parser, but I can keep my core design and tweak it a bit in order to do so. What I have written I am proud of, but
+ I realized it is not robust enough to handle custom morpheme encoding as the morphemes and identification are hard
+ coded.
+
+ I am rewriting the huge checker method in the parser to be more objective. The idea is that we are taking the first letter
+ of the word to be encoded, which should be loaded into wC at the time that the checker replacement will be run, and then
+ compare that to the macros I made the other night corrosponding letters to rows within the values matrix( A=0, so forth).
+ So, if wC == A, we know we are working from row 0 instead of having to identify the row manually. From there we can just
+ iterate through until we get a match, but i'm wondering if narrowing down a range within the column may be beneficial as it
+ grows. That is a desicion that I will make over time however, for now we will start with the basic iteration. If the second
+ letter is n, and the third is d, it'll match And, and know the coordiantes within the matrix which is it's encoded morpheme.
+
+ This should hopefully wind up being more robust and less code overall, so. An all around win.
 
 
 

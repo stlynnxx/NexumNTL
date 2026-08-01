@@ -114,7 +114,9 @@ typedef struct {
     } datatype;
 } Value;
 
-char values_matrix[40][40] = {
+
+// The matrix sizes are placeholders
+char values_matrix[400][400] = {
     {"Able", "Al", "As", "At", "Ance", "ance", "And", "Ante", "ante", "Anti", "anti", "NULL"}, // A, 0
 {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // B, 1
 {"Cede", "cede", "Cess", "cess", "Circum", "circum", "Clude", "clude", "NULL", "NULL", "NULL", "NULL"}, // C, 2

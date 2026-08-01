@@ -34,6 +34,39 @@ char valuesSearch (char searchTerm[80]) {
     }
 
 }
+char look(char compArray[], char letter) {
+    int counter = 0;
+
+    // This loop is going to be for values matrix lookup to load into the compArray
+    if (counter <= 26) {
+        compArray[0] = values_matrix[letter][counter];
+        counter++;
+    }
+    return compArray[0];
+}
+int arse(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *builderr, Breakdown *breakdown, char wC) {
+    int encodedScratch;
+    int peekIdx = breakdownIdx + 1;
+    char wCPeek = breakdown->associations[peekIdx];
+    char compArray[800]; // This is a placeholder size that needs changed
+    char comp; // Comp is sort of the opposite of wC, it is what wC is being compared against from the matrix
+    size_t compSize;
+    bool isAssociator = false;
+    compArray[0] = look(compArray, wC); // At this point we should have all of the row associated with the given wC loaded into compArray
+    compSize = sizeof(compArray) / sizeof(compArray[0]); // This gives us the number of entries within compArray
+
+    if (isupper(wC)) {
+        builderr->assocScratch[scratchOneIdx] = wC;
+        scratchOneIdx++;
+        for (int i = 0; i < compSize; i++) {
+            // If we go through letter by letter manually until a 'soft match', can we not then confirm it by comparing it to the entry size?
+            // if i == wC, append to buffer until soft token match, then hard confirm via buffer size vs comp size?
+        }
+        switch (wC) {
+
+        }
+    }
+}
 int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *builderr, Breakdown *breakdown, char wC) {
     int encodedScratch;
     int peekIdx = breakdownIdx + 1;
@@ -98,7 +131,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                 }
                         break;
                 } // EOS A
-                break; // Ends case 'A'
+             // Ends case 'A'
             case 'C':
                 breakdownIdx++;
                 wC = breakdown->associations[breakdownIdx];
@@ -1091,7 +1124,7 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
     assocSize = sizeof(breakdown->associations) / sizeof(breakdown->associations[0]);
     memKeySize = sizeof(breakdown->memoryKey)/ sizeof(breakdown->memoryKey[0]);
     associatorsSize = sizeof(breakdown->workingAssociators)/ sizeof(breakdown->workingAssociators[0]);
-    char wC; // Similar to wC in Lexer
+    char wC; // Similar to wC in Lexer, is the current working character
     bool run = true;
     // wC = breakdown->associations[breakdownIdx]; // This sets the current working character
     char *writeTarget = NULL; // the array being written to within checker
