@@ -75,26 +75,27 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                         wC = breakdown->associations[breakdownIdx];
 
                         if (wC == 'd') {
-                            writeTarget[scratchOneIdx] = values_matrix[A][4];
+                            writeTarget[scratchOneIdx] = values_matrix[A][6];
                         }
                         if (wC == 't') {
                             breakdownIdx++;
                             wC = breakdown->associations[breakdownIdx];
 
                             if (wC == 'i') {
-                                writeTarget[scratchOneIdx] = values_matrix[A][5];
+                                writeTarget[scratchOneIdx] = values_matrix[A][9];
                             }
                             if (wC == 'e') {
-                                writeTarget[scratchOneIdx] = values_matrix[A][6];
-                            }
-                            if (wC == 'c') {
-                                breakdownIdx++;
-                                wC = breakdown->associations[breakdownIdx];
-                                if (wC == 'e') {
-                                    writeTarget[scratchOneIdx] = values_matrix[A][7];
-                                }
+                                writeTarget[scratchOneIdx] = values_matrix[A][7];
                             }
                         }
+                        if (wC == 'c') {
+                            breakdownIdx++;
+                            wC = breakdown->associations[breakdownIdx];
+                            if (wC == 'e') {
+                                writeTarget[scratchOneIdx] = values_matrix[A][4];
+                            }
+                        }
+                }
                         break;
                 } // EOS A
                 break; // Ends case 'A'
@@ -556,7 +557,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                             wC = breakdown->associations[breakdownIdx];
                                             if (wC == 'e') {
                                                 // This will need to come from a hex values array and not the values matrix
-                                                writeTarget[scratchOneIdx] = able;
+                                                writeTarget[scratchOneIdx] = hex_matrix[A][0];
                                             }
                                         }
                                         break;
