@@ -215,11 +215,11 @@ void crawler(FILE *fp) {
     // wC[0] = memoryFileSplit.mainArray[tracker]; // wC is our working character.
     wC = setr(&memoryFileSplit); // setr sets wC to mainArray[0]. At this point wC and tracker should both be at 0
     // wC should be { when the next line runs
-    wCCheck(wC, "Line 190"); // This should be mainArray[0], so, {
+    wCCheck(wC, "Line 218"); // This should be mainArray[0], so, {
     printf("Tracker Check %d\n", tracker);
     // this function increments tracker by one and updates wC to mainArray[1]
     wC = increment(&memoryFileSplit, &breakdown);
-    wCCheck(wC, "Line 194"); // Here wC should be at mainArray[1] which should be '
+    wCCheck(wC, "Line 222"); // Here wC should be at mainArray[1] which should be '
     // Dear god don't leave this uncommented unless we really need it
     /*printf("---Testing Area---\n");
     int s = sizeof(memoryFileSplit.mainArray) / sizeof(memoryFileSplit.mainArray[0]);

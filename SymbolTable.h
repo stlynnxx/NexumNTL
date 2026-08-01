@@ -6,6 +6,8 @@
 #include <string.h>
 #define TABLE_SIZE 256
 
+
+# define Able "A0"
 typedef enum {
     OPENBRACE = '{',
     CLOSEBRACE = '}',
@@ -88,12 +90,12 @@ typedef struct {
 } Value;
 
 char values_matrix[40][40] = {
-    {"Able", "Al", "As", "At", "Ance", "ance", "And", "Ante", "ante", "Anti", "anti", "NULL"}, // A
-{"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // B
-{"Cede", "cede", "Cess", "cess", "Circum", "circum", "Clude", "clude", "NULL", "NULL", "NULL", "NULL"}, // C
-{"Dict", "NULL", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // D
-{"Ed", "ed", "Er", "er", "En", "en", "NULL","NULL","NULL","NULL","NULL","NULL"}, // E
-{"For_", "Form", "form", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL",}, // F
+    {"Able", "Al", "As", "At", "Ance", "ance", "And", "Ante", "ante", "Anti", "anti", "NULL"}, // A, 0
+{"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // B, 1
+{"Cede", "cede", "Cess", "cess", "Circum", "circum", "Clude", "clude", "NULL", "NULL", "NULL", "NULL"}, // C, 2
+{"Dict", "NULL", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // D ,3
+{"Ed", "ed", "Er", "er", "En", "en", "NULL","NULL","NULL","NULL","NULL","NULL"}, // E, 4
+{"For_", "Form", "form", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL",}, // F, 5
 {"Gress", "gress", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL",}, // G
 {"He", "he", "NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL",}, // H
 {"In", "in", "Ing", "ing", "Is", "is", "Inter", "inter", "Intra", "intra", "NULL","NULL"}, // I
