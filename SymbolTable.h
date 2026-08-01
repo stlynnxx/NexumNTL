@@ -143,6 +143,16 @@ char values_matrix[40][40] = {
 {"NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"} // Z
 };
 
+char encoded_matrix[40][40] = {
+    {"A0", "A1", "A2"},
+    {}
+};
+
+int hex_matrix[40][40] = {
+    {0x15},
+
+};
+
 int counts_matrix[20][20] = {
     {4,2,2,2,4,4,3,4,4,4,4,0},
     {0,0,0,0,0,0,0,0,0,0,0,0},

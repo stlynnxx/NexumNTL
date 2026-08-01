@@ -741,5 +741,9 @@ I also fixed the mrun/prun conflict in main.c.
 I feel caught up on where we were and tonight went through checker in the parser and changed where writeTarget is
 pulling from from the old macros to the values matrix! It's small progress, but it's good progress!
 
+We will still need to set up a hex array and an encoded array, and set up the actual encoding.
+
+
+
 
 

@@ -555,6 +555,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                             breakdownIdx++;
                                             wC = breakdown->associations[breakdownIdx];
                                             if (wC == 'e') {
+                                                // This will need to come from a hex values array and not the values matrix
                                                 writeTarget[scratchOneIdx] = able;
                                             }
                                         }
