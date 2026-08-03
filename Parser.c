@@ -25,11 +25,11 @@ typedef struct {
 // This will be for checking if a given search term is within the values matrix
 char valuesSearch (char searchTerm[80]) {
     int rows = 26;
-    int cols  = sizeof(values_matrix[0] / sizeof(values_matrix[0][0]);
+    int cols  = sizeof(valuesMatrix[0] / sizeof(valuesMatrix[0][0]);
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            if (values_matrix[i][j]) == searchTerm){
-                return values_matrix[i][j];}
+            if (valuesMatrix[i][j]) == searchTerm){
+                return valuesMatrix[i][j];}
         }
     }
 
@@ -37,21 +37,25 @@ char valuesSearch (char searchTerm[80]) {
 char look(char compArray[], char letter) {
     int counter = 0;
 
-    // This loop is going to be for values matrix lookup to load into the compArray
+
     if (counter <= 26) {
-        compArray[0] = values_matrix[letter][counter];
+        compArray[0] = valuesMatrix[letter][counter];
         counter++;
     }
     return compArray[0];
 }
-int arse(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *builderr, Breakdown *breakdown, char wC) {
+
+
+int newCheck(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *builderr, Breakdown *breakdown, char wC) {
     int encodedScratch;
     int peekIdx = breakdownIdx + 1;
     char wCPeek = breakdown->associations[peekIdx];
     char compArray[800]; // This is a placeholder size that needs changed
+    char buffer[100];
     char comp; // Comp is sort of the opposite of wC, it is what wC is being compared against from the matrix
     size_t compSize;
     bool isAssociator = false;
+    bool delimCheck = false;
     compArray[0] = look(compArray, wC); // At this point we should have all of the row associated with the given wC loaded into compArray
     compSize = sizeof(compArray) / sizeof(compArray[0]); // This gives us the number of entries within compArray
 
@@ -59,11 +63,22 @@ int arse(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *builde
         builderr->assocScratch[scratchOneIdx] = wC;
         scratchOneIdx++;
         for (int i = 0; i < compSize; i++) {
+            if (wC == compArray[i]) {
+                if (wC || compArray[i] == COMMA) {
+                    // the comma is the delimiter, so this should denote the end of a word/entry
+                    delimCheck = true;
+
+                }
+                buffer[0] = compArray[i];
+
+
+            }
+            if (wC != compArray[i]) {
+                perror("Parser->newCheck failure");
+                exit(EXIT_FAILURE);
+            }
             // If we go through letter by letter manually until a 'soft match', can we not then confirm it by comparing it to the entry size?
             // if i == wC, append to buffer until soft token match, then hard confirm via buffer size vs comp size?
-        }
-        switch (wC) {
-
         }
     }
 }
@@ -89,43 +104,43 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                             wC = breakdown->associations[breakdownIdx];
                             if (wC == 'e') {
                                 encodedScratch = valuesSearch("Able");
-                                writeTarget[scratchOneIdx] = values_matrix[A][0];
+                                writeTarget[scratchOneIdx] = valuesMatrix[A][0];
 
                             }
                         }
                         break;
                     case 'l':
-                        writeTarget[scratchOneIdx] = values_matrix[A][1];
+                        writeTarget[scratchOneIdx] = valuesMatrix[A][1];
                         break;
                     case 's':
-                        writeTarget[scratchOneIdx] = values_matrix[A][2];
+                        writeTarget[scratchOneIdx] = valuesMatrix[A][2];
                         break;
                     case 't':
-                        writeTarget[scratchOneIdx] = values_matrix[A][3];
+                        writeTarget[scratchOneIdx] = valuesMatrix[A][3];
                         break;
                     case 'n':
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
 
                         if (wC == 'd') {
-                            writeTarget[scratchOneIdx] = values_matrix[A][6];
+                            writeTarget[scratchOneIdx] = valuesMatrix[A][6];
                         }
                         if (wC == 't') {
                             breakdownIdx++;
                             wC = breakdown->associations[breakdownIdx];
 
                             if (wC == 'i') {
-                                writeTarget[scratchOneIdx] = values_matrix[A][9];
+                                writeTarget[scratchOneIdx] = valuesMatrix[A][9];
                             }
                             if (wC == 'e') {
-                                writeTarget[scratchOneIdx] = values_matrix[A][7];
+                                writeTarget[scratchOneIdx] = valuesMatrix[A][7];
                             }
                         }
                         if (wC == 'c') {
                             breakdownIdx++;
                             wC = breakdown->associations[breakdownIdx];
                             if (wC == 'e') {
-                                writeTarget[scratchOneIdx] = values_matrix[A][4];
+                                writeTarget[scratchOneIdx] = valuesMatrix[A][4];
                             }
                         }
                 }
@@ -143,11 +158,11 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                             breakdownIdx++;
                             wC = breakdown->associations[breakdownIdx];
                             if (wC == 'e') {
-                                writeTarget[scratchOneIdx] = values_matrix[C][0];
+                                writeTarget[scratchOneIdx] = valuesMatrix[C][0];
                             }
                         }
                         if (wC == 's') {
-                            writeTarget[scratchOneIdx] = values_matrix[C][1];
+                            writeTarget[scratchOneIdx] = valuesMatrix[C][1];
                         }
                         break;
                     case 'i':
@@ -167,7 +182,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                     wC = breakdown->associations[breakdownIdx];
 
                                     if (wC == 'm') {
-                                        writeTarget[scratchOneIdx] = values_matrix[C][2];
+                                        writeTarget[scratchOneIdx] = valuesMatrix[C][2];
                                     }
                                 }
                             }
@@ -183,7 +198,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                 breakdownIdx++;
                                 wC = breakdown->associations[breakdownIdx];
                                 if (wC == 'e') {
-                                    writeTarget[scratchOneIdx] = values_matrix[C][3];
+                                    writeTarget[scratchOneIdx] = valuesMatrix[C][3];
                                 }
                             }
                         }
@@ -200,7 +215,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                         if (wC == 't') {
-                            writeTarget[scratchOneIdx] = values_matrix[D][0];
+                            writeTarget[scratchOneIdx] = valuesMatrix[D][0];
                         }
                     }
                 }
@@ -210,13 +225,13 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                 wC = breakdown->associations[breakdownIdx];
                 switch (wC) {
                     case 'd':
-                        writeTarget[scratchOneIdx] = values_matrix[E][0];
+                        writeTarget[scratchOneIdx] = valuesMatrix[E][0];
                         break;
                     case 'r':
-                        writeTarget[scratchOneIdx] = values_matrix[4][1];
+                        writeTarget[scratchOneIdx] = valuesMatrix[4][1];
                         break;
                     case 'n':
-                        writeTarget[scratchOneIdx] = values_matrix[4][2];
+                        writeTarget[scratchOneIdx] = valuesMatrix[4][2];
                         break;
                 } // EOS E
                 break;
@@ -227,10 +242,10 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                     breakdownIdx++;
                     wC = breakdown->associations[breakdownIdx];
                     if (wC == 'r' && wCPeek != 'm') {
-                        writeTarget[scratchOneIdx] = values_matrix[F][0];
+                        writeTarget[scratchOneIdx] = valuesMatrix[F][0];
                     }
                     if (wC == 'r' && wCPeek == 'm') {
-                        writeTarget[scratchOneIdx] = values_matrix[F][1];
+                        writeTarget[scratchOneIdx] = valuesMatrix[F][1];
                     }
                 }
                 break;
@@ -247,7 +262,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                             breakdownIdx++;
                             wC = breakdown->associations[breakdownIdx];
                             if (wC == 's') {
-                                writeTarget[scratchOneIdx] = values_matrix[G][0];
+                                writeTarget[scratchOneIdx] = valuesMatrix[G][0];
                             }
                         }
                     }
@@ -258,33 +273,33 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                 breakdownIdx++;
                 wC = breakdown->associations[breakdownIdx];
                 if (wC == 'e') {
-                    writeTarget[scratchOneIdx] = values_matrix[H][0];
+                    writeTarget[scratchOneIdx] = valuesMatrix[H][0];
                 }
                 break;
             case 'I':
                 breakdownIdx++;
                 wC = breakdown->associations[breakdownIdx];
                 if (wC == 'n' && wCPeek != 'g') {
-                    writeTarget[scratchOneIdx] = values_matrix[I][0];
+                    writeTarget[scratchOneIdx] = valuesMatrix[I][0];
                 }
                 if (wC == 'n' && wCPeek == 'g') {
                     breakdownIdx++;
                     wC = breakdown->associations[breakdownIdx];
                     if (wC == 'g') {
-                        writeTarget[scratchOneIdx] = values_matrix[I][1];
+                        writeTarget[scratchOneIdx] = valuesMatrix[I][1];
                     }
                     if (wC == 's') {
-                        writeTarget[scratchOneIdx] = values_matrix[I][2];
+                        writeTarget[scratchOneIdx] = valuesMatrix[I][2];
                     }
 
                     if (wC == 't') {
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                         if (wC == 'r') {
-                            writeTarget[scratchOneIdx] = values_matrix[I][0];
+                            writeTarget[scratchOneIdx] = valuesMatrix[I][0];
                         }
                         if (wC == 'e') {
-                            writeTarget[scratchOneIdx] = values_matrix[I][1];
+                            writeTarget[scratchOneIdx] = valuesMatrix[I][1];
                         }
                         break;
                         case 'J':
@@ -297,7 +312,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                 breakdownIdx++;
                                 wC = breakdown->associations[breakdownIdx];
                                 if (wC == 't') {
-                                    writeTarget[scratchOneIdx] = values_matrix[J][0];
+                                    writeTarget[scratchOneIdx] = valuesMatrix[J][0];
                                 }
                             }
                         }
@@ -313,12 +328,12 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                             breakdownIdx++;
                             wC = breakdown->associations[breakdownIdx];
                             if (wC == 's') {
-                                writeTarget[scratchOneIdx] = values_matrix[L][0];
+                                writeTarget[scratchOneIdx] = valuesMatrix[L][0];
                             }
                         }
                     }
                     if (wC == 'y') {
-                        writeTarget[scratchOneIdx] = values_matrix[L][1];
+                        writeTarget[scratchOneIdx] = valuesMatrix[L][1];
                     }
                     break;
                     case 'M':
@@ -337,7 +352,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                     wC = breakdown->associations[breakdownIdx];
 
                                     if (wC == 'i') {
-                                        writeTarget[scratchOneIdx] = values_matrix[M][0];
+                                        writeTarget[scratchOneIdx] = valuesMatrix[M][0];
                                     }
                                 }
                             }
@@ -345,7 +360,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                 breakdownIdx++;
                                 wC = breakdown->associations[breakdownIdx];
                                 if (wC == 'k') {
-                                    writeTarget[scratchOneIdx] = values_matrix[M][1];
+                                    writeTarget[scratchOneIdx] = valuesMatrix[M][1];
                                 }
                             }
                             break;
@@ -356,7 +371,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                 breakdownIdx++;
                                 wC = breakdown->associations[breakdownIdx];
                                 if (wC == 't') {
-                                    writeTarget[scratchOneIdx] = values_matrix[M][2];
+                                    writeTarget[scratchOneIdx] = valuesMatrix[M][2];
                                 }
                             }
                             break;
@@ -370,7 +385,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                     breakdownIdx++;
                                     wC = breakdown->associations[breakdownIdx];
                                     if (wC == 'i') {
-                                        writeTarget[scratchOneIdx] = values_matrix[M][3];
+                                        writeTarget[scratchOneIdx] = valuesMatrix[M][3];
                                     }
                                 }
                             }
@@ -379,7 +394,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                 wC = breakdown->associations[breakdownIdx];
 
                                 if (wC == 'r') {
-                                    writeTarget[scratchOneIdx] = values_matrix[M][4];
+                                    writeTarget[scratchOneIdx] = valuesMatrix[M][4];
                                 }
                             }
                             break;
@@ -390,7 +405,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                 breakdownIdx++;
                                 wC = breakdown->associations[breakdownIdx];
                                 if (wC == 't') {
-                                    writeTarget[scratchOneIdx] = values_matrix[M][5];
+                                    writeTarget[scratchOneIdx] = valuesMatrix[M][5];
                                 }
                             }
                             break;
@@ -406,7 +421,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                             breakdownIdx++;
                             wC = breakdown->associations[breakdownIdx];
                             if (wC == 's') {
-                                writeTarget[scratchOneIdx] == values_matrix[N][0];
+                                writeTarget[scratchOneIdx] == valuesMatrix[N][0];
                             }
                         }
                     }
@@ -416,13 +431,13 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                     wC = breakdown->associations[breakdownIdx];
                     switch (wC) {
                         case 'f':
-                            writeTarget[scratchOneIdx] = values_matrix[O][0];
+                            writeTarget[scratchOneIdx] = valuesMatrix[O][0];
                             break;
                         case 'n':
-                            writeTarget[scratchOneIdx] = values_matrix[O][1];
+                            writeTarget[scratchOneIdx] = valuesMatrix[O][1];
                             break;
                         case 'r':
-                            writeTarget[scratchOneIdx] = values_matrix[O][2];
+                            writeTarget[scratchOneIdx] = valuesMatrix[O][2];
                             break;
                     } // EOS O
                     break;
@@ -435,7 +450,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                         breakdownIdx++;
                         wC = breakdown->associations[breakdownIdx];
                         if (wC == 'e') {
-                            writeTarget[scratchOneIdx] = values_matrix[P][0];
+                            writeTarget[scratchOneIdx] = valuesMatrix[P][0];
                         }
                     }
                     break;
@@ -443,7 +458,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                     breakdownIdx++;
                     wC = breakdown->associations[breakdownIdx];
                     if (wC == 'e' && wCPeek != 'e') {
-                        writeTarget[scratchOneIdx] = values_matrix[R][0];
+                        writeTarget[scratchOneIdx] = valuesMatrix[R][0];
                     }
                     if (wC == 'e' && wCPeek == 'e') {
                         breakdownIdx++;
@@ -455,7 +470,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                 breakdownIdx++;
                                 wC = breakdown->associations[breakdownIdx];
                                 if (wC == 'o') {
-                                    writeTarget[scratchOneIdx] = values_matrix[R][1];
+                                    writeTarget[scratchOneIdx] = valuesMatrix[R][1];
                                 }
                             }
                         }
@@ -474,7 +489,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                 breakdownIdx++;
                                 wC = breakdown->associations[breakdownIdx];
                                 if (wC == 'r') {
-                                    writeTarget[scratchOneIdx] = values_matrix[S][0];
+                                    writeTarget[scratchOneIdx] = valuesMatrix[S][0];
                                 }
                             }
                         }
@@ -486,16 +501,16 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                     breakdownIdx++;
                     wC = breakdown->associations[breakdownIdx];
                     if (wC == 'o') {
-                        writeTarget[scratchOneIdx] = values_matrix[T][0];
+                        writeTarget[scratchOneIdx] = valuesMatrix[T][0];
                     }
                     if (wC == 'h' && wCPeek != 'e') {
-                        writeTarget[scratchOneIdx] = values_matrix[T][1];
+                        writeTarget[scratchOneIdx] = valuesMatrix[T][1];
                     }
                     if (wC == 'h' && wCPeek == 'e') {
-                        writeTarget[scratchOneIdx] = values_matrix[T][2];
+                        writeTarget[scratchOneIdx] = valuesMatrix[T][2];
                     }
                     if (wC == 'h' && wCPeek == 'a') {
-                        writeTarget[scratchOneIdx] = values_matrix[T][3];
+                        writeTarget[scratchOneIdx] = valuesMatrix[T][3];
                     }
                     if (wC == 'r') {
                         breakdownIdx++;
@@ -507,7 +522,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                 breakdownIdx++;
                                 wC = breakdown->associations[breakdownIdx];
                                 if (wC == 's') {
-                                    writeTarget[scratchOneIdx] = values_matrix[T][4];
+                                    writeTarget[scratchOneIdx] = valuesMatrix[T][4];
                                 }
                             }
                         }
@@ -517,7 +532,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                     breakdownIdx++;
                     wC = breakdown->associations[breakdownIdx];
                     if (wC == 'n' && wCPeek != 'd') {
-                        builderr->assocScratch[scratchOneIdx] = values_matrix[U][0];
+                        builderr->assocScratch[scratchOneIdx] = valuesMatrix[U][0];
                     }
                     if (wC == 'n' && wCPeek == 'd') {
                         breakdownIdx++;
@@ -529,7 +544,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                                 breakdownIdx++;
                                 wC = breakdown->associations[breakdownIdx];
                                 if (wC == 'r') {
-                                    writeTarget[scratchOneIdx] = values_matrix[U][1];
+                                    writeTarget[scratchOneIdx] = valuesMatrix[U][1];
                                 }
                             }
                         }
@@ -545,7 +560,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                             breakdownIdx++;
                             wC = breakdown->associations[breakdownIdx];
                             if (wC == 't') {
-                                writeTarget[scratchOneIdx] = values_matrix[V][0];
+                                writeTarget[scratchOneIdx] = valuesMatrix[V][0];
                             }
                         }
                     }
@@ -560,7 +575,7 @@ int checker(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bui
                             breakdownIdx++;
                             wC = breakdown->associations[breakdownIdx];
                             if (wC == 'h') {
-                                writeTarget[scratchOneIdx] = values_matrix[W][0];
+                                writeTarget[scratchOneIdx] = valuesMatrix[W][0];
                             }
                         }
                     }
@@ -1105,6 +1120,39 @@ void sendToSource() {
 
 }
 
+char increment(int breakdownIdx, char wC, Breakdown *breakdown, int direction) {
+
+    if (direction == 1) {
+        breakdownIdx++;
+        wC = breakdown->memoryKey[breakdownIdx];
+    }
+    if (direction == 2) {
+        breakdownIdx++;
+        wC = breakdown->associations[breakdownIdx];
+    }
+    if (direction == 3) {
+        breakdownIdx++;
+        wC = breakdown->workingAssociators[breakdownIdx];
+    }
+    switch (direction) {
+        case 1:
+            breakdownIdx++;
+            wC = breakdown->memoryKey[breakdownIdx];
+            break;
+        case 2:
+            breakdownIdx++;
+            wC = breakdown->associations[breakdownIdx];
+            break;
+        case 3:
+            breakdownIdx++;
+            wC = breakdown->workingAssociators[breakdownIdx];
+            break;
+        default:
+            break;
+    }
+    return wC;
+}
+
 
 void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
     free_morphemes fmorphemes;
@@ -1132,8 +1180,8 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
     for (int j = 0; j < memKeySize; j++) { // This loops through the memKeys
         wC = breakdown->memoryKey[breakdownIdx]; // Setting wC for this logic block
 
-        breakdownIdx++;
-        wC = breakdown->memoryKey[breakdownIdx];
+
+        wC = increment(breakdownIdx, wC, breakdown, 1);
 
         if (wC == NAMETOKEN) {
             if (firstNameTokenCheck == false) {
@@ -1151,14 +1199,12 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
         else {
             perror("Parser nametoken error");
         }
-        breakdownIdx++;
-        wC = breakdown->memoryKey[breakdownIdx];
+        wC = increment(breakdownIdx, wC, breakdown, 1);
         writeTarget = builderr->memKeyScratch; // Assigns write target
         breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
         export_->memKey[breakdownIdx] = writeTarget[breakdownIdx]; // We need to replace breakdownIdx
 
-        breakdownIdx++;
-        wC = breakdown->memoryKey[breakdownIdx];
+        wC = increment(breakdownIdx, wC, breakdown, 1);
         if (wC == NAMETOKEN) {
             secondNameTokenCheck = true;
         }
@@ -1187,14 +1233,14 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
         else {
             perror("Parser nametoken error");
         }
-        breakdownIdx++;
-        wC = breakdown->associations[breakdownIdx];
+        wC = increment(breakdownIdx, wC, breakdown, 2);
         writeTarget = builderr->assocScratch; // Assigns write target
         breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
         export_->assoc[breakdownIdx] = writeTarget[breakdownIdx]; // Probably should replace BreakdownIDX
 
-        breakdownIdx++;
-        wC = breakdown->memoryKey[breakdownIdx];
+        /* This was originally updating wC from memoryKey before increment; i've implemented increment with 2 for association because
+         I think that the memoryKey was a mistake */
+        wC = increment(breakdownIdx, wC, breakdown, 2);
         if (wC == NAMETOKEN) {
             secondNameTokenCheck = true;
         }
@@ -1223,8 +1269,7 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
         else {
             perror("Parser nametoken error");
         }
-        breakdownIdx++;
-        wC = breakdown->workingAssociators[breakdownIdx];
+        wC = increment(breakdownIdx, wC, breakdown, 3);
         writeTarget = builderr->associatorScratch; // Assigns write target
         breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
         export_->associators[breakdownIdx] = writeTarget[breakdownIdx]; // Probably should replace breakdownIdx

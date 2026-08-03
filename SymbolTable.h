@@ -116,7 +116,7 @@ typedef struct {
 
 
 // The matrix sizes are placeholders
-char values_matrix[400][400] = {
+char valuesMatrix[400][400] = {
     {"Able", "Al", "As", "At", "Ance", "ance", "And", "Ante", "ante", "Anti", "anti", "NULL"}, // A, 0
 {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // B, 1
 {"Cede", "cede", "Cess", "cess", "Circum", "circum", "Clude", "clude", "NULL", "NULL", "NULL", "NULL"}, // C, 2
@@ -144,7 +144,7 @@ char values_matrix[400][400] = {
 {"NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // Y
 {"NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"} // Z
 };
-
+size_t valuesSize = sizeof(valuesMatrix) / sizeof(valuesMatrix[0][0]);
 char encoded_matrix[40][40] = {
     {"A0", "A1", "A2"},
     {}

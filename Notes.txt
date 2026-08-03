@@ -760,5 +760,18 @@ After some thinking I've come to the conclusion that I actually need to go a bit
 
  This should hopefully wind up being more robust and less code overall, so. An all around win.
 
+8/02/2026-
+
+Today was mostly a day off so I'm just in here pecking around a bit before bed, working on newChecker. Something I need
+to do in the near future is modularize incrementing wC in parser; right now I'm doing it manually each time and I can
+cut out code making it into a function. It shouldn't really be hard for me to do, either.
+
+Maybe i'll start on that tonight.
+
+The issue i'm bumping into immediately is that I'm wC is not loaded from just one place, but jumps from breakdown->memoryKey to breakdown->association.
+For now I've set up increment to take a flag which directs it to route to the appropriate logic but if I can find a
+better way in the future i'll go with that, if it's really better. This is still an improvement over the original implementation.
+Progress is progress.
+
 
 
