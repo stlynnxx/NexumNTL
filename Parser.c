@@ -44,6 +44,38 @@ char look(char compArray[], char letter) {
     }
     return compArray[0];
 }
+char increment(int breakdownIdx, char wC, Breakdown *breakdown, int direction) {
+
+    if (direction == 1) {
+        breakdownIdx++;
+        wC = breakdown->memoryKey[breakdownIdx];
+    }
+    if (direction == 2) {
+        breakdownIdx++;
+        wC = breakdown->associations[breakdownIdx];
+    }
+    if (direction == 3) {
+        breakdownIdx++;
+        wC = breakdown->workingAssociators[breakdownIdx];
+    }
+    switch (direction) {
+        case 1:
+            breakdownIdx++;
+            wC = breakdown->memoryKey[breakdownIdx];
+            break;
+        case 2:
+            breakdownIdx++;
+            wC = breakdown->associations[breakdownIdx];
+            break;
+        case 3:
+            breakdownIdx++;
+            wC = breakdown->workingAssociators[breakdownIdx];
+            break;
+        default:
+            break;
+    }
+    return wC;
+}
 
 
 int newCheck(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *builderr, Breakdown *breakdown, char wC) {
@@ -51,9 +83,12 @@ int newCheck(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bu
     int peekIdx = breakdownIdx + 1;
     char wCPeek = breakdown->associations[peekIdx];
     char compArray[800]; // This is a placeholder size that needs changed
+    char compBuffer[100];
     char buffer[100];
     char comp; // Comp is sort of the opposite of wC, it is what wC is being compared against from the matrix
     size_t compSize;
+    size_t sizeX;
+    size_t sizeY;
     bool isAssociator = false;
     bool delimCheck = false;
     compArray[0] = look(compArray, wC); // At this point we should have all of the row associated with the given wC loaded into compArray
@@ -70,12 +105,31 @@ int newCheck(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bu
 
                 }
                 buffer[0] = compArray[i];
+                // We need to figure out how to determine direction for this call
+                wC = increment(breakdownIdx, wC, &*breakdown,2);
 
 
             }
             if (wC != compArray[i]) {
                 perror("Parser->newCheck failure");
                 exit(EXIT_FAILURE);
+            }
+            if (delimCheck == true) {
+                sizeX = sizeof(buffer) / sizeof(buffer[0]);
+                for (int i = 0; i < sizeX; i++) {
+                    compArray[i] = compBuffer[i];
+                }
+                sizeY = sizeof(compBuffer) / sizeof(compBuffer[0]);
+                if (sizeX != sizeY) {
+                    perror("Size x y error");
+                    exit(EXIT_FAILURE);
+                }
+                if (sizeX == sizeY) {
+                    // Morpheme match
+                }
+
+
+
             }
             // If we go through letter by letter manually until a 'soft match', can we not then confirm it by comparing it to the entry size?
             // if i == wC, append to buffer until soft token match, then hard confirm via buffer size vs comp size?
@@ -1120,38 +1174,7 @@ void sendToSource() {
 
 }
 
-char increment(int breakdownIdx, char wC, Breakdown *breakdown, int direction) {
 
-    if (direction == 1) {
-        breakdownIdx++;
-        wC = breakdown->memoryKey[breakdownIdx];
-    }
-    if (direction == 2) {
-        breakdownIdx++;
-        wC = breakdown->associations[breakdownIdx];
-    }
-    if (direction == 3) {
-        breakdownIdx++;
-        wC = breakdown->workingAssociators[breakdownIdx];
-    }
-    switch (direction) {
-        case 1:
-            breakdownIdx++;
-            wC = breakdown->memoryKey[breakdownIdx];
-            break;
-        case 2:
-            breakdownIdx++;
-            wC = breakdown->associations[breakdownIdx];
-            break;
-        case 3:
-            breakdownIdx++;
-            wC = breakdown->workingAssociators[breakdownIdx];
-            break;
-        default:
-            break;
-    }
-    return wC;
-}
 
 
 void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
@@ -1273,8 +1296,7 @@ void parse(Breakdown *breakdown, Export *export_, builder *builderr) {
         writeTarget = builderr->associatorScratch; // Assigns write target
         breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
         export_->associators[breakdownIdx] = writeTarget[breakdownIdx]; // Probably should replace breakdownIdx
-        breakdownIdx++;
-        wC = breakdown->workingAssociators[breakdownIdx];
+        wC = increment(breakdownIdx, wC, breakdown, 3);
         if (wC == NAMETOKEN) {
             secondNameTokenCheck = true;
         }

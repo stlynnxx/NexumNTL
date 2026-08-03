@@ -773,5 +773,9 @@ For now I've set up increment to take a flag which directs it to route to the ap
 better way in the future i'll go with that, if it's really better. This is still an improvement over the original implementation.
 Progress is progress.
 
+8/03/2026 12:35 AM-
+
+Still up pecking around, I finished out increment and I've made some progress in newCheck. I'm noot sure It's going to
+be 100% correct yet but, as I said earlier, progress is progress.
 
 
