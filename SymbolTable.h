@@ -44,10 +44,10 @@ typedef enum {
     ENDOFFILE = 'NULL',
     COLON = ':',
     SPACE = ' ',
-    }Symbols;
+    } Symbols;
 
 typedef struct {
-}Encodings;
+} Encodings;
 
 extern const char alphas[];
 extern const int alphasLength;

@@ -76,6 +76,59 @@ char increment(int breakdownIdx, char wC, Breakdown *breakdown, int direction) {
     }
     return wC;
 }
+char alpha[30] = {
+    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
+    "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
+    "U", "V", "W", "X", "Y", "Z"
+};
+
+ void match(char buffer[100]) {
+     char select = buffer[0];
+
+     char workSelect = toupper(select);
+
+     size_t rowSize;
+
+
+
+     if (isalnum(select)) {
+
+         switch (workSelect) {
+
+             case 'A':
+
+                 rowSize = sizeof(valuesMatrix[A]);
+
+                 break;
+
+                 case 'B':
+
+                 rowSize = sizeof(valuesMatrix[B]);
+
+                 break;
+            case 'C':
+                rowSize = sizeof(valuesMatrix[C]);
+                break;
+            case 'D':
+                rowSize = sizeof(valuesMatrix[D]);
+                break;
+            case 'E':
+                rowSize = sizeof(valuesMatrix[E]);
+                break;
+            case 'F':
+                rowSize = sizeof(valuesMatrix[F]);
+
+
+
+
+
+        }
+        size_t rowSize = sizeof(valuesMatrix[select]);
+
+    }
+
+
+}
 
 
 int newCheck(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *builderr, Breakdown *breakdown, char wC) {
@@ -126,6 +179,7 @@ int newCheck(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bu
                 }
                 if (sizeX == sizeY) {
                     // Morpheme match
+
                 }
 
 
