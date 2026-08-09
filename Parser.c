@@ -94,36 +94,91 @@ char alpha[30] = {
      if (isalnum(select)) {
 
          switch (workSelect) {
-
              case 'A':
-
-                 rowSize = sizeof(valuesMatrix[A]);
-
+                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
                  break;
 
-                 case 'B':
-
-                 rowSize = sizeof(valuesMatrix[B]);
-
+             case 'B':
+                 rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
                  break;
             case 'C':
-                rowSize = sizeof(valuesMatrix[C]);
+                rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
                 break;
             case 'D':
-                rowSize = sizeof(valuesMatrix[D]);
+                rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
                 break;
             case 'E':
-                rowSize = sizeof(valuesMatrix[E]);
+                rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
                 break;
             case 'F':
-                rowSize = sizeof(valuesMatrix[F]);
-
-
-
-
-
+                rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
+                 break;
+             case 'G':
+                 rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
+                 break;
+             case 'H':
+                 rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
+                 break;
+             case 'I':
+                 rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
+                 break;
+             case 'J':
+                 rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
+                 break;
+             case 'K':
+                 rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
+                 break;
+             case 'L':
+                 rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
+                 break;
+             case 'M':
+                 rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
+                 break;
+             case 'N':
+                 rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
+                 break;
+             case 'O':
+                 rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
+                 break;
+             case 'P':
+                 rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
+                 break;
+             case 'Q':
+                 rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
+                 break;
+             case 'R':
+                 rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
+                 break;
+             case 'S':
+                 rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
+                 break;
+             case 'T':
+                 rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
+                 break;
+             case 'U':
+                 rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
+                 break;
+             case 'V':
+                 rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
+                 break;
+             case 'W':
+                 rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
+                 break;
+             case 'X':
+                 rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
+                 break;
+             case 'Y':
+                 rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
+                 break;
+             case 'Z':
+                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
+                 break;
+             default:
+                 break;
         }
-        size_t rowSize = sizeof(valuesMatrix[select]);
+         
+
+
 
     }
 

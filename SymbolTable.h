@@ -17,21 +17,22 @@
 # define H 7
 # define I 8
 # define J 9
-# define L 10
-# define M 11
-# define N 12
-# define O 13
-# define P 14
-# define Q 15
-# define R 16
-# define S 17
-# define T 18
-# define U 19
-# define V 20
-# define W 21
-# define X 22
-# define Y 23
-# define Z 24
+# define K 10
+# define L 11
+# define M 12
+# define N 13
+# define O 14
+# define P 15
+# define Q 16
+# define R 17
+# define S 18
+# define T 19
+# define U 20
+# define V 21
+# define W 22
+# define X 23
+# define Y 24
+# define Z 25
 
 typedef enum {
     OPENBRACE = '{',
