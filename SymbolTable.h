@@ -117,7 +117,7 @@ typedef struct {
 
 
 // The matrix sizes are placeholders
-char valuesMatrix[400][400] = {
+char *valuesMatrix[400][400] = {
     {"Able", "Al", "As", "At", "Ance", "ance", "And", "Ante", "ante", "Anti", "anti", "NULL"}, // A, 0
 {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // B, 1
 {"Cede", "cede", "Cess", "cess", "Circum", "circum", "Clude", "clude", "NULL", "NULL", "NULL", "NULL"}, // C, 2

@@ -790,5 +790,9 @@ critically as needed, so, goodnight.
 
 It's a start.
 
+8/10/2026-
+
+I just did some basic work on the morpheme matching in newCheck tonight, creating the verify function in order to modularize
+part of the logic within the switch statement!
 
 

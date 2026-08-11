@@ -81,9 +81,19 @@ char alpha[30] = {
     "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
     "U", "V", "W", "X", "Y", "Z"
 };
+void verify(char *buffer[100], int rowSiZe, int row) {
+    for (int i = 0; i <= rowSiZe; i++) {
+        if (valuesMatrix[row][i] == NULL) break;
+        if (strncmp(*buffer, valuesMatrix[row][i], strlen(*buffer)) == 0) {
+            // match is found here
+            break;
+        }
+    }
 
- void match(char buffer[100]) {
-     char select = buffer[0];
+
+void match(char *buffer[100], char *compBuffer[100]) {
+     char select = *buffer[0];
+     char compSelect =  *compBuffer[0];
 
      char workSelect = toupper(select);
 
@@ -93,91 +103,118 @@ char alpha[30] = {
 
      if (isalnum(select)) {
 
+
          switch (workSelect) {
              case 'A':
                  rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
+
+                 // verify will probably eventually return something
+                 verify(buffer, rowSize, A);
                  break;
 
              case 'B':
-                 rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
+                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[B][0]);
+                 verify(buffer, rowSize, B);
                  break;
             case 'C':
-                rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
+                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
+                 verify(buffer, rowSize, C);
                 break;
             case 'D':
-                rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
+                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
+                 verify(buffer, rowSize, D);
                 break;
             case 'E':
                 rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
+                 verify(buffer, rowSize, E);
                 break;
             case 'F':
                 rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
+                 verify(buffer, rowSize, F);
                  break;
              case 'G':
                  rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
+                 verify(buffer, rowSize, G);
                  break;
              case 'H':
                  rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
+                 verify(buffer, rowSize, H);
                  break;
              case 'I':
                  rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
+                 verify(buffer, rowSize, I);
                  break;
              case 'J':
                  rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
+                 verify(buffer, rowSize, J);
                  break;
              case 'K':
                  rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
+                 verify(buffer, rowSize, K);
                  break;
              case 'L':
                  rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
+                 verify(buffer, rowSize, L);
                  break;
              case 'M':
                  rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
+                 verify(buffer, rowSize, M);
                  break;
              case 'N':
                  rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
+                 verify(buffer, rowSize, N);
                  break;
              case 'O':
                  rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
+                 verify(buffer, rowSize, O);
                  break;
              case 'P':
                  rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
+                 verify(buffer, rowSize, P);
                  break;
              case 'Q':
                  rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
+                 verify(buffer, rowSize, Q);
                  break;
              case 'R':
                  rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
+                 verify(buffer, rowSize, R);
                  break;
              case 'S':
                  rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
+                 verify(buffer, rowSize, S);
                  break;
              case 'T':
                  rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
+                 verify(buffer, rowSize, T);
                  break;
              case 'U':
                  rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
+                 verify(buffer, rowSize, U);
                  break;
              case 'V':
                  rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
+                 verify(buffer, rowSize, V);
                  break;
              case 'W':
                  rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
+                 verify(buffer, rowSize, W);
                  break;
              case 'X':
                  rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
+                 verify(buffer, rowSize, X);
                  break;
              case 'Y':
                  rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
+                 verify(buffer, rowSize, Y);
                  break;
              case 'Z':
                  rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
+                 verify(buffer, rowSize, Z);
                  break;
              default:
                  break;
         }
-         
-
 
 
     }
@@ -190,7 +227,7 @@ int newCheck(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bu
     int encodedScratch;
     int peekIdx = breakdownIdx + 1;
     char wCPeek = breakdown->associations[peekIdx];
-    char compArray[800]; // This is a placeholder size that needs changed
+    char compArray[800]; // This is a placeholder size that needs changed, this is for loading portions of the matrix
     char compBuffer[100];
     char buffer[100];
     char comp; // Comp is sort of the opposite of wC, it is what wC is being compared against from the matrix
@@ -212,7 +249,7 @@ int newCheck(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bu
                     delimCheck = true;
 
                 }
-                buffer[0] = compArray[i];
+                buffer[i] = compArray[i];
                 // We need to figure out how to determine direction for this call
                 wC = increment(breakdownIdx, wC, &*breakdown,2);
 
@@ -234,6 +271,7 @@ int newCheck(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bu
                 }
                 if (sizeX == sizeY) {
                     // Morpheme match
+
 
                 }
 
