@@ -1,4 +1,4 @@
-# NexumNTL-C
+# NexumNTL
 Hello! This is the ReadMe for the Nexum
 Neurotransmission Language, or NexumNTL.
 
