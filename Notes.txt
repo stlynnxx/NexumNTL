@@ -796,3 +796,11 @@ I just did some basic work on the morpheme matching in newCheck tonight, creatin
 part of the logic within the switch statement!
 
 
+8/12/2026-
+
+I'm pretty tired, so I'm not doing too much tonight, but I did set up a return for verify and if statemenets to flip
+a verify bool into all of the match switch cases.
+
+Even small progress is progress!
+
+
