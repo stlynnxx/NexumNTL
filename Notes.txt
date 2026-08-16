@@ -804,4 +804,12 @@ a verify bool into all of the match switch cases.
 Even small progress is progress!
 
 
-8/13/2026-
+8/15/2026-
+
+I did a bit of work tonight, but i'm already exhausted from a long day. So it goes.
+
+I started building an encode function for encoding the matched morpheme that is called from within verify. The encoded
+values matrix needed updating to a 2D array matching the other matrix so I started working on that, and now I'm going to
+head to bed soon in hopes of being able to do better work tomorrow once rested.
+
+

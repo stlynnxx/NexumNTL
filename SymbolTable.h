@@ -67,26 +67,17 @@ struct MemoryKey {
 
 };
 
-char *upperKeys[] = {
-    "Able", "Al", "As", "At", "Ance", "And", "Ante", "Anti", "Cede", "Cess",
-    "Circum", "Clude", "Dict", "Ed", "En", "Er", "For_", "Form", "Gress", "He",
-    "In", "Ing", "Inter", "Intra", "Is", "Ject", "Less", "Ly", "Magni", "Mark", "Ment",
-    "Micro", "Milli", "Multi", "Ness", "Nd"
-};
-char *upperValues[] = {
-    "A0", "A1", "A2", "A3", "A4", "A6", "A8", "AX",
-    "C0", "C2", "C4", "C6", "D0", "E0", "E1", "E2",
-    "F0", "F1", "G0", "H0", "I0", "I1", "I2", "I3",
-    "I4", "J0", "L0", "L2", "M0", "M2", "M4", "M5",
-    "M7", "M9", "N0", "N1", "O0", "O1", "O2", "P2",
-    "R0", "R2", "S2", "T0", "T1", "T2", "T3", "T4",
-    "U0", "U1", "V0", "W0"
-};
-char *lowerKeys[] = {
-    "able", "al", "As", "At", "ance", "and", "ante", "anti", "cede", "cess",
-    "circum", "clude", "dict", "ed", "en", "er", "for_", "form", "gress", "he",
-    "in", "ing", "inter", "intra", "is", "ject", "less", "ly", "magni", "mark",
-    "ment", "micro", "milli", "multi", "ness", "nd"
+
+char *upperValues[400][400] = {
+    {"A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "AX", "A11", "NULL"}, // A
+    {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // B
+    {"C0", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "NULL", "NULL", "NULL", "NULL"}, // C
+    {"D0", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // D
+    {},
+{"I4", "J0", "L0", "L2", "M0", "M2", "M4", "M5"},
+    {"M7", "M9", "N0", "N1", "O0", "O1", "O2", "P2"},
+    {"R0", "R2", "S2", "T0", "T1", "T2", "T3", "T4"},
+    {"U0", "U1", "V0", "W0"}
 };
 
 // These plus the following Values[] array are for holding the translated versions of morphemes and related info

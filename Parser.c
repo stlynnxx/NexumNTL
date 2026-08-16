@@ -81,276 +81,306 @@ char alpha[30] = {
     "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
     "U", "V", "W", "X", "Y", "Z"
 };
+
+int encode(char *buffer[100], int foundI, int row) {
+    char encodedMorpheme[10];
+    
+
+}
+
 int verify(char *buffer[100], int rowSiZe, int row) {
+    int encodeVal;
+    int foundI;
     for (int i = 0; i <= rowSiZe; i++) {
         if (valuesMatrix[row][i] == NULL) break;
         if (strncmp(*buffer, valuesMatrix[row][i], strlen(*buffer)) == 0) {
             // match is found here
-            return 1;
+            foundI = i;
+            encodeVal = encode(buffer, foundI, row);
         }
         else {
             return 0;
         }
+        if (encodeVal == 0) {
+            perror("Morpheme Encoding Error");
+        }
     }
 void match(char *buffer[100], char *compBuffer[100]) {
-     char select = *buffer[0];
-     char compSelect =  *compBuffer[0];
-     char workSelect = toupper(select);
-     size_t rowSize;
-     int verifyReturn;
-     bool verifyBool;
-     if (isalnum(select)) {
-         switch (workSelect) {
-             case 'A':
-                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
-                 verifyReturn = verify(buffer, rowSize, A);
-                 if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'B':
-                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[B][0]);
-                 verify(buffer, rowSize, B);
-                 if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
+    char select = *buffer[0];
+    char compSelect =  *compBuffer[0];
+    char workSelect = toupper(select);
+    size_t rowSize;
+    int verifyReturn;
+    bool verifyBool;
+    if (isalnum(select)) {
+        switch (workSelect)
+        {
+            case 'A':
+                rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
+                verifyReturn = verify(buffer, rowSize, A);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+
+                }
+                break;
+            case 'B':
+                rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[B][0]);
+                verify(buffer, rowSize, B);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
             case 'C':
-                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
-                 verify(buffer, rowSize, C);
-                 if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
+                rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
+                verify(buffer, rowSize, C);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
                 break;
             case 'D':
-                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
-                 verify(buffer, rowSize, D);
-                 if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
+                rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
+                verify(buffer, rowSize, D);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
                 break;
             case 'E':
                 rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
                 verify(buffer, rowSize, E);
-                 if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
                 break;
             case 'F':
                 rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
                 verify(buffer, rowSize, F);
-                 if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
                 break;
-             case 'G':
-                 rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
-                 verify(buffer, rowSize, G);
-                 if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
+            case 'G':
+                rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
+                verify(buffer, rowSize, G);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'H':
+                rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
+                verify(buffer, rowSize, H);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
                  break;
-             case 'H':
-                 rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
-                 verify(buffer, rowSize, H); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'I':
-                 rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
-                 verify(buffer, rowSize, I); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'J':
-                 rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
-                 verify(buffer, rowSize, J); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'K':
-                 rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
-                 verify(buffer, rowSize, K); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'L':
-                 rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
-                 verify(buffer, rowSize, L); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'M':
-                 rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
-                 verify(buffer, rowSize, M); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'N':
-                 rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
-                 verify(buffer, rowSize, N); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'O':
-                 rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
-                 verify(buffer, rowSize, O); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'P':
-                 rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
-                 verify(buffer, rowSize, P); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'Q':
-                 rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
-                 verify(buffer, rowSize, Q); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'R':
-                 rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
-                 verify(buffer, rowSize, R); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'S':
-                 rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
-                 verify(buffer, rowSize, S); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'T':
-                 rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
-                 verify(buffer, rowSize, T); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'U':
-                 rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
-                 verify(buffer, rowSize, U); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'V':
-                 rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
-                 verify(buffer, rowSize, V); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'W':
-                 rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
-                 verify(buffer, rowSize, W); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'X':
-                 rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
-                 verify(buffer, rowSize, X); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'Y':
-                 rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
-                 verify(buffer, rowSize, Y); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             case 'Z':
-                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
-                 verify(buffer, rowSize, Z); if (verifyReturn == 0) {
-                     verifyBool = false;
-                 }
-                 else if (verifyReturn == 1) {
-                     verifyBool = true;
-                 }
-                 break;
-             default:
-                 break;
+            case 'I':
+                rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
+                verify(buffer, rowSize, I);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'J':
+                rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
+                verify(buffer, rowSize, J);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'K':
+                rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
+                verify(buffer, rowSize, K);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'L':
+                rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
+                verify(buffer, rowSize, L);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'M':
+                rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
+                verify(buffer, rowSize, M);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'N':
+                rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
+                verify(buffer, rowSize, N);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'O':
+                rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
+                verify(buffer, rowSize, O);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'P':
+                rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
+                verify(buffer, rowSize, P);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'Q':
+                rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
+                verify(buffer, rowSize, Q);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'R':
+                rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
+                verify(buffer, rowSize, R);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'S':
+                rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
+                verify(buffer, rowSize, S);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'T':
+                rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
+                verify(buffer, rowSize, T);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'U':
+                rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
+                verify(buffer, rowSize, U);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'V':
+                rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
+                verify(buffer, rowSize, V);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'W':
+                rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
+                verify(buffer, rowSize, W);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'X':
+                rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
+                verify(buffer, rowSize, X);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'Y':
+                rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
+                verify(buffer, rowSize, Y);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            case 'Z':
+                rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
+                verify(buffer, rowSize, Z);
+                if (verifyReturn == 0) {
+                    verifyBool = false;
+                }
+                else if (verifyReturn == 1) {
+                    verifyBool = true;
+                }
+                break;
+            default:
+                break;
+            }
         }
-
-
     }
-
-
-}
 
 
 int newCheck(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *builderr, Breakdown *breakdown, char wC) {
@@ -382,13 +412,13 @@ int newCheck(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bu
                 buffer[i] = compArray[i];
                 // We need to figure out how to determine direction for this call
                 wC = increment(breakdownIdx, wC, &*breakdown,2);
-
-
             }
+
             if (wC != compArray[i]) {
                 perror("Parser->newCheck failure");
                 exit(EXIT_FAILURE);
             }
+
             if (delimCheck == true) {
                 sizeX = sizeof(buffer) / sizeof(buffer[0]);
                 for (int i = 0; i < sizeX; i++) {
@@ -401,7 +431,7 @@ int newCheck(int breakdownIdx, int scratchOneIdx, char *writeTarget, builder *bu
                 }
                 if (sizeX == sizeY) {
                     // Morpheme match
-
+                    match(buffer[100], compBuffer[100]);
 
                 }
 
