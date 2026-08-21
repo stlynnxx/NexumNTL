@@ -812,4 +812,15 @@ I started building an encode function for encoding the matched morpheme that is 
 values matrix needed updating to a 2D array matching the other matrix so I started working on that, and now I'm going to
 head to bed soon in hopes of being able to do better work tomorrow once rested.
 
+8/18/2026-
 
+Tonight I worked more in verify and encode, more or less finishing out the process for writing the encoded morpheme
+to the write target and then commented out checker so I can now go about replacing the calls to that with calls to
+newCheck.
+
+8/21/2026-
+
+1:17 PM:
+
+So far all I've done today is basically change writeTarget to writeFlag so that encode can save the conded morpheme to
+the correct place within the struct. I also changed the struct it's writing to over to export.

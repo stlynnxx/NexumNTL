@@ -67,17 +67,34 @@ struct MemoryKey {
 
 };
 
-
 char *upperValues[400][400] = {
     {"A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "AX", "A11", "NULL"}, // A
     {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // B
     {"C0", "C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "NULL", "NULL", "NULL", "NULL"}, // C
     {"D0", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // D
-    {},
-{"I4", "J0", "L0", "L2", "M0", "M2", "M4", "M5"},
-    {"M7", "M9", "N0", "N1", "O0", "O1", "O2", "P2"},
-    {"R0", "R2", "S2", "T0", "T1", "T2", "T3", "T4"},
-    {"U0", "U1", "V0", "W0"}
+    {"E0", "E1", "E2", "E3", "E4", "E5", "E6", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // E
+    {"F0", "F1", "F2", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // F
+    {"G0", "G1", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // G
+    {"H0", "H1", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // H
+    {"I0", "I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8", "I9", "NULL", "NULL"}, // I
+    {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // J
+    {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // K
+    {"L0", "L1", "L2", "L3", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // L
+    {"M0", "M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "MX", "M11"}, // M
+    {"N0", "N1", "N2", "N3", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // N
+    {"O0", "O1", "O2", "O3", "O4", "O5", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // O
+    {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // P
+    {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // Q
+    {"R0", "R1", "R2", "R3", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // R
+    {"S0", "S1", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // S
+    {"T0", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "NULL", "NULL"}, // T
+    {"U0", "U1", "U2", "U3", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // U
+    {"V0", "V1", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // V
+    {"W0", "W1", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // W
+    {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // X
+    {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // Y
+    {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"} // Z
+
 };
 
 // These plus the following Values[] array are for holding the translated versions of morphemes and related info
