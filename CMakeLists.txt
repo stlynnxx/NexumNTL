@@ -3,18 +3,16 @@ project(NexumNTL C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(NexumNTL main.c
-        Lexer.c
-        Lexer.h
-        main.h
-        SymbolTable.c
-        SymbolTable.h
-        SourceGenerator.c
-        SourceGenerator.h
-        Parser.c
-        Parser.h
-        main.c
-        Nexum.h
-        Nexum.c
+add_executable(NexumNTL Source/main.c
+        Source/Lexer/Lexer.c
+        Source/Lexer/Lexer.h
+        Source/main.h
+        Source/SymbolTable/SymbolTable.c
+        Source/SymbolTable/SymbolTable.h
+        Source/SourceGenerator/SourceGenerator.c
+        Source/SourceGenerator/SourceGenerator.h
+        Source/Parser/Parser.c
+        Source/Parser/Parser.h
+        Source/main.c
 )
 target_compile_options(NexumNTL PRIVATE -Wall)

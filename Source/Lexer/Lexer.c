@@ -6,7 +6,7 @@
 
 #include <ctype.h>
 
-#include "SymbolTable.h"
+#include "../SymbolTable/SymbolTable.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -99,6 +99,7 @@ void associations(char wC, MemoryFileLoad *split, Breakdown *breakdown)
     bool nameTokenOne = false;
     bool nameTokenTwo = false;
 
+
     // int letterCounter = 0;
     // int size;
     // int exportSize;
@@ -135,7 +136,6 @@ void associations(char wC, MemoryFileLoad *split, Breakdown *breakdown)
         {
             if (isalpha(wC)) {
                 while (isalpha(wC)) {
-                    ensure_capacity(&breakdown->associations, 1);
                     append_char(&breakdown->associations, wC);
                     printf("Tracker check 118: %d\n", breakdown->tracker);
                     wC = increment(split, breakdown);
@@ -145,7 +145,6 @@ void associations(char wC, MemoryFileLoad *split, Breakdown *breakdown)
             }
             if (isalnum(wC))
             {
-                ensure_capacity(&breakdown->associations, 1);
                 append_char(&breakdown->associations, wC);
                 printf("Tracker check 126: %d\n", breakdown->tracker);
                 wC = increment(split, breakdown);
@@ -163,7 +162,6 @@ void associations(char wC, MemoryFileLoad *split, Breakdown *breakdown)
 
 char setr(MemoryFileLoad *load) {
     char wC;
-    ensure_capacity(&load->mainArray, 1);
     append_char(&load->mainArray, wC);
     free(load->mainArray.data);
     return wC;
@@ -192,14 +190,12 @@ void associator(char wC, MemoryFileLoad *load, Breakdown *breakdown) {
         if (isalpha(wC))
         {
             associatorLetterCounter++;
-            ensure_capacity(&breakdown->workingAssociators, 1);
             append_char(&breakdown->workingAssociators, wC);
             breakdown->tracker++;
             wC = increment(load, breakdown);
         }
         if (isalpha(wC) != true && isalnum(wC)) {
             associatorLetterCounter++;
-            ensure_capacity(&breakdown->workingAssociators, 1);
             append_char(&breakdown->workingAssociators, wC);
             breakdown->tracker++;
 
@@ -306,7 +302,6 @@ void crawler(FILE *fp) {
             wC = increment(&memoryFileLoad, &breakdown); // This should increment by one per call [3]
             wCCheck(wC, "First Check inside alphas"); // Should be second char of memkey
             if (isalpha(wC)) {
-                ensure_capacity(&breakdown.memoryKey, 1);
                 breakdown.memoryKey.data[breakdown.memoryKey.length] = wC;
                 wC = increment(&memoryFileLoad, &breakdown);
                 breakdown.memoryKey.length++;
@@ -314,14 +309,12 @@ void crawler(FILE *fp) {
             // The idea here is that the while loop will run until memkeybool
             // gets flipped and THEN if wC == nameToken runs
             while (memoryKeyBool == true) {
-                ensure_capacity(&breakdown.memoryKey, 1);
                 breakdown.memoryKey.data[breakdown.memoryKey.length] = wC;
                 wC = increment(&memoryFileLoad, &breakdown);
                 breakdown.memoryKey.length++;
                 wCCheck(wC, "while loop check");
 
                 if (isalnum(wC)) {
-                    ensure_capacity(&breakdown.memoryKey, 1);
                     breakdown.memoryKey.data[breakdown.memoryKey.length] = wC;
                     wC = increment(&memoryFileLoad, &breakdown);
                     breakdown.memoryKey.length++;

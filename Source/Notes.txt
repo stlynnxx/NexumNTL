@@ -913,3 +913,17 @@ yet around interacting with the valuesMatrix; it needs to be intialized and seed
 process needs to account for any user added morphemes, which it currently does not, but that's okay! I think i'll
 take the time to work on that before getting back into match.
 
+I set up the data dir with two files, usrmor.nex and usrmor.nexc, so I can start figuring out the logic for both
+adding and loading new morphemes. I also set up some other dirs and reorganized a bit.
+
+Okay, a few things I need to write out before going forward to avoid gettinng all mucked up-
+
+I need to fix the ensure capacity stuff in lexer before I go anywhere.
+
+I need to write logic for adding the corresponding encoded_morpheme for a given user added morpheme.
+
+I need to, upon updating the matrices, take a snapshot of them both and save them to the the respective usrmor files.
+
+I got through usrmor_check and started working on encode_usrmor and I think I need a break, and my dog needs to go
+outside. I'll try to be back later but I have family coming by for labor day and sometimes one has to touch grass.
+

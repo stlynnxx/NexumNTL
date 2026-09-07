@@ -1,8 +1,8 @@
 # include <stdio.h>
-# include "Lexer.h"
-# include "SymbolTable.h"
-# include "SourceGenerator.h"
-# include "Parser.h"
+#include "Lexer/Lexer.h"
+#include "SymbolTable/SymbolTable.h"
+#include "SourceGenerator/SourceGenerator.h"
+#include "Parser/Parser.h"
 
 
 

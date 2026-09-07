@@ -88,7 +88,6 @@ char firsts[40] = {'t','i','a','o','e','r','l','m','f','n', 'u'};
 char secondaries[80] = {
     'b', 'c', 'd', 'g', 'h', 'j', 'k', 'p', 'q', 's', 'u', 'v', 'w', 'x', 'y', 'z'
 };
-size_t valueSize = sizeof(valuesMatrix) / sizeof(valuesMatrix[0][0]);
 
 // Helper functions
 void seed_table(Table *table) {
@@ -135,3 +134,88 @@ int row_set(Row *row, size_t col, const char *value) {
     return 0;
 }
 
+int values_ensure_capacity(DynamicBuffers *buf, size_t extra) {
+    size_t needed = buf->length + extra;
+    if (needed <= buf->capacity) {
+        return 0;
+    }
+    size_t capacity = buf->capacity ? buf->capacity : 16;
+    while (needed > capacity) {
+        capacity *= 2;
+    }
+    char *tmp = realloc(buf->data, capacity);
+    if (!tmp)
+        return -1;
+
+    buf->data = tmp;
+    buf->capacity = capacity;
+    return 0;
+}
+
+// append_bytes is for appending raw bytes from the given input
+int values_append_bytes(DynamicBuffers *buf, const char *byte, size_t x) {
+    if (values_ensure_capacity(buf, x) != 0) {
+        return -1; // failure
+    }
+    memcpy(buf->data + buf->length, byte, x);
+    buf->length += x;
+    return 0;
+}
+
+// This is an interface for passing a string to append bytes
+int values_append_string(DynamicBuffers *buf, const char *string) {
+    return (values_append_bytes(buf, string, strlen(string)));
+}
+
+// This is an interface for passing chars to append_bytes
+int values_append_char(DynamicBuffers *buf, char c) {
+    return (values_append_bytes(buf, &c, 1));
+}
+void encode_usrmor(DynamicBuffers *buf, Table table, const char morph[]) {
+    char firstChar = morph[0];
+    // I think from here we will need to check the length of the
+    // row corrosponding with firstChar and then add one to it and use that
+    // index to finish our encoded morpheme which will end up being firstChar + index
+    size_t rowCheck = table.row[firstChar].count;
+    char checkChar = (char)rowCheck;
+    strcat(firstChar, checkChar);
+
+
+void usrmor_chk(DynamicBuffers *buf, const char morph[]) {
+    size_t morphLen = sizeof(morph) / sizeof(morph[0]);
+    switch (morphLen) {
+        case 0:
+            perror("Empty morpheme");
+            exit(EXIT_FAILURE);
+            break;
+        case 1:
+            perror("Char error- please append more than a single char");
+            exit(EXIT_FAILURE);
+            break;
+        case 2:
+
+            break;
+
+    }
+
+
+
+}
+// This is for adding morphemes to the valuesMatrix
+// Pass routeFlag as 0 for appending bytes, 1 for appending a char, and 2 for appending a string
+int add_morph(DynamicBuffers *buf, const char *morph, int routeFlag) {
+    switch (routeFlag) {
+        case 0:
+            values_append_bytes(buf, morph, (strlen(morph) + 1));
+            break;
+        case 1:
+            values_append_char(buf, morph[0]);
+            break;
+        case 2:
+            values_append_string(buf, morph);
+            break;
+        default:
+            return -1;
+            break;
+    }
+}

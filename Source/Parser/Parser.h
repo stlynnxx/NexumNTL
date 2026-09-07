@@ -3,7 +3,7 @@
 //
 
 #ifndef PARSER_H
-#include "Nexum.h"
+#include "../SymbolTable/SymbolTable.h"
 #include <stddef.h>
 #define PARSER_H
 

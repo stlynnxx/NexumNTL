@@ -7,9 +7,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "Lexer.h"
-#include "SymbolTable.h"
-#include "Parser.h"
+#include "../Lexer/Lexer.h"
+#include "../SymbolTable/SymbolTable.h"
+#include "../Parser/Parser.h"
 
 
 // Input storage

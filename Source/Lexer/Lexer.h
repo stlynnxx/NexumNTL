@@ -4,7 +4,8 @@
 
 #ifndef LEXER_H
 #define LEXER_H
-#include "Nexum.h"
+
+#include "../SymbolTable/SymbolTable.h"
 #include <stddef.h>
 
 void lRun();

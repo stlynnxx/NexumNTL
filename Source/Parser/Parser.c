@@ -1,11 +1,11 @@
 //
 // Created by steviexx on 3/31/26.
 //
-#include "Nexum.h"
+
 #include "Parser.h"
-#include "Lexer.h"
-#include "SourceGenerator.h"
-#include "SymbolTable.h"
+#include "../Lexer/Lexer.h"
+#include "../SourceGenerator/SourceGenerator.h"
+#include "../SymbolTable/SymbolTable.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <ctype.h>
