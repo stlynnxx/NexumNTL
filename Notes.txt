@@ -904,3 +904,12 @@ compiling one by one. I've made some pretty good progress going through lexer an
 npw i'm in parser, about to working my way through newCheck and match and get those functions sorted out!
 
 I've been at a bit so we may see a break soon but i'll probably work a bit more first still.
+
+9/7/2026-
+
+I've been in here this morning just working through more bugs, the list is getting shorter every day! I worked my way
+through newCheck and got that all cleaned up and made my way into match and now I'm considering a few things I hadn't
+yet around interacting with the valuesMatrix; it needs to be intialized and seeded before interaction, and the seeding
+process needs to account for any user added morphemes, which it currently does not, but that's okay! I think i'll
+take the time to work on that before getting back into match.
+

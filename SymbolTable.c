@@ -28,6 +28,7 @@ char *valuesMatrix[26][14] = {
 {"NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"}, // Y
 {"NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL","NULL"} // Z
 };
+
 char *encodedMatrix[26][14] = {
     {"A0", "A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8", "A9", "AX", "A11", "NULL"}, // A
     {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"}, // B

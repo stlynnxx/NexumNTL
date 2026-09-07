@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <stdatomic.h>
 #include <stdlib.h>
 
 
@@ -33,12 +34,12 @@ const char *valuesSearch(const char *searchTerm) {
 }
 
 // Loads a row associated with a given wC into compArray
-char look(const char *compArray[], char wC) {
+char look(ParserBuffers pbuffers, char wC) {
     for (int r  = 0; r < 26; r++) {
         if (toupper(wC) == *valuesMatrix[r][0]) {
             for (int ii = 0; ii < 14; ii++)
-                compArray[ii] = valuesMatrix[r][ii];
-            return *compArray[0];
+                pbuffers.compArray.data[ii] = *valuesMatrix[r][ii];
+            return pbuffers.compArray.data[0];
         }
         return '\0';
     }
@@ -85,15 +86,15 @@ int encode(char buffer[100], int foundI, int row, int scratchOneIdx, int flag) {
 
 }
 
-int verify(char buffer[100], int rowSiZe, int row, int scratchOneIdx, int flag) {
+int verify(ParserBuffers *pbuffer, int rowSiZe, int row, int scratchOneIdx, int flag) {
     int encodeVal;
     int foundI;
     for (int i = 0; i <= rowSiZe; i++) {
         if (valuesMatrix[row][i] == NULL) break;
-        if (strncmp(buffer, valuesMatrix[row][i], strlen(buffer)) == 0) {
+        if (strncmp(pbuffer->Buffers.data, valuesMatrix[row][i], strlen(pbuffer->Buffers.data)) == 0) {
             // match is found here
             foundI = i;
-            encodeVal = encode(buffer, foundI, row, scratchOneIdx, flag);
+            encodeVal = encode(pbuffer->Buffers.data, foundI, row, scratchOneIdx, flag);
             return 1;
         }
         else {
@@ -105,13 +106,11 @@ int verify(char buffer[100], int rowSiZe, int row, int scratchOneIdx, int flag) 
     }
 }
 
-
 //
-void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) {
-    char select = buffer[0];
-    char compSelect =  compBuffer[0];
+void match(int scratchOneIdx, int flag, ParserBuffers *pbuffers) {
+    const char select = pbuffers->Buffers.data[0];
+    const char compSelect =  pbuffers->compBuffer.data[0];
     char workSelect = toupper(select);
-    size_t rowSize;
     int verifyReturn;
     bool verifyBool;
     if (isalnum(select)) {
@@ -119,7 +118,8 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
         {
             case 'A':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
-                verifyReturn = verify(buffer, rowSize, A, scratchOneIdx, flag);
+
+                verifyReturn = verify(pbuffers, rowSize, A, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     perror("Verify Error");
                 }
@@ -129,7 +129,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'B':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[B][0]);
-                verify(buffer, rowSize, B, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, B, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -139,7 +139,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'C':
                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
-                verify(buffer, rowSize, C, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, C, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -149,7 +149,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'D':
                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
-                verify(buffer, rowSize, D, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, D, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -159,7 +159,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'E':
                 rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
-                verify(buffer, rowSize, E, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, E, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -169,7 +169,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'F':
                 rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
-                verify(buffer, rowSize, F, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, F, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -179,7 +179,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'G':
                 rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
-                verify(buffer, rowSize, G, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, G, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -189,7 +189,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'H':
                 rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
-                verify(buffer, rowSize, H, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, H, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -199,7 +199,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                  break;
             case 'I':
                 rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
-                verify(buffer, rowSize, I, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, I, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -209,7 +209,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'J':
                 rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
-                verify(buffer, rowSize, J, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, J, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -219,7 +219,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'K':
                 rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
-                verify(buffer, rowSize, K, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, K, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -229,7 +229,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'L':
                 rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
-                verify(buffer, rowSize, L,scratchOneIdx, flag);
+                verify(pbuffers, rowSize, L,scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -239,7 +239,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'M':
                 rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
-                verify(buffer, rowSize, M, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, M, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -249,7 +249,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'N':
                 rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
-                verify(buffer, rowSize, N, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, N, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -259,7 +259,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'O':
                 rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
-                verify(buffer, rowSize, O, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, O, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -269,7 +269,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'P':
                 rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
-                verify(buffer, rowSize, P, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, P, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -279,7 +279,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'Q':
                 rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
-                verify(buffer, rowSize, Q, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, Q, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -289,7 +289,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'R':
                 rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
-                verify(buffer, rowSize, R, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, R, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -299,7 +299,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'S':
                 rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
-                verify(buffer, rowSize, S, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, S, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -309,7 +309,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'T':
                 rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
-                verify(buffer, rowSize, T, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, T, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -319,7 +319,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'U':
                 rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
-                verify(buffer, rowSize, U, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, U, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -329,7 +329,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'V':
                 rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
-                verify(buffer, rowSize, V, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, V, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -339,7 +339,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'W':
                 rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
-                verify(buffer, rowSize, W, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, W, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -349,7 +349,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'X':
                 rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
-                verify(buffer, rowSize, X, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, X, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -359,7 +359,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'Y':
                 rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
-                verify(buffer, rowSize, Y, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, Y, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -369,7 +369,7 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
                 break;
             case 'Z':
                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
-                verify(buffer, rowSize, Z, scratchOneIdx, flag);
+                verify(pbuffers, rowSize, Z, scratchOneIdx, flag);
                 if (verifyReturn == 0) {
                     verifyBool = false;
                 }
@@ -384,60 +384,46 @@ void match(char buffer[100], char compBuffer[100], int scratchOneIdx, int flag) 
     }
 
 
-int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builderr, Breakdown *breakdown, ParserBuffers *pbuffers,char wC) {
-    int encodedScratch;
-    int peekIdx = breakdownIdx + 1;
-    char wCPeek = breakdown->associations.data[peekIdx];
-    char compArray[800]; // This is a placeholder size that needs changed, this is for loading portions of the matrix
-    char compBuffer[100];
-    char buffer[100];
-    char comp; // Comp is sort of the opposite of wC, it is what wC is being compared against from the matrix
-    size_t compSize;
-    size_t sizeX;
-    size_t sizeY;
-    bool isAssociator = false;
-    bool delimCheck = false;
-    compArray[0] = look(compArray, wC); // At this point we should have all of the row associated with the given wC loaded into compArray
-    compSize = sizeof(compArray) / sizeof(compArray[0]); // This gives us the number of entries within compArray
 
+int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builderr, Breakdown *breakdown, ParserBuffers *pbuffers,char wC) {
+    bool delimCheck = false;
+    pbuffers->compArray.data[0] = look(*pbuffers, wC); // At this point we should have all of the row associated with the given wC loaded into compArray
     if (isupper(wC)) {
         builderr->assocScratch.data[scratchOneIdx] = wC;
         scratchOneIdx++;
-        for (int i = 0; i < compSize; i++) {
-            if (wC == compArray[i]) {
-                if (wC || compArray[i] == COMMA) {
+        for (int i = 0; i < pbuffers->compArray.length; i++) {
+            if (wC == pbuffers->compArray.data[i]) {
+                if (wC || pbuffers->compArray.data[i] == COMMA) {
                     // the comma is the delimiter, so this should denote the end of a word/entry
                     delimCheck = true;
 
                 }
-                buffer[i] = compArray[i];
+                pbuffers->Buffers.data[i] = pbuffers->compArray.data[i];
                 // We need to figure out how to determine direction for this call
                 wC = increment(breakdownIdx, wC, &*breakdown,2);
             }
 
-            if (wC != compArray[i]) {
+            if (wC != pbuffers.compArray.data[i]) {
                 perror("Parser->newCheck failure");
                 exit(EXIT_FAILURE);
             }
 
             if (delimCheck == true) {
-                sizeX = sizeof(buffer) / sizeof(buffer[0]);
-                for (int i = 0; i < sizeX; i++) {
-                    compArray[i] = compBuffer[i];
+                // sizeX = sizeof(buffer) / sizeof(buffer[0]);
+                for (int j = 0; j < pbuffers->Buffers.length; j++) {
+                    pbuffers->compArray.data[i] = pbuffers->compBuffer.data[i];
                 }
-                sizeY = sizeof(compBuffer) / sizeof(compBuffer[0]);
-                if (sizeX != sizeY) {
+                // sizeY = sizeof(compBuffer) / sizeof(compBuffer[0]);
+                if (pbuffers->Buffers.length != pbuffers->compBuffer.length) {
                     perror("Size x y error");
-                    exit(EXIT_FAILURE);
+                    return -1;
                 }
-                if (sizeX == sizeY) {
+                if (pbuffers->Buffers.length == pbuffers->compBuffer.length) {
                     // Morpheme match
-                    match(buffer, compBuffer, scratchOneIdx, writeFlag);
+                    match(scratchOneIdx, writeFlag, pbuffers);
+                    return 0;
 
                 }
-
-
-
             }
             // If we go through letter by letter manually until a 'soft match', can we not then confirm it by comparing it to the entry size?
             // if i == wC, append to buffer until soft token match, then hard confirm via buffer size vs comp size?
@@ -530,6 +516,7 @@ void parse(Breakdown *breakdown, Export *export_, Builder *builderr, ParserBuffe
         writeTarget = builderr->assocScratch.data; // Assigns write target
         // breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
         breakdownIdx = newCheck(breakdownIdx, scratchOneIdx, 2, builderr, breakdown, pbuffers,wC); // wC should be at the end of whatever word was last parsed here
+        if (breakdownIdx == -1) {exit(EXIT_FAILURE);}
         export_->assoc.data[breakdownIdx] = writeTarget[breakdownIdx]; // Probably should replace BreakdownIDX
 
         /* This was originally updating wC from memoryKey before increment; i've implemented increment with 2 for association because
