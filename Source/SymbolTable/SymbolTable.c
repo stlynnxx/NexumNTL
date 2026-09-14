@@ -197,9 +197,6 @@ void usrmor_chk(DynamicBuffers *buf, const char morph[]) {
             break;
 
     }
-
-
-
 }
 // This is for adding morphemes to the valuesMatrix
 // Pass routeFlag as 0 for appending bytes, 1 for appending a char, and 2 for appending a string

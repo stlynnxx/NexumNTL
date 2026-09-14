@@ -927,3 +927,7 @@ I need to, upon updating the matrices, take a snapshot of them both and save the
 I got through usrmor_check and started working on encode_usrmor and I think I need a break, and my dog needs to go
 outside. I'll try to be back later but I have family coming by for labor day and sometimes one has to touch grass.
 
+9/13/2026-
+
+I've spent the last two days in Cognition setting things up in there, but that's right now seperate from in here but also
+a part of the progress for in here, so I thought i'd make a quick journal entry saying as much.
