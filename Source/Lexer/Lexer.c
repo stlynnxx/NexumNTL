@@ -60,36 +60,42 @@ int append_char(DynamicBuffers *buf, char c) {
 }
 
 // This is for loading the nexfile from storage
-void *loadNexFile(FILE *fp, MemoryFileLoad *load) {
+int loadNexFile(FILE *fp, MemoryFileLoad *load) {
+    int returned;
     fseek(fp, 0, SEEK_END);
     long size = ftell(fp);
     rewind(fp);
 
    fread(&load->mainArray, sizeof(load->mainArray), 1, fp);
-   ensure_capacity(&load->mainArray, size);
-    load->mainArray.data[load->mainArray.length] = '\0';
-    free(load->mainArray.data);
-
+   returned = ensure_capacity(&load->mainArray, size);
+    if (returned == -1) {
+        return -1;
+    }
+   load->mainArray.data[load->mainArray.length] = '\0';
+   free(load->mainArray.data);
+    return 1;
 }
 
 // This increments wC
-char increment(MemoryFileLoad *load, Breakdown *breakdown) {
+/*char increment(MemoryFileLoad *load, Breakdown *breakdown) {
     char wC;
     breakdown->tracker++;
+
+    append_char()
     ensure_capacity(&load->mainArray, 1);
     load->mainArray.data[load->mainArray.length] = wC;
+
     free(load->mainArray.data);
     return wC;
-}
+}*/
 
 // Checking wC for debugging
 void wCCheck(char wC, char location[30]) {
     printf("wC Check %s: %c\n", location, wC);
-
 }
 
 // The associatons loop
-void associations(char wC, MemoryFileLoad *split, Breakdown *breakdown)
+void associations(char wC, MemoryFileLoad *split, Breakdown *breakdown, DynamicBuffers *buf)
 {
     // Whenever associations is called initally wC will be on
     // the first association's opening name token
@@ -160,10 +166,10 @@ void associations(char wC, MemoryFileLoad *split, Breakdown *breakdown)
     } // While loop closing brace
 } // End of the associations loop
 
-char setr(MemoryFileLoad *load) {
-    char wC;
-    append_char(&load->mainArray, wC);
-    free(load->mainArray.data);
+char setr(MemoryFileLoad *load, char wC, int index) {
+    wC = load->mainArray.data[index];
+    /*append_char(&load->mainArray, wC);
+    free(load->mainArray.data);*/
     return wC;
 }
 
@@ -246,50 +252,39 @@ void breakdown_free(Breakdown *brk) {
 }
 
 void crawler(FILE *fp) {
-    MemoryFileLoad memoryFileLoad;
-    load_init(&memoryFileLoad);
-    Breakdown breakdown;
-    breakdown_init(&breakdown);
+    MemoryFileLoad *memoryFileLoad;
+    load_init(memoryFileLoad);
+    Breakdown *breakdown;
+    breakdown_init(breakdown);
     // Sizes
     char wC;
     bool memoryKeyBool = false;
     bool nameTokenTwo = false;
     bool whileBool = true;
-
+    int loadFileReturn;
+    int incrementIdx = 0;
     // loadNexFile loads the working file into memoryFileSplit.mainArray
-    loadNexFile(fp, &memoryFileLoad);
-    // int len = sizeof(memoryFileLoad.mainArray) / sizeof(memoryFileLoad.mainArray[0]);
+    loadFileReturn = loadNexFile(fp, memoryFileLoad);
+    if (loadFileReturn == -1) {
+        perror("loadNexFile error");
+        exit(EXIT_FAILURE);
+    }
     // Here begins the crawling process.
     printf("Crawler Start Reached\n");
     printf("For Loop 01 executed\n");
     // wC[0] = memoryFileSplit.mainArray[tracker]; // wC is our working character.
-    wC = setr(&memoryFileLoad); // setr sets wC to mainArray[0]. At this point wC and tracker should both be at 0
+    wC = setr(memoryFileLoad,wC, incrementIdx); // setr sets wC to mainArray[0]. At this point wC and tracker should both be at 0
     // wC should be { when the next line runs
-    wCCheck(wC, "Line 218"); // This should be mainArray[0], so, {
-    printf("Tracker Check %d\n", breakdown.tracker);
+    wCCheck(wC, "Line 278"); // This should be mainArray[0], so, {
     // this function increments tracker by one and updates wC to mainArray[1]
-    wC = increment(&memoryFileLoad, &breakdown);
-    wCCheck(wC, "Line 222"); // Here wC should be at mainArray[1] which should be '
-    // Dear god don't leave this uncommented unless we really need it
-    /*printf("---Testing Area---\n");
-    int s = sizeof(memoryFileSplit.mainArray) / sizeof(memoryFileSplit.mainArray[0]);
-    for (int i = 0; i < s; i++) {
-        printf("Mem Test %d: %c\n", i, memoryFileSplit.mainArray[i]);
-        printf("----\n");
-    }*/
-    // int loopTracker = 0;
-
-    // loopTracker++;
-    // printf("Loop tracker: %d\n", loopTracker);
+    incrementIdx++;
+    wC = setr(memoryFileLoad,wC, incrementIdx);
+    wCCheck(wC, "Line 282"); // Here wC should be at mainArray[1] which should be '
     if (wC == NAMETOKEN) {
         wCCheck(wC, "Just inside NAMETOKEN Loop");
         if (memoryKeyBool == false) {
-
-            // This used to be in an if wC == NAMETOKEN loop but
-            // After I added the one above I found it redundant.
-            //nameTokenOne = true;
-            // printf("wC == nameToken running\n");
-            wC = increment(&memoryFileLoad, &breakdown);
+            incrementIdx++;
+            wC = setr(memoryFileLoad,wC, incrementIdx);
             wCCheck(wC, "if memkey == false"); // As of here the wC is correct; it is at the first letter of the first memkey (2)
         }
 
@@ -299,25 +294,29 @@ void crawler(FILE *fp) {
             printf("wC == alphas[i] running\n");
             memoryKeyBool = true;
             // wCCheck(wC, "Line 226");
-            wC = increment(&memoryFileLoad, &breakdown); // This should increment by one per call [3]
+            incrementIdx++;
+            wC = setr(memoryFileLoad,wC, incrementIdx);
             wCCheck(wC, "First Check inside alphas"); // Should be second char of memkey
             if (isalpha(wC)) {
-                breakdown.memoryKey.data[breakdown.memoryKey.length] = wC;
-                wC = increment(&memoryFileLoad, &breakdown);
-                breakdown.memoryKey.length++;
+                breakdown->memoryKey.data[breakdown->memoryKey.length] = wC;
+                incrementIdx++;
+                wC = setr(memoryFileLoad,wC, incrementIdx);
+                breakdown->memoryKey.length++;
             }
             // The idea here is that the while loop will run until memkeybool
             // gets flipped and THEN if wC == nameToken runs
             while (memoryKeyBool == true) {
-                breakdown.memoryKey.data[breakdown.memoryKey.length] = wC;
-                wC = increment(&memoryFileLoad, &breakdown);
-                breakdown.memoryKey.length++;
+                breakdown->memoryKey.data[breakdown->memoryKey.length] = wC;
+                incrementIdx++;
+                wC = setr(memoryFileLoad,wC, incrementIdx);
+                breakdown->memoryKey.length++;
                 wCCheck(wC, "while loop check");
 
                 if (isalnum(wC)) {
-                    breakdown.memoryKey.data[breakdown.memoryKey.length] = wC;
-                    wC = increment(&memoryFileLoad, &breakdown);
-                    breakdown.memoryKey.length++;
+                    breakdown->memoryKey.data[breakdown->memoryKey.length] = wC;
+                    incrementIdx++;
+                    wC = setr(memoryFileLoad,wC, incrementIdx);
+                    breakdown->memoryKey.length++;
                 }
                 if (wC == NAMETOKEN) {
                     wCCheck(wC, "NAMETOKEN two check one");
@@ -329,7 +328,8 @@ void crawler(FILE *fp) {
             if (isalpha(wC) != true && nameTokenTwo == true) {
                 wCCheck(wC, "Post NAMETOKEN 2 If one");
                 memoryKeyBool = false;
-                wC = increment(&memoryFileLoad, &breakdown);
+                incrementIdx++;
+                wC = setr(memoryFileLoad,wC, incrementIdx);
                 wCCheck(wC, "Post NAMETOKEN 2 If Two");
                 // wC will be at COLON
             }
@@ -339,13 +339,15 @@ void crawler(FILE *fp) {
             printf("Line 271\n");
             if (wC == COLON) {
                 wCCheck(wC, "COLON check one");
-                wC = increment(&memoryFileLoad, &breakdown); // this should place wC at an open brace
+                incrementIdx++;
+                wC = setr(memoryFileLoad,wC, incrementIdx);
                 wCCheck(wC, "COLON Check Two");
             }
 
             if (wC == OPENBRACE) {
                 wCCheck(wC, "OPENBRACE check one");
-                wC = increment(&memoryFileLoad, &breakdown);
+                incrementIdx++;
+                wC = setr(memoryFileLoad,wC, incrementIdx);
                 wCCheck(wC, "OPENBRACE check two"); // wC here is a nameToken
             }
 
@@ -366,7 +368,7 @@ void crawler(FILE *fp) {
                 if (isalpha(wC) == false) {
                     // wCCheck(wC, "Line 295\n");
 
-                    if (wC == 'NULL') {
+                    if (wC == 0) {
                         printf("314");
 
                         whileBool = false;
@@ -377,9 +379,10 @@ void crawler(FILE *fp) {
                                 printf("NAMETOKEN CASE HIT: %d\n", (int)wC);
                                 printf("Nametoken reached\n");
                                 printf("Tracker check pre associations: %d\n", breakdown.tracker);
-                                associations(wC, &memoryFileLoad, &breakdown);
+                                associations(wC, &memoryFileLoad, &breakdown, );
                                 printf("Tracker check post associations: %d\n", breakdown.tracker);
-                                wC = increment(&memoryFileLoad, &breakdown);
+                                incrementIdx++;
+                                wC = setr(memoryFileLoad,wC, incrementIdx);
                                 printf("Tracker Check Line 339: %d\n", breakdown.tracker);
                                 wCCheck(wC, "Final NAMETOKEN check"); // At this point wC is returning an open brace
                                 break;
@@ -389,15 +392,18 @@ void crawler(FILE *fp) {
                                 break;
                             case CLOSEBRACE:
                                 printf("310");
-                                wC = increment(&memoryFileLoad, &breakdown);
+                                incrementIdx++;
+                                wC = setr(memoryFileLoad,wC, incrementIdx);
                                 break;
                             case COMMA:
                                 printf("Line 319");
-                                wC = increment(&memoryFileLoad, &breakdown);
+                                incrementIdx++;
+                                wC = setr(memoryFileLoad,wC, incrementIdx);
                                 break;
                             case SEMICOLON:
                                 wCCheck(wC, "inside semicolon case");
-                                wC = increment(&memoryFileLoad, &breakdown);
+                                incrementIdx++;
+                                wC = setr(memoryFileLoad,wC, incrementIdx);
                                 whileBool = false;
                                 break;
                             default:
@@ -432,7 +438,8 @@ void crawler(FILE *fp) {
 
 
 void lRun()
-    {   printf("Catalyst Reached\n");
+    {
+        printf("Catalyst Reached\n");
         FILE *fp = fopen("Testing2.nex", "r");
         crawler(fp);
         fclose(fp);

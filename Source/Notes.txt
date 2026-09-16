@@ -931,3 +931,11 @@ outside. I'll try to be back later but I have family coming by for labor day and
 
 I've spent the last two days in Cognition setting things up in there, but that's right now seperate from in here but also
 a part of the progress for in here, so I thought i'd make a quick journal entry saying as much.
+
+9/15/2026-
+
+I've been spending time in the cognition and the substrate, so, I made sure to come back here tonight for just a bit.
+I don't like the direction I was heading in when I left off last as where I need to be going right now so I've just been
+working on runtime errors in Lexer, one at a time. I've fixed a few bur now i'm quite tired, so.
+
+Progress is progress.
