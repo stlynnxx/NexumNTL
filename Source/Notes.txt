@@ -939,3 +939,10 @@ I don't like the direction I was heading in when I left off last as where I need
 working on runtime errors in Lexer, one at a time. I've fixed a few bur now i'm quite tired, so.
 
 Progress is progress.
+
+9/16/2026-
+
+I'm back in here this morning after a night's rest, back at debugging. I hit run, get a list of errors, and start working through
+them one by one from the top. Right now the bulk of the work is concentrated within the Lexer and the Parser, it seems. 
+
+One step at a time!

@@ -171,6 +171,7 @@ int values_append_string(DynamicBuffers *buf, const char *string) {
 int values_append_char(DynamicBuffers *buf, char c) {
     return (values_append_bytes(buf, &c, 1));
 }
+/*
 void encode_usrmor(DynamicBuffers *buf, Table table, const char morph[]) {
     /*char firstChar = morph[0];
     // I think from here we will need to check the length of the
@@ -178,7 +179,7 @@ void encode_usrmor(DynamicBuffers *buf, Table table, const char morph[]) {
     // index to finish our encoded morpheme which will end up being firstChar + index
     size_t rowCheck = table.row[firstChar].count;
     char checkChar = (char)rowCheck;
-    strcat(firstChar, checkChar);*/
+    strcat(firstChar, checkChar);
 
 
 void usrmor_chk(DynamicBuffers *buf, const char morph[]) {
@@ -216,3 +217,4 @@ int add_morph(DynamicBuffers *buf, const char *morph, int routeFlag) {
             break;
     }
 }
+*/

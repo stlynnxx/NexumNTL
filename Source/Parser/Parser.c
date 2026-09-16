@@ -34,18 +34,17 @@ const char *valuesSearch(const char *searchTerm) {
 }
 
 // Loads a row associated with a given wC into compArray
-char look(ParserBuffers pbuffers, char wC) {
+void look(ParserBuffers pbuffers, char wC) {
     for (int r  = 0; r < 26; r++) {
         if (toupper(wC) == *valuesMatrix[r][0]) {
-            for (int ii = 0; ii < 14; ii++)
+            for (int ii = 0; ii < 14; ii++) {
                 pbuffers.compArray.data[ii] = *valuesMatrix[r][ii];
-            return pbuffers.compArray.data[0];
+            }
         }
-        return '\0';
     }
 }
 
-char increment(int breakdownIdx, char wC, Breakdown *breakdown, int direction) {
+char increment(int breakdownIdx, char wC, Organizer *breakdown, int direction) {
     switch (direction) {
         case 1:
             breakdownIdx++;
@@ -65,8 +64,10 @@ char increment(int breakdownIdx, char wC, Breakdown *breakdown, int direction) {
     return wC;
 }
 
-int encode(char buffer[100], int foundI, int row, int scratchOneIdx, int flag) {
+int encode(int foundI, int row, int scratchOneIdx, int flag) {
     Export ex;
+    int encodeVal;
+    // Encoded morpheme eventually needs to use a dynaminc buffer
     char *encodedMorpheme[10];
     encodedMorpheme[0] = encodedMatrix[row][foundI];
     // Should we have write target write to export at this point?
@@ -74,13 +75,32 @@ int encode(char buffer[100], int foundI, int row, int scratchOneIdx, int flag) {
     switch (flag) {
         case 1:
             ex.memKey.data[scratchOneIdx] = *encodedMorpheme[0];
+            if (!ex.memKey.data[scratchOneIdx]) {
+                encodeVal = -1;
+            }
+            else {
+                encodeVal = 1;
+            }
             break;
         case 2:
             ex.assoc.data[scratchOneIdx] = *encodedMorpheme[0];
+            if (!ex.assoc.data[scratchOneIdx]) {
+                encodeVal = -1;
+            }
+            else {
+                encodeVal = 1;
+            }
             break;
         case 3:
             ex.associators.data[scratchOneIdx] = *encodedMorpheme[0];
+            if (!ex.associators.data[scratchOneIdx]) {
+                encodeVal = -1;
+            }
+            else {
+                encodeVal = 1;
+            }
         default:
+            encodeVal = 0;
             break;
     }
 
@@ -94,300 +114,174 @@ int verify(ParserBuffers *pbuffer, int rowSiZe, int row, int scratchOneIdx, int 
         if (strncmp(pbuffer->Buffers.data, valuesMatrix[row][i], strlen(pbuffer->Buffers.data)) == 0) {
             // match is found here
             foundI = i;
-            encodeVal = encode(pbuffer->Buffers.data, foundI, row, scratchOneIdx, flag);
-            return 1;
+            encodeVal = encode(foundI, row, scratchOneIdx, flag);
         }
-        else {
-            return 0;
-        }
-        if (encodeVal == 0) {
-            perror("Morpheme Encoding Error");
+        switch (encodeVal) {
+            case 1:
+                return 1;
+                break;
+            case 0:
+                perror("Encode error in Parser");
+                return 0;
+                break;
+            case -1:
+                perror("Encode error in Parser");
+                return -1;
+                break;
+            default:
+                perror("Encode error in Parser");
+                return 0;
+                break;
         }
     }
 }
 
 //
-void match(int scratchOneIdx, int flag, ParserBuffers *pbuffers) {
+int match(int scratchOneIdx, int flag, ParserBuffers *pbuffers) {
+    size_t rowSize;
     const char select = pbuffers->Buffers.data[0];
-    const char compSelect =  pbuffers->compBuffer.data[0];
+    // const char compSelect =  pbuffers->compBuffer.data[0];
     char workSelect = toupper(select);
     int verifyReturn;
-    bool verifyBool;
-    if (isalnum(select)) {
+    if (isalnum(select))
+    {
         switch (workSelect)
         {
             case 'A':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
-
                 verifyReturn = verify(pbuffers, rowSize, A, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    perror("Verify Error");
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
                 break;
             case 'B':
-                rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[B][0]);
-                verify(pbuffers, rowSize, B, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
+                verifyReturn = verify(pbuffers, rowSize, B, scratchOneIdx, flag);
                 break;
             case 'C':
                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
-                verify(pbuffers, rowSize, C, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, C, scratchOneIdx, flag);
                 break;
             case 'D':
                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
-                verify(pbuffers, rowSize, D, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'E':
                 rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
-                verify(pbuffers, rowSize, E, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, E, scratchOneIdx, flag);
                 break;
             case 'F':
                 rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
-                verify(pbuffers, rowSize, F, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, F, scratchOneIdx, flag);
                 break;
             case 'G':
                 rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
-                verify(pbuffers, rowSize, G, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, G, scratchOneIdx, flag);
                 break;
             case 'H':
                 rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
-                verify(pbuffers, rowSize, H, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
-                 break;
+                verifyReturn = verify(pbuffers, rowSize, H, scratchOneIdx, flag);
+                break;
             case 'I':
                 rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
-                verify(pbuffers, rowSize, I, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, I, scratchOneIdx, flag);
                 break;
             case 'J':
                 rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
-                verify(pbuffers, rowSize, J, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, J, scratchOneIdx, flag);
                 break;
             case 'K':
                 rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
-                verify(pbuffers, rowSize, K, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, K, scratchOneIdx, flag);
                 break;
             case 'L':
                 rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
-                verify(pbuffers, rowSize, L,scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, L,scratchOneIdx, flag);
                 break;
             case 'M':
                 rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
-                verify(pbuffers, rowSize, M, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, M, scratchOneIdx, flag);
                 break;
             case 'N':
                 rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
-                verify(pbuffers, rowSize, N, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, N, scratchOneIdx, flag);
                 break;
             case 'O':
                 rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
-                verify(pbuffers, rowSize, O, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, O, scratchOneIdx, flag);
                 break;
             case 'P':
                 rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
-                verify(pbuffers, rowSize, P, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, P, scratchOneIdx, flag);
                 break;
             case 'Q':
                 rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
-                verify(pbuffers, rowSize, Q, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, Q, scratchOneIdx, flag);
                 break;
             case 'R':
                 rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
-                verify(pbuffers, rowSize, R, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, R, scratchOneIdx, flag);
                 break;
             case 'S':
                 rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
-                verify(pbuffers, rowSize, S, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, S, scratchOneIdx, flag);
                 break;
             case 'T':
                 rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
-                verify(pbuffers, rowSize, T, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, T, scratchOneIdx, flag);
                 break;
             case 'U':
                 rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
-                verify(pbuffers, rowSize, U, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, U, scratchOneIdx, flag);
                 break;
             case 'V':
                 rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
-                verify(pbuffers, rowSize, V, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, V, scratchOneIdx, flag);
                 break;
             case 'W':
                 rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
-                verify(pbuffers, rowSize, W, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, W, scratchOneIdx, flag);
                 break;
             case 'X':
                 rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
-                verify(pbuffers, rowSize, X, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, X, scratchOneIdx, flag);
                 break;
             case 'Y':
                 rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
-                verify(pbuffers, rowSize, Y, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, Y, scratchOneIdx, flag);
                 break;
             case 'Z':
                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
-                verify(pbuffers, rowSize, Z, scratchOneIdx, flag);
-                if (verifyReturn == 0) {
-                    verifyBool = false;
-                }
-                else if (verifyReturn == 1) {
-                    verifyBool = true;
-                }
+                verifyReturn = verify(pbuffers, rowSize, Z, scratchOneIdx, flag);
                 break;
             default:
                 break;
-            }
         }
+        switch (verifyReturn)
+        {
+            case 1:
+                return 1;
+                break;
+            case 0:
+                return 0;
+                break;
+            case -1:
+                return -1;
+                break;
+            default:
+                return -1;
+                break;
+        }
+
     }
+}
 
 
 
-int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builderr, Breakdown *breakdown, ParserBuffers *pbuffers,char wC) {
+int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builderr, Organizer *breakdown, ParserBuffers *pbuffers,char wC) {
     bool delimCheck = false;
-    pbuffers->compArray.data[0] = look(*pbuffers, wC); // At this point we should have all of the row associated with the given wC loaded into compArray
+    int matchChk;
+    look(*pbuffers, wC); // At this point we should have all of the row associated with the given wC loaded into compArray
+    if (!pbuffers->compArray.data[0]) {
+        perror("Empty pbuffer comparray in Parser newCheck");
+    }
     if (isupper(wC)) {
         builderr->assocScratch.data[scratchOneIdx] = wC;
         scratchOneIdx++;
@@ -403,7 +297,7 @@ int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builde
                 wC = increment(breakdownIdx, wC, &*breakdown,2);
             }
 
-            if (wC != pbuffers.compArray.data[i]) {
+            if (wC != pbuffers->compArray.data[i]) {
                 perror("Parser->newCheck failure");
                 exit(EXIT_FAILURE);
             }
@@ -420,9 +314,21 @@ int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builde
                 }
                 if (pbuffers->Buffers.length == pbuffers->compBuffer.length) {
                     // Morpheme match
-                    match(scratchOneIdx, writeFlag, pbuffers);
-                    return 0;
-
+                    matchChk = match(scratchOneIdx, writeFlag, pbuffers);
+                    switch (matchChk) {
+                        case 1:
+                            return 1;
+                            break;
+                        case 0:
+                            return 0;
+                            break;
+                        case -1:
+                            return -1;
+                            break;
+                        default:
+                            return -1;
+                            break;
+                    }
                 }
             }
             // If we go through letter by letter manually until a 'soft match', can we not then confirm it by comparing it to the entry size?
@@ -438,8 +344,9 @@ void sendToSource() {
 }
 
 
-void parse(Breakdown *breakdown, Export *export_, Builder *builderr, ParserBuffers *pbuffers) {
-    int writeFlag = 1;
+void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffers *pbuffers) {
+    int writeFlag = 1
+    int checkChk;
     size_t assocSize; // size of the assoc array in the working struct
     size_t memKeySize; // size of mem key array in breakdown
     size_t associatorsSize;
@@ -663,7 +570,7 @@ int prun()
 {
     // This establishes the struct instances and
     // passes them into parseAssocs
-    Breakdown breakdown;
+    Organizer breakdown;
     breakdown_init(&breakdown);
     Export export_;
     exp_init(&export_);

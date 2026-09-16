@@ -27,6 +27,6 @@ typedef struct {
     DynamicBuffers associations;
     DynamicBuffers workingAssociators;
     int tracker;
-} Breakdown;
+} Organizer;
 
 #endif //NEXUMNTL_LEXER_H
