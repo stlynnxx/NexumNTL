@@ -88,6 +88,40 @@ char firsts[40] = {'t','i','a','o','e','r','l','m','f','n', 'u'};
 char secondaries[80] = {
     'b', 'c', 'd', 'g', 'h', 'j', 'k', 'p', 'q', 's', 'u', 'v', 'w', 'x', 'y', 'z'
 };
+int ensure_capacity(DynamicBuffers *buf, size_t extra) {
+    size_t needed = buf->length + extra;
+    if (needed <= buf->capacity) {
+        return 0;
+    }
+    size_t capacity = buf->capacity ? buf->capacity : 16;
+    while (needed > capacity) {
+        capacity *= 2;
+    }
+    char *tmp = realloc(buf->data, capacity);
+    if (!tmp)
+        return -1;
+
+    buf->data = tmp;
+    buf->capacity = capacity;
+    return 0;
+}
+// append_bytes is for appending raw bytes from the given input
+int append_bytes(DynamicBuffers *buf, const char *byte, size_t x) {
+    if (ensure_capacity(buf, x) != 0) {
+        return -1; // failure
+    }
+    memcpy(buf->data + buf->length, byte, x);
+    buf->length += x;
+    return 0;
+}
+// This is an interface for passing a string to append bytes
+int append_string(DynamicBuffers *buf, const char *string) {
+    return (append_bytes(buf, string, strlen(string)));
+}
+// This is an interface for passing chars to append_bytes
+int append_char(DynamicBuffers *buf, char c) {
+    return (append_bytes(buf, &c, 1));
+}
 
 // Helper functions
 void seed_table(Table *table) {

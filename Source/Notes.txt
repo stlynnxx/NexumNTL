@@ -947,3 +947,14 @@ them one by one from the top. Right now the bulk of the work is concentrated wit
 
 One step at a time!
 
+I've been back in here again tonight, working through bugs and fixing some inits that I wanted to set up differently
+than I originally had. I need to build the append methods for several differnt places across the program, and also free
+functions. I am still learning manual memory but I feel i'm getting better.
+
+Good progress today!
+
+I also started on working on the compressor for the handoff from the cognitive unit and i'm realizing I need to make
+match in parser a bit more modular if I want to just simply call that from the compressor which will take some deeper
+reworking within Parser to make that happen, but it'll be worth it.
+
+Less to go wrong, so they say.

@@ -78,7 +78,13 @@ Export* exp_init() {
     }
     return ex;
 }
-void exp_add(Export *export_, int value) {
+void exp_add(Export *export_, int flag) {
+    switch (flag) {
+        case 0:
+            appendChar(export_, '\0');
+
+    }
+
 }
 
 int encode(int foundI, int row, int scratchOneIdx, int flag) {
@@ -519,8 +525,8 @@ void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffe
     } // End associators loop
 }
 
-void build_init(Builder *builderr)
-{
+Builder* build_init() {
+    Builder *builderr = malloc(sizeof(Builder));
     builderr->associatorScratch.length = 0;
     builderr->associatorScratch.capacity = 0;
     builderr->memKeyScratch.length = 0;
@@ -533,8 +539,10 @@ void build_init(Builder *builderr)
         perror("build_init malloc failed");
         exit(EXIT_FAILURE);
     }
+    return builderr;
 }
-void pbuffers_init(ParserBuffers *pbuffers) {
+ParserBuffers* pbuffers_init() {
+    ParserBuffers *pbuffers = malloc(sizeof(ParserBuffers));
     pbuffers->compBuffer.length = 0;
     pbuffers->compBuffer.capacity = 0;
     pbuffers->compArray.length = 0;
@@ -548,21 +556,17 @@ void pbuffers_init(ParserBuffers *pbuffers) {
         perror("pbuffers_init malloc failed");
         exit(EXIT_FAILURE);
     }
-
+    return pbuffers;
 }
 int prun()
 {
     // This establishes the struct instances and
     // passes them into parseAssocs
-    Organizer breakdown;
-    breakdown_init(&breakdown);
-    Export export_;
-    exp_init(&export_);
-    Builder builderr;
-    build_init(&builderr);
-    ParserBuffers pbuffers;
-    pbuffers_init(&pbuffers);
-    parse(&breakdown, &export_, &builderr, &pbuffers);
+    Organizer *breakdown = breakdown_init();
+    Export *exp = exp_init();
+    Builder *builderr = build_init();
+    ParserBuffers *pbuffers = pbuffers_init();
+    parse(breakdown, exp, builderr, pbuffers);
     return 0;
 }
 

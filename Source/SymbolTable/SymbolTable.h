@@ -89,6 +89,10 @@ extern char secondaries[80];
 void seed_table(Table *table);
 int row_init(Row *row);
 int row_set(Row *row, size_t col, const char *value);
+extern int append_bytes(DynamicBuffers *buf, char *data, size_t length);
+extern int append_string(DynamicBuffers *buf, char *data, size_t length);
+extern int append_char(DynamicBuffers *buf, char c);
+extern int ensure_capacity();
 
 
 #endif // SymbolTable_H

@@ -8,9 +8,22 @@
 #include "../SymbolTable/SymbolTable.h"
 #include <stddef.h>
 
+
+
+typedef struct {
+    DynamicBuffers memoryKey;
+    int assocationCount;
+    DynamicBuffers associations;
+    DynamicBuffers workingAssociators;
+    int tracker;
+} Organizer;
+
+
 void lRun();
-void breakdown_init();
+Organizer* breakdown_init();
 void breakdown_free();
+void appendString(DynamicBuffers *buf, char *string);
+void appendChar(DynamicBuffers *buf, char c);
 #define MAX_ASSOC 200
 #define MAX_ASSOC_LEN 200
 #define ROW 20
@@ -20,13 +33,5 @@ typedef struct {
     DynamicBuffers mainArray;
     // We may end up coming back in here and creating a second array to handle nexcode passes
 } MemoryFileLoad;
-
-typedef struct {
-    DynamicBuffers memoryKey;
-    int assocationCount;
-    DynamicBuffers associations;
-    DynamicBuffers workingAssociators;
-    int tracker;
-} Organizer;
 
 #endif //NEXUMNTL_LEXER_H
