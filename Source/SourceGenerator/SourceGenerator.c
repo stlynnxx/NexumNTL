@@ -100,7 +100,7 @@ int readBytes(FILE *fp, InputForm *form, Export *exp) {
 }
 
 // Begins the append process
-int append(const char *path) {
+int append(const char *path, bool nexcodeFlag) {
     Export *exp;
     FILE *fp = fopen(path, "a");
     printf("Appending to: %s\n", path);
@@ -117,9 +117,9 @@ int append(const char *path) {
     return 0;
 }
 
-int sgRun(const char *path) {
+int sgRun(const char *path, bool nexcodeFlag) {
     // create(path); Create has been merged into append
-    append(path);
+    append(path, nexcodeFlag);
     return 0;
 }
 

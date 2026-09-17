@@ -9,7 +9,7 @@
 
 int main_run() {
     // This initiates the Source Generator
-    sgRun("Testing2.nex");
+    sgRun("Testing2.nex", false);
     // This initiates the Lexer
     lRun();
     prun();

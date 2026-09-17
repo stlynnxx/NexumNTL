@@ -63,19 +63,37 @@ char increment(int breakdownIdx, char wC, Organizer *breakdown, int direction) {
     }
     return wC;
 }
+Export* exp_init() {
+    Export *ex = malloc(sizeof(Export));
+    ex->assoc.length = 0;
+    ex->assoc.capacity = 0;
+    ex->memKey.length = 0;
+    ex->memKey.capacity = 0;
+    ex->memKey.data = malloc(32);
+    ex->assoc.data = malloc(64);
+    ex->associators.data = malloc(32);
+    if (!ex->memKey.data || !ex->assoc.data || !ex->associators.data) {
+        perror("exp_init malloc failed");
+        exit(EXIT_FAILURE);
+    }
+    return ex;
+}
+void exp_add(Export *export_, int value) {
+}
 
 int encode(int foundI, int row, int scratchOneIdx, int flag) {
-    Export ex;
+    Export *ex = exp_init();
     int encodeVal;
     // Encoded morpheme eventually needs to use a dynaminc buffer
     char *encodedMorpheme[10];
     encodedMorpheme[0] = encodedMatrix[row][foundI];
     // Should we have write target write to export at this point?
     // writeTarget[scratchOneIdx] = encodedMorpheme[0];
-    switch (flag) {
+    switch (flag)
+    {
         case 1:
-            ex.memKey.data[scratchOneIdx] = *encodedMorpheme[0];
-            if (!ex.memKey.data[scratchOneIdx]) {
+            ex->memKey.data[scratchOneIdx] = *encodedMorpheme[0];
+            if (!ex->memKey.data[scratchOneIdx]) {
                 encodeVal = -1;
             }
             else {
@@ -83,8 +101,8 @@ int encode(int foundI, int row, int scratchOneIdx, int flag) {
             }
             break;
         case 2:
-            ex.assoc.data[scratchOneIdx] = *encodedMorpheme[0];
-            if (!ex.assoc.data[scratchOneIdx]) {
+            ex->assoc.data[scratchOneIdx] = *encodedMorpheme[0];
+            if (!ex->assoc.data[scratchOneIdx]) {
                 encodeVal = -1;
             }
             else {
@@ -92,8 +110,8 @@ int encode(int foundI, int row, int scratchOneIdx, int flag) {
             }
             break;
         case 3:
-            ex.associators.data[scratchOneIdx] = *encodedMorpheme[0];
-            if (!ex.associators.data[scratchOneIdx]) {
+            ex->associators.data[scratchOneIdx] = *encodedMorpheme[0];
+            if (!ex->associators.data[scratchOneIdx]) {
                 encodeVal = -1;
             }
             else {
@@ -103,36 +121,51 @@ int encode(int foundI, int row, int scratchOneIdx, int flag) {
             encodeVal = 0;
             break;
     }
+    switch (encodeVal) {
+        case 1:
+            return 1;
+            break;
+        case 0:
+            return 0;
+            break;
+        case -1:
+            return -1;
+            break;
+        default:
+            perror("Encode error in Parser");
+            return -1;
+            break;
+    }
 
-}
+ }
 
 int verify(ParserBuffers *pbuffer, int rowSiZe, int row, int scratchOneIdx, int flag) {
     int encodeVal;
     int foundI;
     for (int i = 0; i <= rowSiZe; i++) {
-        if (valuesMatrix[row][i] == NULL) break;
+        if (valuesMatrix[row][i] == NULL) return -1;
         if (strncmp(pbuffer->Buffers.data, valuesMatrix[row][i], strlen(pbuffer->Buffers.data)) == 0) {
             // match is found here
             foundI = i;
             encodeVal = encode(foundI, row, scratchOneIdx, flag);
         }
-        switch (encodeVal) {
-            case 1:
-                return 1;
-                break;
-            case 0:
-                perror("Encode error in Parser");
-                return 0;
-                break;
-            case -1:
-                perror("Encode error in Parser");
-                return -1;
-                break;
-            default:
-                perror("Encode error in Parser");
-                return 0;
-                break;
-        }
+    }
+    switch (encodeVal) {
+        case 1:
+            return 1;
+            break;
+        case 0:
+            perror("Encode error in Parser");
+            return 0;
+            break;
+        case -1:
+            perror("Encode error in Parser");
+            return -1;
+            break;
+        default:
+            perror("Encode error in Parser");
+            return 0;
+            break;
     }
 }
 
@@ -252,6 +285,7 @@ int match(int scratchOneIdx, int flag, ParserBuffers *pbuffers) {
                 verifyReturn = verify(pbuffers, rowSize, Z, scratchOneIdx, flag);
                 break;
             default:
+                verifyReturn = -1;
                 break;
         }
         switch (verifyReturn)
@@ -271,6 +305,9 @@ int match(int scratchOneIdx, int flag, ParserBuffers *pbuffers) {
         }
 
     }
+    else {
+        return -1;
+    }
 }
 
 
@@ -281,6 +318,7 @@ int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builde
     look(*pbuffers, wC); // At this point we should have all of the row associated with the given wC loaded into compArray
     if (!pbuffers->compArray.data[0]) {
         perror("Empty pbuffer comparray in Parser newCheck");
+        return -1;
     }
     if (isupper(wC)) {
         builderr->assocScratch.data[scratchOneIdx] = wC;
@@ -290,7 +328,9 @@ int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builde
                 if (wC || pbuffers->compArray.data[i] == COMMA) {
                     // the comma is the delimiter, so this should denote the end of a word/entry
                     delimCheck = true;
-
+                }
+                else {
+                    return -1;
                 }
                 pbuffers->Buffers.data[i] = pbuffers->compArray.data[i];
                 // We need to figure out how to determine direction for this call
@@ -299,12 +339,13 @@ int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builde
 
             if (wC != pbuffers->compArray.data[i]) {
                 perror("Parser->newCheck failure");
-                exit(EXIT_FAILURE);
+                return -1;
             }
 
             if (delimCheck == true) {
                 // sizeX = sizeof(buffer) / sizeof(buffer[0]);
-                for (int j = 0; j < pbuffers->Buffers.length; j++) {
+                for (int j = 0; j < pbuffers->Buffers.length; j++)
+                {
                     pbuffers->compArray.data[i] = pbuffers->compBuffer.data[i];
                 }
                 // sizeY = sizeof(compBuffer) / sizeof(compBuffer[0]);
@@ -330,23 +371,27 @@ int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builde
                             break;
                     }
                 }
+
+            } else {
+                return -1;
             }
-            // If we go through letter by letter manually until a 'soft match', can we not then confirm it by comparing it to the entry size?
-            // if i == wC, append to buffer until soft token match, then hard confirm via buffer size vs comp size?
         }
+    } else {
+        return -1;
     }
+    return -1;
 }
 
 void sendToSource() {
-    nexcodeFlag = true;
-    sgRun("Testing2.nexcode");
+    bool flag = true;
+    sgRun("Testing2.nexcode", flag);
 
 }
 
 
 void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffers *pbuffers) {
-    int writeFlag = 1
-    int checkChk;
+    int writeFlag = 1;
+    // int checkChk;
     size_t assocSize; // size of the assoc array in the working struct
     size_t memKeySize; // size of mem key array in breakdown
     size_t associatorsSize;
@@ -474,67 +519,6 @@ void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffe
     } // End associators loop
 }
 
-
-
-
-    // I don't remember why I wrote this so it's commented out hoping it'll become obvious that I do or don't need it
-
-    /*
-    for (int b = 0; b < assocSize; b++) {
-        // These if statements get the char counts for the associations
-        if (isalpha(working->assoc[b])) {
-            assocCharCount++;
-        }
-        if (isalnum(working->assoc[b])) {
-            assocCharCount++;
-        }
-        if (breakdown->associations[b] == COMMA) {
-            commaPoint = breakdown->associations[b];
-            counts[countsIdx] = assocCharCount;
-            countsIdx++;
-            assocCharCount = 0;
-        }
-        // The k for loop is isolating assocations
-        for (int k = 0; k <= commaPoint - 1; k++) {
-            breakdown->associations[k] = breakdown->associations[b];
-
-        } // End of k for
-        */
-
-    // Here we will need to reference the symbol table for encodings and translate to .nexcode
-
-    // For checking for macro'd morphemes (mm's) we should have a list of all of the first letters of
-    // the mm's and if there's a match advance one letter at a time checking for mm matches
-
-
-
-    // This is checking to see if the current char being examined is a capital letter,
-    // and append it to the scratch if so
-
-
-
-
-    //}
-
-void flag()
-{
-    nexcodeFlag = true;
-}
-void exp_init(Export *export_) {
-    export_->assoc.length = 0;
-    export_->assoc.capacity = 0;
-    export_->memKey.length = 0;
-    export_->memKey.capacity = 0;
-    export_->memKey.data = malloc(32);
-    export_->assoc.data = malloc(64);
-    export_->associators.data = malloc(32);
-    if (!export_->memKey.data || !export_->assoc.data || !export_->associators.data) {
-        perror("exp_init malloc failed");
-        exit(EXIT_FAILURE);
-    }
-}
-void exp_add(Export *export_, int value) {
-}
 void build_init(Builder *builderr)
 {
     builderr->associatorScratch.length = 0;
