@@ -27,5 +27,5 @@ typedef struct {
     DynamicBuffers associatorScratch;
     DynamicBuffers memKeyScratch;
 } Builder;
-extern int match(int scratchgOneIdx, int flag, ParserBuffers *buf);
+
 #endif //NEXUMNTL_PARSER_H

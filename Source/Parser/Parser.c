@@ -44,19 +44,19 @@ void look(ParserBuffers pbuffers, char wC) {
     }
 }
 
-char increment(int breakdownIdx, char wC, Organizer *breakdown, int direction) {
+char increment(int breakdownIdx, char wC, Organizer *lexerbreakdown, int direction) {
     switch (direction) {
+        case 0:
+            breakdownIdx++;
+            wC = lexerbreakdown->memoryKey.data[breakdownIdx];
+            break;
         case 1:
             breakdownIdx++;
-            wC = breakdown->memoryKey.data[breakdownIdx];
+            wC = lexerbreakdown->associations.data[breakdownIdx];
             break;
         case 2:
             breakdownIdx++;
-            wC = breakdown->associations.data[breakdownIdx];
-            break;
-        case 3:
-            breakdownIdx++;
-            wC = breakdown->workingAssociators.data[breakdownIdx];
+            wC = lexerbreakdown->workingAssociators.data[breakdownIdx];
             break;
         default:
             break;
@@ -143,7 +143,8 @@ int encode(int foundI, int row, int scratchOneIdx, int flag) {
             break;
     }
 
- }
+}
+
 
 int verify(ParserBuffers *pbuffer, int rowSiZe, int row, int scratchOneIdx, int flag) {
     int encodeVal;
@@ -154,6 +155,9 @@ int verify(ParserBuffers *pbuffer, int rowSiZe, int row, int scratchOneIdx, int 
             // match is found here
             foundI = i;
             encodeVal = encode(foundI, row, scratchOneIdx, flag);
+        }
+        else {
+            // We need to catch the unverified morpheme here and then hand it over to usrmor
         }
     }
     switch (encodeVal) {
@@ -318,7 +322,7 @@ int match(int scratchOneIdx, int flag, ParserBuffers *pbuffers) {
 
 
 
-int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builderr, Organizer *breakdown, ParserBuffers *pbuffers,char wC) {
+int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builderr, Organizer *lexerbreakdown, ParserBuffers *pbuffers,char wC, int incrementFlag) {
     bool delimCheck = false;
     int matchChk;
     look(*pbuffers, wC); // At this point we should have all of the row associated with the given wC loaded into compArray
@@ -327,8 +331,21 @@ int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builde
         return -1;
     }
     if (isupper(wC)) {
-        builderr->assocScratch.data[scratchOneIdx] = wC;
-        scratchOneIdx++;
+        switch (incrementFlag) {
+            case 0:
+                builderr->memKeyScratch.data[scratchOneIdx] = wC;
+                break;
+            case 1:
+                builderr->assocScratch.data[scratchOneIdx] = wC;
+                break;
+            case 2:
+                builderr->associatorScratch.data[scratchOneIdx] = wC;
+                break;
+            default:
+                perror("Default error, closing");
+                return -1;
+                break;
+        }
         for (int i = 0; i < pbuffers->compArray.length; i++) {
             if (wC == pbuffers->compArray.data[i]) {
                 if (wC || pbuffers->compArray.data[i] == COMMA) {
@@ -339,8 +356,7 @@ int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builde
                     return -1;
                 }
                 pbuffers->Buffers.data[i] = pbuffers->compArray.data[i];
-                // We need to figure out how to determine direction for this call
-                wC = increment(breakdownIdx, wC, &*breakdown,2);
+                wC = increment(breakdownIdx, wC, &*lexerbreakdown,incrementFlag);
             }
 
             if (wC != pbuffers->compArray.data[i]) {
@@ -396,7 +412,8 @@ void sendToSource() {
 
 
 void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffers *pbuffers) {
-    int writeFlag = 1;
+    int writeFlag;
+    int incrementFlag;
     // int checkChk;
     size_t assocSize; // size of the assoc array in the working struct
     size_t memKeySize; // size of mem key array in breakdown
@@ -414,9 +431,12 @@ void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffe
     // wC = breakdown->associations[breakdownIdx]; // This sets the current working character
     char *writeTarget; // the array being written to within checker
 
+    // This loops through the memKeys
     for (int j = 0; j < memKeySize; j++) { // This loops through the memKeys
+        incrementFlag = 0;
+        writeFlag = 0;
         wC = breakdown->memoryKey.data[breakdownIdx]; // Setting wC for this logic block
-        wC = increment(breakdownIdx, wC, breakdown, 1);
+        wC = increment(breakdownIdx, wC, breakdown, incrementFlag);
         if (wC == NAMETOKEN) {
             if (firstNameTokenCheck == false) {
                 firstNameTokenCheck = true;
@@ -426,17 +446,18 @@ void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffe
                 if (secondNameTokenCheck == true) {
                     firstNameTokenCheck = false;
                     secondNameTokenCheck = false;
+                    // expNameTokenCheck = false;
                 }
             }
         }
         else {
             perror("Parser nametoken error");
         }
-        wC = increment(breakdownIdx, wC, breakdown, 1);
+        wC = increment(breakdownIdx, wC, breakdown, incrementFlag);
         writeTarget = builderr->memKeyScratch.data; // Assigns write target
         // The next line is what will be replaced with newCheck
         /// breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
-        breakdownIdx = newCheck(breakdownIdx, scratchOneIdx, 1, builderr, breakdown, pbuffers, wC); // wC should be at the end of whatever word was last parsed here
+        breakdownIdx = newCheck(breakdownIdx, scratchOneIdx, 1, builderr, breakdown, pbuffers, wC, incrementFlag); // wC should be at the end of whatever word was last parsed here
         
         export_->memKey.data[breakdownIdx] = writeTarget[breakdownIdx]; // We need to replace breakdownIdx
 
@@ -450,8 +471,11 @@ void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffe
         }
     } // End memkey loop
     breakdownIdx = 0;
-    for (int i = 0; i < assocSize; i++) { // this loops through associations
-        writeFlag++;
+
+    // this loops through associations
+    for (int i = 0; i < assocSize; i++) {
+        incrementFlag = 1;
+        writeFlag = 1;
         wC = breakdown->associations.data[breakdownIdx]; // Setting wC for this logic block
 
         if (wC == NAMETOKEN) {
@@ -470,10 +494,10 @@ void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffe
         else {
             perror("Parser nametoken error");
         }
-        wC = increment(breakdownIdx, wC, breakdown, 2);
+        wC = increment(breakdownIdx, wC, breakdown, incrementFlag);
         writeTarget = builderr->assocScratch.data; // Assigns write target
         // breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
-        breakdownIdx = newCheck(breakdownIdx, scratchOneIdx, 2, builderr, breakdown, pbuffers,wC); // wC should be at the end of whatever word was last parsed here
+        breakdownIdx = newCheck(breakdownIdx, scratchOneIdx, 2, builderr, breakdown, pbuffers,wC, incrementFlag); // wC should be at the end of whatever word was last parsed here
         if (breakdownIdx == -1) {exit(EXIT_FAILURE);}
         export_->assoc.data[breakdownIdx] = writeTarget[breakdownIdx]; // Probably should replace BreakdownIDX
 
@@ -489,8 +513,11 @@ void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffe
         }
     } // End associations loop
     breakdownIdx = 0;
+
+    // this loops through associators
     for (int k = 0; k < associatorsSize; k++) { // this loops through associators
-        writeFlag++;
+        incrementFlag = 2;
+        writeFlag = 2;
         wC = breakdown->workingAssociators.data[breakdownIdx]; // Setting wC for this logic block
 
         if (wC == NAMETOKEN) {
@@ -509,10 +536,10 @@ void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffe
         else {
             perror("Parser nametoken error");
         }
-        wC = increment(breakdownIdx, wC, breakdown, 3);
+        wC = increment(breakdownIdx, wC, breakdown, incrementFlag);
         writeTarget = builderr->associatorScratch.data; // Assigns write target
         // breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
-        breakdownIdx = newCheck(breakdownIdx, scratchOneIdx, 3, builderr, breakdown, pbuffers, wC); // wC should be at the end of whatever word was last parsed here
+        breakdownIdx = newCheck(breakdownIdx, scratchOneIdx, 3, builderr, breakdown, pbuffers, wC, incrementFlag); // wC should be at the end of whatever word was last parsed here
         export_->associators.data[breakdownIdx] = writeTarget[breakdownIdx]; // Probably should replace breakdownIdx
         wC = increment(breakdownIdx, wC, breakdown, 3);
         if (wC == NAMETOKEN) {
@@ -562,11 +589,11 @@ int prun()
 {
     // This establishes the struct instances and
     // passes them into parseAssocs
-    Organizer *breakdown = breakdown_init();
+    Organizer *lexerbreakdown = breakdown_init();
     Export *exp = exp_init();
     Builder *builderr = build_init();
     ParserBuffers *pbuffers = pbuffers_init();
-    parse(breakdown, exp, builderr, pbuffers);
+    parse(lexerbreakdown, exp, builderr, pbuffers);
     return 0;
 }
 

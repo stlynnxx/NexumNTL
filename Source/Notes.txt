@@ -958,3 +958,11 @@ match in parser a bit more modular if I want to just simply call that from the c
 reworking within Parser to make that happen, but it'll be worth it.
 
 Less to go wrong, so they say.
+
+9/19/2026-
+
+I did a bit of work in here this morning, setting up some stuff in the compressor and also smoothing some more
+things over in the parser. I also started some basic work on usermorpheme.
+
+Basically, in both the compressor and the parser, it will need to either verify or not verify a given morpheme, and
+unverified morphemes should be encoded and handed over to the .nex/.nexc file.
