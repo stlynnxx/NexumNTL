@@ -20,6 +20,7 @@ typedef struct {
     DynamicBuffers assoc;
     DynamicBuffers associators;
     DynamicBuffers memKey;
+    DynamicBuffers encodedMorpheme;
 } Export;
 
 typedef struct {

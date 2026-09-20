@@ -209,7 +209,7 @@ Organizer* breakdown_init() {
     brk->memoryKey.length = 0;
     brk->memoryKey.capacity = 0;
     brk->memoryKey.data = malloc(32);
-    brk->as sociations.data = malloc(64);
+    brk->associations.data = malloc(64);
     brk->workingAssociators.data = malloc(32);
     if (!brk->memoryKey.data || !brk->associations.data || !brk->workingAssociators.data) {
         perror("malloc failed");

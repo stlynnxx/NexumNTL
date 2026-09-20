@@ -80,19 +80,19 @@ typedef struct {
 typedef struct {
     Row row[26];
 } Table;
-extern char *valuesMatrix[26][14];
-extern char *encodedMatrix[26][14];
-extern int hexMatrix[40][40];
-extern int countsMatrix[26][14];
-extern char firsts[40];
-extern char secondaries[80];
+char *valuesMatrix[26][14];
+char *encodedMatrix[26][14];
+int hexMatrix[40][40];
+int countsMatrix[26][14];
+char firsts[40];
+char secondaries[80];
 void seed_table(Table *table);
 int row_init(Row *row);
 int row_set(Row *row, size_t col, const char *value);
-extern int append_bytes(DynamicBuffers *buf, char *data, size_t length);
-extern int append_string(DynamicBuffers *buf, char *data, size_t length);
-extern int append_char(DynamicBuffers *buf, char c);
-extern int ensure_capacity();
+int append_bytes(DynamicBuffers *buf, char *byte, size_t length);
+int append_string(DynamicBuffers *buf, char *data, size_t x);
+int append_char(DynamicBuffers *buf, char c);
+int ensure_capacity();
 
 
 #endif // SymbolTable_H

@@ -12,10 +12,128 @@
 #include <stdatomic.h>
 #include <stdlib.h>
 
+int ensure_capacity(Export *export, size_t extra, int control) {
+    size_t needed;
+    size_t capacity;
 
+    switch (control) {
+        case 0: {
+            needed = export->memKey.length + extra;
+            if (needed <= export->memKey.capacity) {
+                return 0;
+            }
+            capacity = export->memKey.capacity ? export->memKey.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(export->memKey.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            export->memKey.data = tmp;
+            export->memKey.capacity = capacity;
+            return 0;
+        }
+        case 1: {
+            needed = export->assoc.length + extra;
+            if (needed <= export->assoc.capacity) {
+                return 0;
+            }
+            capacity = export->assoc.capacity ? export->assoc.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(export->assoc.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            export->assoc.data = tmp;
+            export->assoc.capacity = capacity;
+            return 0;
+            break;
+        }
+        case 2: {
+            needed = export->associators.length + extra;
+            if (needed <= export->associators.capacity) {
+                return 0;
+            }
+            capacity = export->associators.capacity ? export->associators.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(export->associators.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            export->associators.data = tmp;
+            export->associators.capacity = capacity;
+            return 0;
 
+            break;
+        }
+        case 3: {
+            needed = export->encodedMorpheme.length + extra;
+            if (needed <= export->encodedMorpheme.capacity) {
+                return 0;
+            }
+            capacity = export->encodedMorpheme.capacity ? export->encodedMorpheme.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(export->encodedMorpheme.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            export->encodedMorpheme.data = tmp;
+            export->encodedMorpheme.capacity = capacity;
+            return 0;
+            break;
+        }
+        default:
+            return -1;
+            break;
+    }
+}
+// append_bytes is for appending raw bytes from the given input
+int append_bytes(Export *export, char *byte, size_t x, int control) {
+    if (ensure_capacity(export, x, control) != 0) {
+        return -1; // failure
+    }
+    switch (control) {
+        case 0:
+            memcpy(export->memKey.data + export->memKey.length, byte, x);
+            export->memKey.length += x;
+            return 0;
+            break;
+        case 1:
+            memcpy(export->associators.data + export->associators.length, byte, x);
+            export->associators.length += x;
+            return 0;
+            break;
+        case 2:
+            memcpy(export->assoc.data + export->assoc.length, byte, x);
+            export->assoc.length += x;
+            return 0;
+            break;
+        case 3:
+            memcpy(export->encodedMorpheme.data + export->encodedMorpheme.length, byte, x);
+            export->encodedMorpheme.length += x;
+            return 0;
+            break;
+        default:
+            perror("Default error");
+            exit(EXIT_FAILURE);
+    }
+}
 
-// int workIdx = breakdownIdx + 1;
+// This is an interface for passing a string to append bytes
+int append_string(Export *export, char *string, size_t x, int control) {
+    return (append_bytes(export, string, strlen(string), control));
+}
+// This is an interface for passing chars to append_bytes
+int append_char(Export *export, char c, int control) {
+    return (append_bytes(export, &c, 1),control);
+}
 
 
 // This will be for checking if a given search term is within the values matrix
@@ -69,6 +187,9 @@ Export* exp_init() {
     ex->assoc.capacity = 0;
     ex->memKey.length = 0;
     ex->memKey.capacity = 0;
+    ex->encodedMorpheme.length = 0;
+    ex->encodedMorpheme.capacity = 0;
+    ex->encodedMorpheme.data = malloc(32);
     ex->memKey.data = malloc(32);
     ex->assoc.data = malloc(64);
     ex->associators.data = malloc(32);
@@ -78,26 +199,44 @@ Export* exp_init() {
     }
     return ex;
 }
-void exp_add(Export *export_, int flag) {
+void exp_append(Export *export_, int flag, char append[]) {
     switch (flag) {
         case 0:
-            appendChar(export_, '\0');
-
+            // Memory Keys
+            break;
+        case 1:
+            // Associations
+            break;
+        case 2:
+            // Associators
+            break;
+        case 3:
+            // encodedMorpheme
+            append_string(*export_, append[0], sizeof(append[0]));
+            break;
+        default:
+            break;
     }
 
 }
 
-int encode(int foundI, int row, int scratchOneIdx, int flag) {
+int encode(int foundI, int row, int scratchOneIdx, int flag, int flag_two) {
     Export *ex = exp_init();
     int encodeVal;
-    // Encoded morpheme eventually needs to use a dynaminc buffer
+    if (flag_two == 0) {
+
+    }
+    if (flag_two == 1) {
+
+    }
+    // Encoded morpheme eventually needs to use a dynamic buffer
     char *encodedMorpheme[10];
     encodedMorpheme[0] = encodedMatrix[row][foundI];
     // Should we have write target write to export at this point?
     // writeTarget[scratchOneIdx] = encodedMorpheme[0];
     switch (flag)
     {
-        case 1:
+        case 0:
             ex->memKey.data[scratchOneIdx] = *encodedMorpheme[0];
             if (!ex->memKey.data[scratchOneIdx]) {
                 encodeVal = -1;
@@ -106,7 +245,7 @@ int encode(int foundI, int row, int scratchOneIdx, int flag) {
                 encodeVal = 1;
             }
             break;
-        case 2:
+        case 1:
             ex->assoc.data[scratchOneIdx] = *encodedMorpheme[0];
             if (!ex->assoc.data[scratchOneIdx]) {
                 encodeVal = -1;
@@ -115,7 +254,7 @@ int encode(int foundI, int row, int scratchOneIdx, int flag) {
                 encodeVal = 1;
             }
             break;
-        case 3:
+        case 2:
             ex->associators.data[scratchOneIdx] = *encodedMorpheme[0];
             if (!ex->associators.data[scratchOneIdx]) {
                 encodeVal = -1;
@@ -154,10 +293,13 @@ int verify(ParserBuffers *pbuffer, int rowSiZe, int row, int scratchOneIdx, int 
         if (strncmp(pbuffer->Buffers.data, valuesMatrix[row][i], strlen(pbuffer->Buffers.data)) == 0) {
             // match is found here
             foundI = i;
-            encodeVal = encode(foundI, row, scratchOneIdx, flag);
+            encodeVal = encode(foundI, row, scratchOneIdx, flag,0);
         }
         else {
             // We need to catch the unverified morpheme here and then hand it over to usrmor
+            foundI = i;
+            encodeVal = encode(foundI, row, scratchOneIdx, flag,1);
+
         }
     }
     switch (encodeVal) {

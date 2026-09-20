@@ -966,3 +966,10 @@ things over in the parser. I also started some basic work on usermorpheme.
 
 Basically, in both the compressor and the parser, it will need to either verify or not verify a given morpheme, and
 unverified morphemes should be encoded and handed over to the .nex/.nexc file.
+
+9/20/2026-
+
+Ive been back in here again today, working through things. I'm realizing that different parts of the complier will actually
+need their own append functions, increasing code but also flexability alongside it, so I've been working on that today,
+setting up Parser's in particular. I added logic for handling newly encoded morphemes in the process! The lexer will
+probably get it's own append functions but the compressor might actually be able to reuse the parser's.
