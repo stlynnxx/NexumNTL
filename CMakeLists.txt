@@ -18,5 +18,7 @@ add_executable(NexumNTL Source/main.c
         Source/Compressor/compressor.h
         Source/Usrmor/usermorpheme.c
         Source/Usrmor/usermorpheme.h
+        Source/Parser/parserhelpers.c
+        Source/Parser/parserhelpers.h
 )
 target_compile_options(NexumNTL PRIVATE -Wall)
