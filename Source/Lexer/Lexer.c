@@ -21,6 +21,40 @@
 
 
 
+static int ensure_capacity(DynamicBuffers *buf, size_t extra) {
+    size_t needed = buf->length + extra;
+    if (needed <= buf->capacity) {
+        return 0;
+    }
+    size_t capacity = buf->capacity ? buf->capacity : 16;
+    while (needed > capacity) {
+        capacity *= 2;
+    }
+    char *tmp = realloc(buf->data, capacity);
+    if (!tmp)
+        return -1;
+
+    buf->data = tmp;
+    buf->capacity = capacity;
+    return 0;
+}
+// append_bytes is for appending raw bytes from the given input
+static int append_bytes(DynamicBuffers *buf, char *byte, size_t x) {
+    if (ensure_capacity(buf, x) != 0) {
+        return -1; // failure
+    }
+    memcpy(buf->data + buf->length, byte, x);
+    buf->length += x;
+    return 0;
+}
+// This is an interface for passing a string to append bytes
+static int append_string(DynamicBuffers *buf, char *string, size_t x) {
+    return (append_bytes(buf, string, strlen(string)));
+}
+// This is an interface for passing chars to append_bytes
+static int append_char(DynamicBuffers *buf, char c) {
+    return (append_bytes(buf, &c, 1));
+}
 // This is for loading the nexfile from storage
 int loadNexFile(FILE *fp, MemoryFileLoad *load) {
     int returned;
@@ -66,28 +100,11 @@ void associations(char wC, MemoryFileLoad *split, Organizer *organizer,int incre
 {
     // Whenever associations is called initally wC will be on
     // the first association's opening name token
-    // bool associationBool = false;
-    // bool associatorBool = false;
-    // bool nameTokenBool = false;
+
     bool nameTokenOne = false;
     bool nameTokenTwo = false;
-
-
-
-    // int letterCounter = 0;
-    // int size;
-    // int exportSize;
-    // int associatorLetterCounter = 0;
-    // int associatiorStartPoint;
-    // int associatorEndPoint;
-    //int workingAssociatorIdx = 0;
-    // char workingAssociations[50];
      int workingAssocationsIdx = 0;
-    // int associationsSizes[100];
-
-
     bool repeatBool = true;
-
     printf("Tracker check line 83: %d\n", organizer->tracker);
     while (repeatBool == true) {
         if (wC) {

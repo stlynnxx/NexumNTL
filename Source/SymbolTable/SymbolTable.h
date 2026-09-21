@@ -89,10 +89,6 @@ char secondaries[80];
 void seed_table(Table *table);
 int row_init(Row *row);
 int row_set(Row *row, size_t col, const char *value);
-int append_bytes(DynamicBuffers *buf, char *byte, size_t length);
-int append_string(DynamicBuffers *buf, char *data, size_t x);
-int append_char(DynamicBuffers *buf, char c);
-int ensure_capacity();
 
 
 #endif // SymbolTable_H

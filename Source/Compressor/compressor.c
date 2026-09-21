@@ -248,6 +248,8 @@ void input_collect(Input *input) {
     match(0,1, input);
     // this will need to get the input from python, get it translated into nexcode from NTL,
     // and then append it into the input buff
+
+
 }
 void collect() {
     Input *in = in_init();

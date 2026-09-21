@@ -973,3 +973,10 @@ Ive been back in here again today, working through things. I'm realizing that di
 need their own append functions, increasing code but also flexability alongside it, so I've been working on that today,
 setting up Parser's in particular. I added logic for handling newly encoded morphemes in the process! The lexer will
 probably get it's own append functions but the compressor might actually be able to reuse the parser's.
+
+9/21/2026-
+
+I've been back in Parser today; IO had thought I wass going to have to make seperate encode functions for the user
+morphemes for a moment because I wanted a different return type but decided to just change the return type of the
+encode function and go through parser and make the needed changes to adapt to the new return type all the way down.
+

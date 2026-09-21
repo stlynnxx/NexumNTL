@@ -88,7 +88,7 @@ char firsts[40] = {'t','i','a','o','e','r','l','m','f','n', 'u'};
 char secondaries[80] = {
     'b', 'c', 'd', 'g', 'h', 'j', 'k', 'p', 'q', 's', 'u', 'v', 'w', 'x', 'y', 'z'
 };
-int ensure_capacity(void *buf, size_t extra) {
+static int ensure_capacity(DynamicBuffers *buf, size_t extra) {
     size_t needed = buf->length + extra;
     if (needed <= buf->capacity) {
         return 0;
@@ -106,7 +106,7 @@ int ensure_capacity(void *buf, size_t extra) {
     return 0;
 }
 // append_bytes is for appending raw bytes from the given input
-int append_bytes(void *buf, char *byte, size_t x) {
+static int append_bytes(DynamicBuffers *buf, char *byte, size_t x) {
     if (ensure_capacity(buf, x) != 0) {
         return -1; // failure
     }
@@ -115,11 +115,11 @@ int append_bytes(void *buf, char *byte, size_t x) {
     return 0;
 }
 // This is an interface for passing a string to append bytes
-int append_string(DynamicBuffers *buf, char *string, size_t x) {
+static int append_string(DynamicBuffers *buf, char *string, size_t x) {
     return (append_bytes(buf, string, strlen(string)));
 }
 // This is an interface for passing chars to append_bytes
-int append_char(DynamicBuffers *buf, char c) {
+static int append_char(DynamicBuffers *buf, char c) {
     return (append_bytes(buf, &c, 1));
 }
 

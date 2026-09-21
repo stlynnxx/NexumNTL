@@ -12,7 +12,7 @@
 #include <stdatomic.h>
 #include <stdlib.h>
 
-int ensure_capacity(Export *export, size_t extra, int control) {
+int p_ensure_capacity(Export *export, size_t extra, int control) {
     size_t needed;
     size_t capacity;
 
@@ -95,8 +95,8 @@ int ensure_capacity(Export *export, size_t extra, int control) {
     }
 }
 // append_bytes is for appending raw bytes from the given input
-int append_bytes(Export *export, char *byte, size_t x, int control) {
-    if (ensure_capacity(export, x, control) != 0) {
+int p_append_bytes(Export *export, char *byte, size_t x, int control) {
+    if (p_ensure_capacity(export, x, control) != 0) {
         return -1; // failure
     }
     switch (control) {
@@ -127,12 +127,12 @@ int append_bytes(Export *export, char *byte, size_t x, int control) {
 }
 
 // This is an interface for passing a string to append bytes
-int append_string(Export *export, char *string, size_t x, int control) {
-    return (append_bytes(export, string, strlen(string), control));
+int p_append_string(Export *export, char *string, size_t x, int control) {
+    return (p_append_bytes(export, string, strlen(string), control));
 }
 // This is an interface for passing chars to append_bytes
-int append_char(Export *export, char c, int control) {
-    return (append_bytes(export, &c, 1),control);
+int p_append_char(Export *export, char c, int control) {
+    return (p_append_bytes(export, &c, 1),control);
 }
 
 
@@ -219,6 +219,48 @@ void exp_append(Export *export_, int flag, char append[]) {
     }
 
 }
+Export* usrmor_encode(int foundI, int row, int scratchOneIdx, int flag) {
+    Export *ex = exp_init();
+    int encodeVal;
+    // Encoded morpheme eventually needs to use a dynamic buffer
+    char *encodedMorpheme[10];
+    encodedMorpheme[0] = encodedMatrix[row][foundI];
+    // Should we have write target write to export at this point?
+    // writeTarget[scratchOneIdx] = encodedMorpheme[0];
+    switch (flag)
+    {
+        case 0:
+            ex->memKey.data[scratchOneIdx] = *encodedMorpheme[0];
+            if (!ex->memKey.data[scratchOneIdx]) {
+                encodeVal = -1;
+            }
+            else {
+                encodeVal = 1;
+            }
+            break;
+        case 1:
+            ex->assoc.data[scratchOneIdx] = *encodedMorpheme[0];
+            if (!ex->assoc.data[scratchOneIdx]) {
+                encodeVal = -1;
+            }
+            else {
+                encodeVal = 1;
+            }
+            break;
+        case 2:
+            ex->associators.data[scratchOneIdx] = *encodedMorpheme[0];
+            if (!ex->associators.data[scratchOneIdx]) {
+                encodeVal = -1;
+            }
+            else {
+                encodeVal = 1;
+            }
+        default:
+            encodeVal = 0;
+            break;
+    }
+    return ex;
+}
 
 int encode(int foundI, int row, int scratchOneIdx, int flag, int flag_two) {
     Export *ex = exp_init();
@@ -285,44 +327,27 @@ int encode(int foundI, int row, int scratchOneIdx, int flag, int flag_two) {
 }
 
 
-int verify(ParserBuffers *pbuffer, int rowSiZe, int row, int scratchOneIdx, int flag) {
-    int encodeVal;
+Export* verify(Export *exp, ParserBuffers *pbuffer, int rowSiZe, int row, int scratchOneIdx, int flag) {
     int foundI;
     for (int i = 0; i <= rowSiZe; i++) {
-        if (valuesMatrix[row][i] == NULL) return -1;
+        if (valuesMatrix[row][i] == NULL) perror("values matrix null"); exit(EXIT_FAILURE);
         if (strncmp(pbuffer->Buffers.data, valuesMatrix[row][i], strlen(pbuffer->Buffers.data)) == 0) {
             // match is found here
             foundI = i;
-            encodeVal = encode(foundI, row, scratchOneIdx, flag,0);
+            exp = usrmor_encode(foundI, row, scratchOneIdx, flag);
         }
         else {
             // We need to catch the unverified morpheme here and then hand it over to usrmor
             foundI = i;
-            encodeVal = encode(foundI, row, scratchOneIdx, flag,1);
+            exp = usrmor_encode(foundI, row, scratchOneIdx, flag);
 
         }
     }
-    switch (encodeVal) {
-        case 1:
-            return 1;
-            break;
-        case 0:
-            perror("Encode error in Parser");
-            return 0;
-            break;
-        case -1:
-            perror("Encode error in Parser");
-            return -1;
-            break;
-        default:
-            perror("Encode error in Parser");
-            return 0;
-            break;
-    }
+    return exp;
 }
 
 //
-int match(int scratchOneIdx, int flag, ParserBuffers *pbuffers) {
+Export* match(Export *exp,int scratchOneIdx, int flag, ParserBuffers *pbuffers) {
     size_t rowSize;
     const char select = pbuffers->Buffers.data[0];
     // const char compSelect =  pbuffers->compBuffer.data[0];
@@ -334,137 +359,118 @@ int match(int scratchOneIdx, int flag, ParserBuffers *pbuffers) {
         {
             case 'A':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
-                verifyReturn = verify(pbuffers, rowSize, A, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, A, scratchOneIdx, flag);
                 break;
             case 'B':
                 rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
-                verifyReturn = verify(pbuffers, rowSize, B, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, B, scratchOneIdx, flag);
                 break;
             case 'C':
                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
-                verifyReturn = verify(pbuffers, rowSize, C, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, C, scratchOneIdx, flag);
                 break;
             case 'D':
                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
-                verifyReturn = verify(pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'E':
                 rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
-                verifyReturn = verify(pbuffers, rowSize, E, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'F':
                 rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
-                verifyReturn = verify(pbuffers, rowSize, F, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'G':
                 rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
-                verifyReturn = verify(pbuffers, rowSize, G, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'H':
                 rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
-                verifyReturn = verify(pbuffers, rowSize, H, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'I':
                 rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
-                verifyReturn = verify(pbuffers, rowSize, I, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'J':
                 rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
-                verifyReturn = verify(pbuffers, rowSize, J, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'K':
                 rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
-                verifyReturn = verify(pbuffers, rowSize, K, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'L':
                 rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
-                verifyReturn = verify(pbuffers, rowSize, L,scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'M':
                 rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
-                verifyReturn = verify(pbuffers, rowSize, M, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'N':
                 rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
-                verifyReturn = verify(pbuffers, rowSize, N, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'O':
                 rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
-                verifyReturn = verify(pbuffers, rowSize, O, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'P':
                 rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
-                verifyReturn = verify(pbuffers, rowSize, P, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'Q':
                 rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
-                verifyReturn = verify(pbuffers, rowSize, Q, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'R':
                 rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
-                verifyReturn = verify(pbuffers, rowSize, R, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'S':
                 rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
-                verifyReturn = verify(pbuffers, rowSize, S, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'T':
                 rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
-                verifyReturn = verify(pbuffers, rowSize, T, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'U':
                 rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
-                verifyReturn = verify(pbuffers, rowSize, U, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'V':
                 rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
-                verifyReturn = verify(pbuffers, rowSize, V, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'W':
                 rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
-                verifyReturn = verify(pbuffers, rowSize, W, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'X':
                 rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
-                verifyReturn = verify(pbuffers, rowSize, X, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'Y':
                 rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
-                verifyReturn = verify(pbuffers, rowSize, Y, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             case 'Z':
                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
-                verifyReturn = verify(pbuffers, rowSize, Z, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
                 break;
             default:
                 verifyReturn = -1;
                 break;
         }
-        switch (verifyReturn)
-        {
-            case 1:
-                return 1;
-                break;
-            case 0:
-                return 0;
-                break;
-            case -1:
-                return -1;
-                break;
-            default:
-                return -1;
-                break;
-        }
-
-    }
-    else {
-        return -1;
-    }
+    } return exp;
 }
 
 
 
-int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builderr, Organizer *lexerbreakdown, ParserBuffers *pbuffers,char wC, int incrementFlag) {
+int newCheck(Export *exp, int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builderr, Organizer *lexerbreakdown, ParserBuffers *pbuffers,char wC, int incrementFlag) {
     bool delimCheck = false;
     int matchChk;
     look(*pbuffers, wC); // At this point we should have all of the row associated with the given wC loaded into compArray
@@ -494,16 +500,15 @@ int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builde
                     // the comma is the delimiter, so this should denote the end of a word/entry
                     delimCheck = true;
                 }
-                else {
-                    return -1;
-                }
+
                 pbuffers->Buffers.data[i] = pbuffers->compArray.data[i];
                 wC = increment(breakdownIdx, wC, &*lexerbreakdown,incrementFlag);
+                breakdownIdx++;
             }
 
             if (wC != pbuffers->compArray.data[i]) {
                 perror("Parser->newCheck failure");
-                return -1;
+                exit(EXIT_FAILURE);
             }
 
             if (delimCheck == true) {
@@ -515,35 +520,16 @@ int newCheck(int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builde
                 // sizeY = sizeof(compBuffer) / sizeof(compBuffer[0]);
                 if (pbuffers->Buffers.length != pbuffers->compBuffer.length) {
                     perror("Size x y error");
-                    return -1;
+                    exit(EXIT_FAILURE);
                 }
                 if (pbuffers->Buffers.length == pbuffers->compBuffer.length) {
                     // Morpheme match
-                    matchChk = match(scratchOneIdx, writeFlag, pbuffers);
-                    switch (matchChk) {
-                        case 1:
-                            return 1;
-                            break;
-                        case 0:
-                            return 0;
-                            break;
-                        case -1:
-                            return -1;
-                            break;
-                        default:
-                            return -1;
-                            break;
-                    }
-                }
+                    exp = match(exp,scratchOneIdx, writeFlag, pbuffers);
 
-            } else {
-                return -1;
+                }
             }
         }
-    } else {
-        return -1;
-    }
-    return -1;
+     return breakdownIdx;
 }
 
 void sendToSource() {
@@ -553,7 +539,7 @@ void sendToSource() {
 }
 
 
-void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffers *pbuffers) {
+void parse(Organizer *breakdown, Export *exp, Builder *builderr, ParserBuffers *pbuffers) {
     int writeFlag;
     int incrementFlag;
     // int checkChk;
@@ -599,9 +585,9 @@ void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffe
         writeTarget = builderr->memKeyScratch.data; // Assigns write target
         // The next line is what will be replaced with newCheck
         /// breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
-        breakdownIdx = newCheck(breakdownIdx, scratchOneIdx, 1, builderr, breakdown, pbuffers, wC, incrementFlag); // wC should be at the end of whatever word was last parsed here
+        breakdownIdx = newCheck(exp,breakdownIdx, scratchOneIdx, 1, builderr, breakdown, pbuffers, wC, incrementFlag); // wC should be at the end of whatever word was last parsed here
         
-        export_->memKey.data[breakdownIdx] = writeTarget[breakdownIdx]; // We need to replace breakdownIdx
+        exp->memKey.data[breakdownIdx] = writeTarget[breakdownIdx]; // We need to replace breakdownIdx
 
         wC = increment(breakdownIdx, wC, breakdown, 1);
         if (wC == NAMETOKEN) {
@@ -639,9 +625,9 @@ void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffe
         wC = increment(breakdownIdx, wC, breakdown, incrementFlag);
         writeTarget = builderr->assocScratch.data; // Assigns write target
         // breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
-        breakdownIdx = newCheck(breakdownIdx, scratchOneIdx, 2, builderr, breakdown, pbuffers,wC, incrementFlag); // wC should be at the end of whatever word was last parsed here
+        breakdownIdx = newCheck(exp,breakdownIdx, scratchOneIdx, 2, builderr, breakdown, pbuffers,wC, incrementFlag); // wC should be at the end of whatever word was last parsed here
         if (breakdownIdx == -1) {exit(EXIT_FAILURE);}
-        export_->assoc.data[breakdownIdx] = writeTarget[breakdownIdx]; // Probably should replace BreakdownIDX
+        exp->assoc.data[breakdownIdx] = writeTarget[breakdownIdx]; // Probably should replace BreakdownIDX
 
         /* This was originally updating wC from memoryKey before increment; i've implemented increment with 2 for association because
          I think that the memoryKey was a mistake */
@@ -681,8 +667,8 @@ void parse(Organizer *breakdown, Export *export_, Builder *builderr, ParserBuffe
         wC = increment(breakdownIdx, wC, breakdown, incrementFlag);
         writeTarget = builderr->associatorScratch.data; // Assigns write target
         // breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
-        breakdownIdx = newCheck(breakdownIdx, scratchOneIdx, 3, builderr, breakdown, pbuffers, wC, incrementFlag); // wC should be at the end of whatever word was last parsed here
-        export_->associators.data[breakdownIdx] = writeTarget[breakdownIdx]; // Probably should replace breakdownIdx
+        breakdownIdx = newCheck(exp,breakdownIdx, scratchOneIdx, 3, builderr, breakdown, pbuffers, wC, incrementFlag); // wC should be at the end of whatever word was last parsed here
+        exp->associators.data[breakdownIdx] = writeTarget[breakdownIdx]; // Probably should replace breakdownIdx
         wC = increment(breakdownIdx, wC, breakdown, 3);
         if (wC == NAMETOKEN) {
             secondNameTokenCheck = true;
