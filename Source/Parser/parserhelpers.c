@@ -2,6 +2,7 @@
 // Created by steviexx on 9/21/26.
 //
 #include "parserhelpers.h"
+#include "Parser.h"
 
 int exp_ensure_capacity(Export *export, size_t extra, int control)
 {
@@ -214,7 +215,7 @@ int builder_ensure_capacity(Builder *builderr, size_t extra, int control)
     }
 }
 
-// append_bytes is for appending raw bytes from the given input
+// builder appending
 int builder_append_bytes(Builder *builderr, char *byte, size_t x, int control)
 {
     if (builder_ensure_capacity(builderr, x, control) != 0) {
@@ -253,5 +254,114 @@ int builder_append_string(Builder *builderr, char *string, size_t x, int control
 }
 // This is an interface for passing chars to append_bytes
 int builder_append_char(Builder *builderr, char c, int control) {
-    return (builder_append_bytes(builderr, &c, 1),control);
+    return (builder_append_bytes(builderr, &c,sizeof(&c), control));
+}
+
+// pbuffers appending
+int pbuff_ensure_capacity(ParserBuffers *pbuffer, size_t extra, int control)
+{
+    size_t needed;
+    size_t capacity;
+
+    switch (control) {
+        case 0: {
+            needed = pbuffer->compArray.length + extra;
+            if (needed <= pbuffer->compArray.capacity) {
+                return 0;
+            }
+            capacity = pbuffer->compArray.capacity ? pbuffer->compArray.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(pbuffer->compArray.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            pbuffer->compArray.data = tmp;
+            pbuffer->compArray.capacity = capacity;
+            return 0;
+        }
+        case 1: {
+            needed = pbuffer->compBuffer.length + extra;
+            if (needed <= pbuffer->compBuffer..capacity) {
+                return 0;
+            }
+            capacity = pbuffer->compBuffer.capacity ? pbuffer->compBuffer..capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(pbuffer->compBuffer.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            pbuffer->compBuffer.data = tmp;
+            pbuffer->compBuffer.capacity = capacity;
+            return 0;
+            break;
+        }
+        case 2: {
+            needed = pbuffer->Buffers.length + extra;
+            if (needed <= pbuffer->Buffers.capacity) {
+                return 0;
+            }
+            capacity = pbuffer->Buffers.capacity ? pbuffer->Buffers.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(pbuffer->Buffers.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            pbuffer->Buffers.data = tmp;
+            pbuffer->Buffers.capacity = capacity;
+            return 0;
+
+            break;
+        }
+        default:
+            return -1;
+            break;
+    }
+}
+
+// builder appending
+int builder_append_bytes(Builder *builderr, char *byte, size_t x, int control)
+{
+    if (builder_ensure_capacity(builderr, x, control) != 0) {
+        return -1; // failure
+    }
+    switch (control) {
+        case 0:
+            memcpy(builderr->memKeyScratch.data + builderr->memKeyScratch.length, byte, x);
+            builderr->memKeyScratch.length += x;
+            return 0;
+            break;
+        case 1:
+            memcpy(builderr->associatorScratch.data + builderr->associatorScratch.length, byte, x);
+            builderr->associatorScratch.length += x;
+            return 0;
+            break;
+        case 2:
+            memcpy(builderr->assocScratch.data + builderr->assocScratch.length, byte, x);
+            builderr->assocScratch.length += x;
+            return 0;
+            break;
+        case 3:
+            memcpy(builderr->wC.data + builderr->wC.length, byte, x);
+            builderr->wC.length += x;
+            return 0;
+            break;
+        default:
+            perror("Default error");
+            exit(EXIT_FAILURE);
+    }
+}
+
+// This is an interface for passing a string to append bytes
+int builder_append_string(Builder *builderr, char *string, size_t x, int control) {
+    return (builder_append_bytes(builderr, string, strlen(string), control));
+}
+// This is an interface for passing chars to append_bytes
+int builder_append_char(Builder *builderr, char c, int control) {
+    return (builder_append_bytes(builderr, &c,sizeof(&c), control));
 }

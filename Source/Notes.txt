@@ -995,3 +995,9 @@ and fix all of my appends next.
 
 I went ahead and fixed the exp appends and still need to fix the wC appends. I also fixed the braces/indentation issue
 that's been in the parser for awhile now.
+
+9/22/2026-
+
+I'm just doing some light late night work, it probably won't really be much. I picked up where I left off in pbuffers_ensure_capacity
+and got that cleaned up, and now i'm gonna see where I should go next.
+

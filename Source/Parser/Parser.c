@@ -2,7 +2,7 @@
 // Created by steviexx on 3/31/26.
 //
 #include "Parser.h"
-
+#include "parserhelpers.h"
 
 
 // This will be for checking if a given search term is within the values matrix
@@ -46,16 +46,19 @@ int increment(int breakdownIdx, char wC, Organizer *lexerbreakdown, int directio
     {
         case 0:
             breakdownIdx++;
-            builder->wC.data[breakdownIdx] = lexerbreakdown->memoryKey.data[breakdownIdx];
+            builder_append_string(builder, lexerbreakdown->memoryKey.data[breakdownIdx], sizeof(lexerbreakdown->memoryKey.data[breakdownIdx]), 0);
             break;
         case 1:
             breakdownIdx++;
-            builder->wC.data[breakdownIdx] = lexerbreakdown->associations.data[breakdownIdx];
+            builder_append_string(builder, lexerbreakdown->memoryKey.data[breakdownIdx], sizeof(lexerbreakdown->memoryKey.data[breakdownIdx]), 1);
             break;
         case 2:
             breakdownIdx++;
-            builder->wC.data[breakdownIdx] = lexerbreakdown->workingAssociators.data[breakdownIdx];
+            builder_append_string(builder, lexerbreakdown->memoryKey.data[breakdownIdx], sizeof(lexerbreakdown->memoryKey.data[breakdownIdx]), 2);
             break;
+        case 3:
+            breakdownIdx++;
+            builder_append_string(builder, lexerbreakdown->memoryKey.data[breakdownIdx], sizeof(lexerbreakdown->memoryKey.data[breakdownIdx]), 3);
         default:
             break;
     }
@@ -311,13 +314,16 @@ int newCheck(Export *exp, int breakdownIdx, int scratchOneIdx, int writeFlag, Bu
         switch (incrementFlag)
         {
             case 0:
-                builderr->memKeyScratch.data[scratchOneIdx] = builderr->wC.data[breakdownIdx];
+                builder_append_char(builderr, builderr->wC.data[breakdownIdx], incrementFlag);
                 break;
             case 1:
-                builderr->assocScratch.data[scratchOneIdx] = builderr->wC.data[breakdownIdx];
+                builder_append_char(builderr, builderr->wC.data[breakdownIdx], incrementFlag);
                 break;
             case 2:
-                builderr->associatorScratch.data[scratchOneIdx] = builderr->wC.data[breakdownIdx];
+                builder_append_char(builderr, builderr->wC.data[breakdownIdx], incrementFlag);
+                break;
+            case 3:
+                builder_append_char(builderr, builderr->wC.data[breakdownIdx], incrementFlag);
                 break;
             default:
                 perror("Default error, closing");
@@ -334,6 +340,7 @@ int newCheck(Export *exp, int breakdownIdx, int scratchOneIdx, int writeFlag, Bu
                     delimCheck = true;
                 }
 
+                // we need an append function for pbuffers built
                 pbuffers->Buffers.data[i] = pbuffers->compArray.data[i];
                 breakdownIdx = increment(breakdownIdx, builderr->wC.data[breakdownIdx], &*lexerbreakdown,incrementFlag, builderr);
 
