@@ -3,6 +3,48 @@
 //
 #include "parserhelpers.h"
 #include "Parser.h"
+int exp_free(Export *export) {
+    if (export) {
+        free(export->memKey.data);
+        free(export->assoc.data);
+        free(export->associators.data);
+        free(export->encodedMorpheme.data);
+        free(export);
+        export = NULL;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+int builder_free(Builder *builder) {
+    if (builder) {
+        free(builder->associatorScratch.data);
+        free(builder->assocScratch.data);
+        free(builder->memKeyScratch.data);
+        free(builder->wC.data);
+        free(builder);
+        builder = NULL;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+int pbuff_free(ParserBuffers *pbuffers) {
+    if (pbuffers) {
+        free(pbuffers->compArray.data);
+        free(pbuffers->Buffers.data);
+        free(pbuffers->compBuffer.data);
+        free(pbuffers);
+        pbuffers = NULL;
+        return 0;
+    }
+    else {
+        return -1;
+    }
+}
+
 
 int exp_ensure_capacity(Export *export, size_t extra, int control)
 {
@@ -87,6 +129,68 @@ int exp_ensure_capacity(Export *export, size_t extra, int control)
             break;
     }
 }
+
+Export* exp_init()
+{
+    Export *ex = malloc(sizeof(Export));
+    ex->assoc.length = 0;
+    ex->assoc.capacity = 0;
+    ex->memKey.length = 0;
+    ex->memKey.capacity = 0;
+    ex->encodedMorpheme.length = 0;
+    ex->encodedMorpheme.capacity = 0;
+    ex->encodedMorpheme.data = malloc(32);
+    ex->memKey.data = malloc(32);
+    ex->assoc.data = malloc(64);
+    ex->associators.data = malloc(32);
+    if (!ex->memKey.data || !ex->assoc.data || !ex->associators.data) {
+        perror("exp_init malloc failed");
+        exit(EXIT_FAILURE);
+    }
+    return ex;
+}
+
+Builder* build_init() {
+    Builder *builderr = malloc(sizeof(Builder));
+    builderr->associatorScratch.length = 0;
+    builderr->associatorScratch.capacity = 0;\
+    builderr->assocScratch.length = 0;
+    builderr->assocScratch.capacity = 0;
+    builderr->memKeyScratch.length = 0;
+    builderr->memKeyScratch.capacity = 0;
+    builderr->wC.length = 0;
+    builderr->wC.capacity = 0;
+    builderr->memKeyScratch.data = malloc(32);
+    builderr->assocScratch.data = malloc(64);
+    builderr->associatorScratch.data = malloc(32);
+    builderr->wC.data = malloc(2);
+    if (!builderr->memKeyScratch.data || !builderr->assocScratch.data || !builderr->associatorScratch.data || !builderr->wC.data || !builderr->assocScratch.data)
+    {
+        perror("build_init malloc failed");
+        exit(EXIT_FAILURE);
+    }
+    return builderr;
+}
+
+ParserBuffers* pbuffers_init() {
+    ParserBuffers *pbuffers = malloc(sizeof(ParserBuffers));
+    pbuffers->compBuffer.length = 0;
+    pbuffers->compBuffer.capacity = 0;
+    pbuffers->compArray.length = 0;
+    pbuffers->compArray.capacity = 0;
+    pbuffers->Buffers.length = 0;
+    pbuffers->Buffers.capacity = 0;
+    pbuffers->Buffers.data = malloc(32);
+    pbuffers->compArray.data = malloc(32);
+    pbuffers->compBuffer.data = malloc(32);
+    if (!pbuffers->Buffers.data || !pbuffers->compArray.data || !pbuffers->compBuffer.data) {
+        perror("pbuffers_init malloc failed");
+        exit(EXIT_FAILURE);
+    }
+    return pbuffers;
+}
+
+
 
 // append_bytes is for appending raw bytes from the given input
 int exp_append_bytes(Export *export, char *byte, size_t x, int control)

@@ -6,6 +6,7 @@
 #include "../SymbolTable/SymbolTable.h"
 #include "../Parser/Parser.h"
 void usrmor_add_p(ParserBuffers *pbuffer) {
+    
 
 }
 void usrmor_add() {

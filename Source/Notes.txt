@@ -1001,3 +1001,11 @@ that's been in the parser for awhile now.
 I'm just doing some light late night work, it probably won't really be much. I picked up where I left off in pbuffers_ensure_capacity
 and got that cleaned up, and now i'm gonna see where I should go next.
 
+9/23/2026-
+
+I've been in here again tonight, chipping away at things a bit more. I set up the free functions I was missing in the
+Parser and also just cleaned up some unnessecary code in the inner functions of Parser. I need to set up some free
+functions in lexer and then get back on setting up logic in usermorpheme and the we can finish the compressor and polish
+everything and maybe call it v 0.0.1!
+
+

@@ -9,5 +9,8 @@
 int builder_append_string(Builder *builderr, char *string, size_t x, int control);
 int builder_append_char(Builder *builderr, char c, int control);
 int builder_append_bytes(Builder *builderr, char *byte, size_t x, int control);
+Builder* build_init();
+ParserBuffers* pbuffers_init();
+Export* exp_init();
 
 #endif //NEXUMNTL_PARSERHELPERS_H

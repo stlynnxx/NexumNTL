@@ -22,7 +22,7 @@ typedef struct {
     DynamicBuffers compArray;
     DynamicBuffers compBuffer;
     DynamicBuffers Buffers;
-} ParserBuffers;
+}ParserBuffers;
 
 typedef struct {
     DynamicBuffers assoc;
@@ -37,6 +37,8 @@ typedef struct {
     DynamicBuffers memKeyScratch;
     DynamicBuffers wC;
 } Builder;
+
+
 int exp_ensure_capacity(Export *export, size_t extra, int control);
 int exp_append_bytes(Export *export, char *byte, size_t x, int control);
 int exp_append_string(Export *export, char *string, size_t x, int control);
