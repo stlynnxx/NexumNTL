@@ -8,7 +8,10 @@
 #include "../SymbolTable/SymbolTable.h"
 #include <stddef.h>
 
-
+typedef struct {
+    DynamicBuffers mainArray;
+    // We may end up coming back in here and creating a second array to handle nexcode passes
+} MemoryFileLoad;
 
 typedef struct {
     DynamicBuffers memoryKey;
@@ -18,16 +21,8 @@ typedef struct {
     int tracker;
 } Organizer;
 
+inline void lRun();
 
-void lRun();
-#define MAX_ASSOC 200
-#define MAX_ASSOC_LEN 200
-#define ROW 20
-#define COLUMN 20
 
-typedef struct {
-    DynamicBuffers mainArray;
-    // We may end up coming back in here and creating a second array to handle nexcode passes
-} MemoryFileLoad;
 
 #endif //NEXUMNTL_LEXER_H

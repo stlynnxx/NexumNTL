@@ -7,8 +7,22 @@
 #include "usrmorhelpers.h"
 #include "../SymbolTable/SymbolTable.h"
 #include "../Parser/Parser.h"
+#include "../SourceGenerator/SourceGenerator.h"
+#include "../SourceGenerator/SGruninterface.h"
+#define USRMOR_PATH_ONE "../data/usrmor.nex"
+#define USRMOR_PATH_TWO "../data/usrmor.nexc"
 
-void match(Unencoded *unencoded, char firstLetter) {
+
+
+int usrmor_commit(bool pCheck) {
+    // This is calling the source generator with the two different usrmor file paths; one is nex, two is nexc
+    sgRun(USRMOR_PATH_ONE, 0, 0);
+    sgRun(USRMOR_PATH_TWO, 1, 1);
+
+}
+
+
+void usrmor_match(Unencoded *unencoded, char firstLetter, bool pCheck) {
     int rowSize;
     int usrmorIdx;
     switch (firstLetter)
@@ -146,16 +160,20 @@ void match(Unencoded *unencoded, char firstLetter) {
             default:
                 break;
         }
+        if (pCheck) {
+            usrmor_commit(pCheck);
+        }
+        else {
+
+        }
 }
 
-
-
-
 void usrmor_add_p(Export *export, ParserBuffers *pbuffers, int foundI) {
+    bool pCheck = true;
     Unencoded *unencoded = unencoded_init();
     unc_append_string(unencoded, pbuffers, foundI, sizeof(pbuffers->Buffers.data[foundI]));
     char firstLetter = unencoded->morpheme.data[0];
-    match(firstLetter);
+    usrmor_match(unencoded, firstLetter, pCheck);
 
 }
 void usrmor_add() {

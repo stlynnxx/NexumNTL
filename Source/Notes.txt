@@ -1016,4 +1016,15 @@ to but different from the one in the parser.
 
 That's where I should pick back up at.
 
+9/25/2026-
 
+This morning I've been back in usrmor,  trying to pave forward farther. I'm not expecting any of this to be done done yet,
+I was just want to get a rough draft of what's left built and then go from there. I'm working on the handoff from usrmor
+to the source generator and I'm sure i'll need to make some adjustments in the source generator along the way.
+
+I've got some more progress made along that path, there will be a few different routes going into the source generator
+that will need accounted for which may take some doing but it won't be anything too bad, I think we may have gotten through
+what will prove to be the worst of it by building the logic to pass that exp pointer to SGruninterface, but doing so alllows
+for logic specific to the source being the parser to be built.
+
+Note: Parser still needs free functions and cleanup logic

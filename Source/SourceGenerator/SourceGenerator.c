@@ -13,12 +13,7 @@
 
 
 // Input storage
-typedef struct {
-    char memoryKey[200];
-    int assocationCount;
-    char associations[MAX_ASSOC][MAX_ASSOC_LEN];
-    char associators[];
-    } InputForm;
+
 
 
 // This is creating a file
@@ -53,7 +48,7 @@ void format(FILE *fp, InputForm *form) {
 }
 // Step Two of the append process, opens the created file
 // and collects input which gets placed into the input storage
-void openNexFile(FILE *fp, InputForm *form) {
+void nex(FILE *fp, InputForm *form) {
     printf("Memory Key: \n");
     scanf("%199s", form->memoryKey);
     printf("Assocation Count: \n");
@@ -67,11 +62,11 @@ void openNexFile(FILE *fp, InputForm *form) {
     format(fp, form);
 }
 
-int readBytes(FILE *fp, InputForm *form, Export *exp) {
+int nexc(FILE *fp, InputForm *form, Export *exp) {
     // The following variables are establishing the sizes for the arrays within the struct
-    int sizeAssoc = sizeof(exp->assoc) / sizeof(exp->assoc.data[0]);
-    int sizeAssociators = sizeof(exp->associators) / sizeof(exp->associators.data[0]);
-    int sizeMemKeys = sizeof(exp->memKey) / sizeof(exp->memKey.data[0]);
+    size_t sizeAssoc = sizeof(exp->assoc) / sizeof(exp->assoc.data[0]);
+    size_t sizeAssociators = sizeof(exp->associators) / sizeof(exp->associators.data[0]);
+    size_t sizeMemKeys = sizeof(exp->memKey) / sizeof(exp->memKey.data[0]);
     // Control Vars
     bool mem = false;
     // Here we are looping through the arrays individually
@@ -99,29 +94,9 @@ int readBytes(FILE *fp, InputForm *form, Export *exp) {
     }
 }
 
-// Begins the append process
-int append(const char *path, bool nexcodeFlag) {
-    Export *exp;
-    FILE *fp = fopen(path, "a");
-    printf("Appending to: %s\n", path);
-    if (fp == NULL)
-        return 1;
-    InputForm form = {0};
-    if (nexcodeFlag == false) {
-        openNexFile(fp, &form);
-    }
-    else {
-        readBytes(fp, &form, exp);
-    }
-    fclose(fp);
-    return 0;
-}
 
-int sgRun(const char *path, bool nexcodeFlag) {
-    // create(path); Create has been merged into append
-    append(path, nexcodeFlag);
-    return 0;
-}
+
+
 
 /*int main() {
     // bool inputBool = false;

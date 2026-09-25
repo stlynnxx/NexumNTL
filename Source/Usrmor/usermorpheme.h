@@ -11,6 +11,6 @@ typedef struct {
 } Unencoded;
 
 
-
+void usrmor_match(Unencoded *unencoded, char firstLetter, bool pCheck);
 void usrmor_add_p(Export *export, ParserBuffers *pbuffers, int foundI);
 #endif //NEXUMNTL_USERMORPHEME_H

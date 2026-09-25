@@ -6,11 +6,11 @@
 #define NEXUMNTL_PARSERHELPERS_H
 #include "../SymbolTable/SymbolTable.h"
 #include "Parser.h"
-int builder_append_string(Builder *builderr, char *string, size_t x, int control);
-int builder_append_char(Builder *builderr, char c, int control);
-int builder_append_bytes(Builder *builderr, char *byte, size_t x, int control);
-Builder* build_init();
-ParserBuffers* pbuffers_init();
-Export* exp_init();
+inline int builder_append_string(Builder *builderr, char *string, size_t x, int control);
+inline int builder_append_char(Builder *builderr, char c, int control);
+inline int builder_append_bytes(Builder *builderr, char *byte, size_t x, int control);
+inline Builder* build_init();
+inline ParserBuffers* pbuffers_init();
+inline Export* exp_init();
 
 #endif //NEXUMNTL_PARSERHELPERS_H

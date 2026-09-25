@@ -11,6 +11,7 @@
 #include "../Lexer/Lexer.h"
 #include "../SourceGenerator/SourceGenerator.h"
 #include "../SymbolTable/SymbolTable.h"
+#include "../Lexer/lexerhelpers.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <ctype.h>
@@ -30,7 +31,7 @@ typedef struct {
     DynamicBuffers memKey;
     DynamicBuffers encodedMorpheme;
 } Export;
-
+extern Export *parser_export;
 typedef struct {
     DynamicBuffers assocScratch;
     DynamicBuffers associatorScratch;
@@ -38,10 +39,10 @@ typedef struct {
     DynamicBuffers wC;
 } Builder;
 
-
-int exp_ensure_capacity(Export *export, size_t extra, int control);
-int exp_append_bytes(Export *export, char *byte, size_t x, int control);
-int exp_append_string(Export *export, char *string, size_t x, int control);
-int exp_append_char(Export *export, char c, int control);
+inline Export* get_parser_export(void);
+inline int exp_ensure_capacity(Export *export, size_t extra, int control);
+inline int exp_append_bytes(Export *export, char *byte, size_t x, int control);
+inline int exp_append_string(Export *export, char *string, size_t x, int control);
+inline int exp_append_char(Export *export, char c, int control);
 
 #endif //NEXUMNTL_PARSER_H

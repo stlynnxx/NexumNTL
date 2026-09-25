@@ -230,8 +230,6 @@ Export* match(Export *exp,int scratchOneIdx, int flag, ParserBuffers *pbuffers)
     } return exp;
 }
 
-
-
 int newCheck(Export *exp, int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builderr, Organizer *lexerbreakdown, ParserBuffers *pbuffers, int incrementFlag) {
     bool delimCheck = false;
     int matchChk;
@@ -300,6 +298,7 @@ int newCheck(Export *exp, int breakdownIdx, int scratchOneIdx, int writeFlag, Bu
                 {
                     // Morpheme match
                     exp = match(exp,scratchOneIdx, writeFlag, pbuffers);
+
 
                 }
             }
@@ -447,8 +446,15 @@ void parse(Organizer *breakdown, Export *exp, Builder *builderr, ParserBuffers *
         }
     } // End associators loop
 }
-
-
+void parser_cleanup_export(void) {
+    if (parser_export) {
+        exp_free(parser_export);
+        parser_export = NULL;
+    }
+}
+Export* get_parser_export(void) {
+    return parser_export;
+}
 
 int prun()
 {
@@ -459,6 +465,7 @@ int prun()
     Builder *builderr = build_init();
     ParserBuffers *pbuffers = pbuffers_init();
     parse(lexerbreakdown, exp, builderr, pbuffers);
+    parser_export = exp;
     return 0;
 }
 

@@ -86,9 +86,7 @@ int hexMatrix[40][40];
 int countsMatrix[26][14];
 char firsts[40];
 char secondaries[80];
-void seed_table(Table *table);
-int row_init(Row *row);
-int row_set(Row *row, size_t col, const char *value);
-
-
+inline void seed_table(Table *table);
+inline int row_init(Row *row);
+inline int row_set(Row *row, size_t col, const char *value);
 #endif // SymbolTable_H
