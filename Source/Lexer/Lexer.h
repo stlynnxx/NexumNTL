@@ -20,10 +20,6 @@ typedef struct {
 
 
 void lRun();
-Organizer* breakdown_init();
-void breakdown_free();
-void appendString(DynamicBuffers *buf, char *string);
-void appendChar(DynamicBuffers *buf, char c);
 #define MAX_ASSOC 200
 #define MAX_ASSOC_LEN 200
 #define ROW 20

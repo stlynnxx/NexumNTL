@@ -2,6 +2,7 @@
 // Created by steviexx on 3/31/26.
 //
 #include "Parser.h"
+#include "../Usrmor/usermorpheme.h"
 
 #include <math.h>
 
@@ -98,7 +99,8 @@ Export* verify(Export *exp, ParserBuffers *pbuffer, int rowSiZe, int row, int sc
         else {
             // We need to catch the unverified morpheme here and then hand it over to usrmor
             foundI = i;
-            exp = encode(exp, foundI, row, flag);
+            usrmor_add_p(exp,pbuffer,foundI);
+
 
         }
     }
