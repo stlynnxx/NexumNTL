@@ -8,10 +8,10 @@
 #include "../SymbolTable/SymbolTable.h"
 #include "usermorpheme.h"
 
-int unc_ensure_capacity(Unencoded *unencoded, size_t extra);
-int unc_append_bytes(Unencoded *unencoded, char *byte, size_t x);
-int unc_append_string(Unencoded *unencoded, ParserBuffers *pbuff, int foundI, size_t x);
-int unc_append_char(Unencoded *unencoded, char c);
+int usr_ensure_capacity(Unencoded *unencoded, size_t extra);
+int usr_append_bytes(Unencoded *unencoded, char *byte, size_t x);
+int usr_append_string(Unencoded *unencoded, ParserBuffers *pbuff, int foundI, size_t x);
+int usr_append_char(Unencoded *unencoded, char c);
 int unencoded_free(Unencoded* unencoded);
 Unencoded* unencoded_init();
 

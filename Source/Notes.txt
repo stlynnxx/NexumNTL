@@ -1041,3 +1041,15 @@ Progress is progress.
 After some coffee and music, I was able to get some more work done in here tonight. I worked more in SGruninterface and
 the source generator itself, writing the logic for writing the updated valuesMatrix with the user added morpheme in the
 ussrmor.nex file; next we need to do the same for the .nexc!
+
+
+9/27/2026-
+
+I'm actually questioning if saving the encodedMatrix in the usrmor dir is worth the effort as i'm not really sure what
+use it would even have.. on it's own a matix of personally encoded morphmemes is nonsense, and it's also all data that
+is implied with the valuesMatrix. If one really wanted to, they could build an encodedMatrix from the info in the
+valuesMatrix, so, is worth both the computational overhead and time added to the project? At that rate, I don't think i'm
+actually using it interanally, either. Should I get rid of it? I'll give it some time to think it all over before I do,
+I could have it for something that's temporarily slipped my mind. But I think I may also move forward without building
+logic for saving the encodedMatrix to file.
+

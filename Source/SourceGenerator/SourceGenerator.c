@@ -48,7 +48,7 @@ void format(FILE *fp, InputForm *form, int count, int mem_key_idx) {
 }
 // Step Two of the append process, opens the created file
 // and collects input which gets placed into the input storage
-void terminal_input(FILE *fp, InputForm *form) {
+int terminal_input(FILE *fp, InputForm *form) {
     printf("Memory Key: \n");
     scanf("%s", form->memoryKey.data);
     printf("Assocation Count: \n");
@@ -59,7 +59,8 @@ void terminal_input(FILE *fp, InputForm *form) {
         scanf("%s", form->associations.data[i]);
 
     }
-    format(fp, form);
+    format(fp, form, form->assocationCount, 0);
+    return 0;
 }
 int* count_set(InputForm *form, int *counts) {
     // this loads the size of each row into counts by the letter macro number- entry 0 is the size for A, entry 1 is the size of B, and so forth
@@ -76,7 +77,7 @@ int* count_set(InputForm *form, int *counts) {
 
 }
 
-void usrmor_input(FILE *fp, InputForm *form) {
+int usrmor_input(FILE *fp, InputForm *form) {
     // This will need to take the updated values matrices themselves and translate them to .nex/.nexc
     //
     // this is assigning memory keys as first letters
@@ -97,6 +98,7 @@ void usrmor_input(FILE *fp, InputForm *form) {
         free(form->associations.data);
         form->associations.data = NULL;
     }
+    return 0;
 }
 
 int nexc(FILE *fp, InputForm *form, Export *exp) {

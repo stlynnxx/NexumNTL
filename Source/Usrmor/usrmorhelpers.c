@@ -25,7 +25,7 @@ int unencoded_free(Unencoded* unencoded) {
 }
 
 
-int unc_ensure_capacity(Unencoded *unencoded, size_t extra) {
+int usr_ensure_capacity(Unencoded *unencoded, size_t extra) {
     size_t needed = unencoded->morpheme.length + extra;
     if (needed <= unencoded->morpheme.capacity) {
         return 0;
@@ -44,8 +44,8 @@ int unc_ensure_capacity(Unencoded *unencoded, size_t extra) {
 }
 
 // append_bytes is for appending raw bytes from the given input
-int unc_append_bytes(Unencoded *unencoded, char *byte, size_t x) {
-    if (unc_ensure_capacity(unencoded, x) != 0) {
+int usr_append_bytes(Unencoded *unencoded, char *byte, size_t x) {
+    if (usr_ensure_capacity(unencoded, x) != 0) {
         return -1; // failure
     }
     memcpy(unencoded->morpheme.data + unencoded->morpheme.length, byte, x);
@@ -53,10 +53,10 @@ int unc_append_bytes(Unencoded *unencoded, char *byte, size_t x) {
     return 0;
 }
 // This is an interface for passing a string to append bytes
-int unc_append_string(Unencoded *unencoded, ParserBuffers *pbuff, int foundI, size_t x) {
-    return (unc_append_bytes(unencoded, pbuff->Buffers.data[foundI], strlen(pbuff->Buffers.data[foundI])));
+int usr_append_string(Unencoded *unencoded, ParserBuffers *pbuff, int foundI, size_t x) {
+    return (usr_append_bytes(unencoded, pbuff->Buffers.data[foundI], strlen(pbuff->Buffers.data[foundI])));
 }
 // This is an interface for passing chars to append_bytes
-int unc_append_char(Unencoded *unencoded, char c) {
-    return (unc_append_bytes(unencoded, &c, 1));
+int usr_append_char(Unencoded *unencoded, char c) {
+    return (usr_append_bytes(unencoded, &c, 1));
 }

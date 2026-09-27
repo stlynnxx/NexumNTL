@@ -15,6 +15,6 @@ typedef struct {
 } InputForm;
 
 int nexc(FILE *fp, InputForm *form, Export *exp);
-void terminal_input(FILE *fp, InputForm *form);
-void usrmor_input(FILE *fp, InputForm *form);
+int terminal_input(FILE *fp, InputForm *form);
+int usrmor_input(FILE *fp, InputForm *form);
 #endif //SOURCEGENERATOR_H

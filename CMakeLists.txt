@@ -28,5 +28,7 @@ add_executable(NexumNTL Source/main.c
         Source/SourceGenerator/SGruninterface.h
         Source/SourceGenerator/SGhelpers.c
         Source/SourceGenerator/SGhelpers.h
+        Source/Compressor/compressorhelpers.c
+        Source/Compressor/compressorhelpers.h
 )
 target_compile_options(NexumNTL PRIVATE -Wall)
