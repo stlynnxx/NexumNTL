@@ -7,7 +7,7 @@
 #include "Lexer.h"
 #include "../SymbolTable/SymbolTable.h"
 
-int in_ensure_capacity(DynamicBuffers *buf, size_t extra) {
+int lex_ensure_capacity(DynamicBuffers *buf, size_t extra) {
     size_t needed = buf->length + extra;
     if (needed <= buf->capacity) {
         return 0;
@@ -25,8 +25,8 @@ int in_ensure_capacity(DynamicBuffers *buf, size_t extra) {
     return 0;
 }
 // append_bytes is for appending raw bytes from the given input
-int in_append_bytes(DynamicBuffers *buf, char *byte, size_t x) {
-    if (in_ensure_capacity(buf, x) != 0) {
+int lex_append_bytes(DynamicBuffers *buf, char *byte, size_t x) {
+    if (lex_ensure_capacity(buf, x) != 0) {
         return -1; // failure
     }
     memcpy(buf->data + buf->length, byte, x);
@@ -34,12 +34,12 @@ int in_append_bytes(DynamicBuffers *buf, char *byte, size_t x) {
     return 0;
 }
 // This is an interface for passing a string to append bytes
-int in_append_string(DynamicBuffers *buf, char *string, size_t x) {
-    return (in_append_bytes(buf, string, strlen(string)));
+int lex_append_string(DynamicBuffers *buf, char *string, size_t x) {
+    return (lex_append_bytes(buf, string, strlen(string)));
 }
 // This is an interface for passing chars to append_bytes
-int in_append_char(DynamicBuffers *buf, char c) {
-    return (in_append_bytes(buf, &c, 1));
+int lex_append_char(DynamicBuffers *buf, char c) {
+    return (lex_append_bytes(buf, &c, 1));
 }
 
 Organizer* breakdown_init() {

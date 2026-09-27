@@ -28,16 +28,16 @@
 
 
 // This is what is actually being appended to the file
-void format(FILE *fp, InputForm *form) {
+void format(FILE *fp, InputForm *form, int count, int mem_key_idx) {
      fprintf(fp, "%s\n", "");
      char memoryKeyPrefix[5] = "{'";
      char memoryKeySuffix[5] = "':{";
      fprintf(fp, "%s", memoryKeyPrefix);
-     fprintf(fp,"%s", form->memoryKey);
+     fprintf(fp,"%s", form->memoryKey.data[mem_key_idx]);
      fprintf(fp, "%s", memoryKeySuffix);
-     for (int i = 0; i < form->assocationCount; i++) {
+     for (int i = 0; i < count; i++) {
         fprintf(fp, "%s", "'");
-        fprintf(fp, "%s", form->associations[i]);
+        fprintf(fp, "%s", form->associations.data[i]);
         fprintf(fp, "%s", "'");
          if (i != form->assocationCount - 1) {
              fprintf(fp, "%c", COMMA);
@@ -48,18 +48,55 @@ void format(FILE *fp, InputForm *form) {
 }
 // Step Two of the append process, opens the created file
 // and collects input which gets placed into the input storage
-void nex(FILE *fp, InputForm *form) {
+void terminal_input(FILE *fp, InputForm *form) {
     printf("Memory Key: \n");
-    scanf("%199s", form->memoryKey);
+    scanf("%s", form->memoryKey.data);
     printf("Assocation Count: \n");
-    scanf("%d", &form->assocationCount);
+    scanf("%d", form->assocationCount);
     printf("Assocations (seperate with spaces, and be sure to match your association count correctly.): \n");
-    for (int i = 0; i < form->assocationCount && i < MAX_ASSOC; i++ )
+    for (int i = 0; i < form->assocationCount; i++ )
     {
-        scanf("%1999s", form->associations[i]);
+        scanf("%s", form->associations.data[i]);
 
     }
     format(fp, form);
+}
+int* count_set(InputForm *form, int *counts) {
+    // this loads the size of each row into counts by the letter macro number- entry 0 is the size for A, entry 1 is the size of B, and so forth
+    for (int i = 0; i <= 25; i++) {
+        counts[i] = sizeof(valuesMatrix[i])/sizeof(valuesMatrix[i][0]);
+    }
+
+    for (int k = 0; k <= 25; k++) {
+        for (int l = 0; l < counts[k]; l++) {
+            in_append_string(form, valuesMatrix[k][l], sizeof(valuesMatrix[k][l]), 1);
+        }
+    }
+    return counts;
+
+}
+
+void usrmor_input(FILE *fp, InputForm *form) {
+    // This will need to take the updated values matrices themselves and translate them to .nex/.nexc
+    //
+    // this is assigning memory keys as first letters
+    int *counts[30];
+    char letters[30] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+    for (int i = 0; i <= 25; i++) {
+        form->memoryKey.data[i] = letters[i];
+    }
+
+    *counts = count_set(form, *counts);
+    format(fp, form, *counts[A],  A);
+    free(form->associators.data);
+    form->associators.data = NULL;
+    for (int i = 1; i <= 25; i++) {
+        form->associators.data = malloc(32);
+        *counts = count_set(form, *counts);
+        format(fp, form, *counts[i], i);
+        free(form->associations.data);
+        form->associations.data = NULL;
+    }
 }
 
 int nexc(FILE *fp, InputForm *form, Export *exp) {

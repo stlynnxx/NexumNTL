@@ -1038,3 +1038,6 @@ the day.
 
 Progress is progress.
 
+After some coffee and music, I was able to get some more work done in here tonight. I worked more in SGruninterface and
+the source generator itself, writing the logic for writing the updated valuesMatrix with the user added morpheme in the
+ussrmor.nex file; next we need to do the same for the .nexc!
