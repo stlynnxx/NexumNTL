@@ -28,7 +28,7 @@ int loadNexFile(FILE *fp, MemoryFileLoad *load) {
     rewind(fp);
 
    fread(&load->mainArray, sizeof(load->mainArray), 1, fp);
-   returned = ensure_capacity(&load->mainArray, size);
+   returned = in_ensure_capacity(&load->mainArray, size);
     if (returned == -1) {
         return -1;
     }
@@ -80,7 +80,7 @@ void associations(char wC, MemoryFileLoad *split, Organizer *organizer,int incre
         {
             if (isalpha(wC)) {
                 while (isalpha(wC)) {
-                    append_char(&organizer->associations, wC);
+                    in_append_char(&organizer->associations, wC);
                     printf("Tracker check 118: %d\n", organizer->tracker);
                     incrementIdx++;
                     wC = setr(split,wC, incrementIdx);
@@ -90,7 +90,7 @@ void associations(char wC, MemoryFileLoad *split, Organizer *organizer,int incre
             }
             if (isalnum(wC))
             {
-                append_char(&organizer->associations, wC);
+                in_append_char(&organizer->associations, wC);
                 printf("Tracker check 126: %d\n", organizer->tracker);
                 incrementIdx++;
                 wC = setr(split,wC, incrementIdx);
@@ -133,14 +133,14 @@ void associator(char wC, MemoryFileLoad *load, Organizer *organizer, int increme
         if (isalpha(wC))
         {
             associatorLetterCounter++;
-            append_char(&organizer->workingAssociators, wC);
+            in_append_char(&organizer->workingAssociators, wC);
             organizer->tracker++;
             incrementIdx++;
             wC = setr(load,wC, incrementIdx);
         }
         if (isalpha(wC) != true && isalnum(wC)) {
             associatorLetterCounter++;
-            append_char(&organizer->workingAssociators, wC);
+            in_append_char(&organizer->workingAssociators, wC);
             organizer->tracker++;
 
             incrementIdx++;

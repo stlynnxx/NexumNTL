@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-
+#include "SGhelpers.h"
 #include "../Lexer/Lexer.h"
 #include "../SymbolTable/SymbolTable.h"
 #include "../Parser/Parser.h"
@@ -72,11 +72,12 @@ int nexc(FILE *fp, InputForm *form, Export *exp) {
     // Here we are looping through the arrays individually
     for (int i = 0; i < sizeAssoc; i++) {
         if (i == 0) {
+
             exp->memKey.data[i] = NAMETOKEN;
             mem = true;
         }
         if (i > 0) {
-            if (form->memoryKey[i] )
+            if (form->memoryKey.data[i] )
             form->memoryKey[i] = exp->memKey.data[i];
         }
     }

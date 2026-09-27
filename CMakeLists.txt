@@ -26,5 +26,7 @@ add_executable(NexumNTL Source/main.c
         Source/Usrmor/usrmorhelpers.h
         Source/SourceGenerator/SGruninterface.c
         Source/SourceGenerator/SGruninterface.h
+        Source/SourceGenerator/SGhelpers.c
+        Source/SourceGenerator/SGhelpers.h
 )
 target_compile_options(NexumNTL PRIVATE -Wall)

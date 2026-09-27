@@ -1024,7 +1024,17 @@ to the source generator and I'm sure i'll need to make some adjustments in the s
 
 I've got some more progress made along that path, there will be a few different routes going into the source generator
 that will need accounted for which may take some doing but it won't be anything too bad, I think we may have gotten through
-what will prove to be the worst of it by building the logic to pass that exp pointer to SGruninterface, but doing so alllows
+what will prove to be the worst of it by building the logic to pass that exp pointer to SGruninterface, but doing so allows
 for logic specific to the source being the parser to be built.
 
 Note: Parser still needs free functions and cleanup logic
+
+Once we're done generating usrmor.nex/nexc, we're almost done!
+
+9/26/2026-
+
+I did some work in SGhelpers today but I've been fighting exhastion all day before this and fear this is all I can do for
+the day.
+
+Progress is progress.
+
