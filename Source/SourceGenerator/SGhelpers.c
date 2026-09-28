@@ -13,13 +13,27 @@ InputForm* input_init() {
 
     form->associations.length = 0;
     form->associations.capacity = 0;
+
     form->memoryKey.length = 0;
     form->memoryKey.capacity = 0;
-    form->associators.data = malloc(32);
 
+    form->memoryKeyBuffer.length = 0;
+    form->memoryKeyBuffer.capacity = 0;
+
+    form->associationBuffer.length = 0;
+    form->associationBuffer.capacity = 0;
+
+    form->associatorBuffer.length = 0;
+    form->associatorBuffer.capacity = 0;
+
+    form->associators.data = malloc(32);
     form->associations.data = malloc(32);
     form->memoryKey.data = malloc(32);
-    if (!form->associations.data || !form->associators.data || !form->memoryKey.data) {
+    form->memoryKeyBuffer.data = malloc(32);
+    form->associationBuffer.data = malloc(32);
+    form->associatorBuffer.data = malloc(32);
+
+    if (!form->associations.data || !form->associators.data || !form->memoryKey.data || !form->memoryKeyBuffer.data || !form->associationBuffer.data || !form->associatorBuffer) {
         perror("input_init failure");
         exit(-1);
     }

@@ -30,6 +30,11 @@ typedef struct {
     DynamicBuffers associators;
     DynamicBuffers memKey;
     DynamicBuffers encodedMorpheme;
+
+    DynamicBuffers memoryKeyScratch;
+    DynamicBuffers associationScratch;
+    DynamicBuffers associatorScratch;
+
 } Export;
 extern Export *parser_export;
 typedef struct {
@@ -40,9 +45,8 @@ typedef struct {
 } Builder;
 
 inline Export* get_parser_export(void);
-inline int exp_ensure_capacity(Export *export, size_t extra, int control);
-inline int exp_append_bytes(Export *export, char *byte, size_t x, int control);
-inline int exp_append_string(Export *export, char *string, size_t x, int control);
-inline int exp_append_char(Export *export, char c, int control);
+Export* match(Export *exp,int scratchOneIdx, int flag, ParserBuffers *pbuffers);
+void terminalToNexcMatch(Export *exp,int flag, char firstLetter)
+
 
 #endif //NEXUMNTL_PARSER_H

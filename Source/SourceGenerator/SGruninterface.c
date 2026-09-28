@@ -12,13 +12,10 @@ int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, i
         return 1;
     if (nexcodeFlag == 0) {
         // This is for handling .nex
-        terminal_input(fp, form);
-    }
-    else {
-        // This is for handling .nexc
         switch (sourceFlag) {
             case 0:
                 //  This is for input coming from the terminal
+                // form will be freed as a result of the terminal_input call
                 term_return = terminal_input(fp, form);
                 if (term_return == -1) {
                     printf("terminal input failure");
@@ -27,10 +24,43 @@ int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, i
                 else {
                     printf("Success!");
                 }
-
                 break;
             case 1:
                 // This is for input coming from usermorpheme
+                // form is freed as a result of usrmor_input
+                usr_return = usrmor_input(fp, form);
+                if (usr_return == -1) {
+                    perror("sgrun failure");
+                    exit(-1);
+                }
+                else {
+                    printf("SG run success!");
+                }
+                break;
+            case 2:
+                break;
+            default:
+                break;
+        }
+    }
+    else {
+        // This is for handling .nexc
+        switch (sourceFlag) {
+            case 0:
+                //  This is for input coming from the terminal
+                // form will be freed as a result of the terminal_input call
+                term_return = terminal_input(fp, form);
+                if (term_return == -1) {
+                    printf("terminal input failure");
+                    exit(-1);
+                }
+                else {
+                    printf("Success!");
+                }
+                break;
+            case 1:
+                // This is for input coming from usermorpheme
+                // form is freed as a result of usrmor_input
                 usr_return = usrmor_input(fp, form);
                 if (usr_return == -1) {
                     perror("sgrun failure");

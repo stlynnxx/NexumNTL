@@ -45,22 +45,51 @@ void format(FILE *fp, InputForm *form, int count, int mem_key_idx) {
 
     }
      fprintf(fp, "%s", "};");
+    // free form
 }
 // Step Two of the append process, opens the created file
 // and collects input which gets placed into the input storage
-int terminal_input(FILE *fp, InputForm *form) {
-    printf("Memory Key: \n");
-    scanf("%s", form->memoryKey.data);
-    printf("Assocation Count: \n");
-    scanf("%d", form->assocationCount);
-    printf("Assocations (seperate with spaces, and be sure to match your association count correctly.): \n");
-    for (int i = 0; i < form->assocationCount; i++ )
-    {
-        scanf("%s", form->associations.data[i]);
+int terminal_input(FILE *fp, InputForm *form, int control) {
+    // .nex
+    if (control == 0) {
+        printf("Memory Key: \n");
+        scanf("%s", form->memoryKeyBuffer.data);
+        in_append_string(form, form->memoryKeyBuffer.data, form->memoryKeyBuffer.length, 0);
+        printf("Assocation Count: \n");
+        scanf("%d", form->assocCount);
+        printf("Assocations (seperate with spaces, and be sure to match your association count correctly.): \n");
+        for (int i = 0; i < form->assocCount; i++ )
+        {
+            scanf("%s", &form->associationBuffer.data[i]);
+            in_append_string(form, &form->associationBuffer.data[i], form->associationBuffer.length, 1);
 
+        }
+        format(fp, form, form->assocCount, 0);
+        return 0;
     }
-    format(fp, form, form->assocationCount, 0);
-    return 0;
+    // .nexc
+    if (control == 1) {
+        Export* exp = exp_init();
+        printf("Memory Key: \n");
+        scanf("%s", form->memoryKeyBuffer.data);
+        // hand over to parser match
+        exp_append_string(exp, form->memoryKeyBuffer.data, form->memoryKeyBuffer.length, 4);
+        terminalToNexcMatch(exp, 4, exp->memoryKeyScratch.data[0]);
+        printf("Assocation Count: \n");
+        scanf("%d", form->assocCount);
+        printf("Assocations (seperate with spaces, and be sure to match your association count correctly.): \n");
+        for (int i = 0; i < form->assocCount; i++ )
+        {
+            scanf("%s", &form->associations.data[i]);
+            exp_append_string(exp, &form->associations.data[i], form->associations.length, 5);
+
+        }
+        format(fp, form, form->assocCount, 0);
+        return 0;
+    }
+    else {
+        return -1;
+    }
 }
 int* count_set(InputForm *form, int *counts) {
     // this loads the size of each row into counts by the letter macro number- entry 0 is the size for A, entry 1 is the size of B, and so forth

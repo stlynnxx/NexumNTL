@@ -1053,3 +1053,10 @@ actually using it interanally, either. Should I get rid of it? I'll give it some
 I could have it for something that's temporarily slipped my mind. But I think I may also move forward without building
 logic for saving the encodedMatrix to file.
 
+9/28/2026-
+
+I've spent basically all day in here and not journaled at all and I really got a lot done and now i'm tired and so
+this entry is just going to suck, probably. I'm so close to being done that it's exciting! I'm leaving off on the terminal
+to nexc path, with needing to figure if my next move is freeing unencoded or doing something with it Parser.
+
+Big progress today, even if the journal entry is small!

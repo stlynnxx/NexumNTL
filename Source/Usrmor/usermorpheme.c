@@ -11,11 +11,6 @@
 #include "../SourceGenerator/SGruninterface.h"
 #define USRMOR_PATH "../data/usrmor.nex"
 
-
-
-
-
-
 void usrmor_match(Unencoded *unencoded, char firstLetter, bool pCheck) {
     int rowSize;
     int usrmorIdx;
@@ -187,14 +182,19 @@ void usrmor_match(Unencoded *unencoded, char firstLetter, bool pCheck) {
 
         }
 }
-
-void usrmor_add_p(Export *export, ParserBuffers *pbuffers, int foundI) {
+void terminalToNexcUsrmorAddP(Export *export, int foundI) {
     bool pCheck = true;
     Unencoded *unencoded = unencoded_init();
-    usr_append_string(unencoded, pbuffers, foundI, sizeof(pbuffers->Buffers.data[foundI]));
+    terminalToNexcUsrAppendString(unencoded, export, foundI, export->memKey.length);
     char firstLetter = unencoded->morpheme.data[0];
     usrmor_match(unencoded, firstLetter, pCheck);
-
+}
+void usrmor_add_p(char *byte, int foundI) {
+    bool pCheck = true;
+    Unencoded *unencoded = unencoded_init();
+    usr_append_string(unencoded, byte, foundI, sizeof());
+    char firstLetter = unencoded->morpheme.data[0];
+    usrmor_match(unencoded, firstLetter, pCheck);
 }
 
 void usrmor_run() {

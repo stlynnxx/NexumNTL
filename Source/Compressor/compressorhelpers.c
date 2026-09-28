@@ -43,21 +43,14 @@ int comp_ensure_capacity(Input *in, size_t extra) {
 }
 
 // append_bytes is for appending raw bytes from the given input
-int comp_append_bytes(Input *in, char *byte, size_t x) {
+int comp_append_bytes(Unencoded *unencoded, Input *in) {
+    size_t x = in->terminalInput.length;
     if (comp_ensure_capacity(in, x) != 0) {
         return -1; // failure
     }
-    memcpy(in->terminalInput.data + in->terminalInput.length, byte, x);
+    memcpy(unencoded->morpheme.data+ unencoded->morpheme.length, in->terminalInput.data, x);
     in->terminalInput.length += x;
     return 0;
-}
-// This is an interface for passing a string to append bytes
-int comp_append_string(Input *in, Unencoded *unencoded, int foundI, size_t x) {
-    return (comp_append_bytes(in, unencoded->morpheme.data[foundI], strlen(unencoded->morpheme.data[foundI])));
-}
-// This is an interface for passing chars to append_bytes
-int usr_append_char(Unencoded *unencoded, char c) {
-    return (comp_append_bytes(unencoded, &c, 1));
 }
 
 

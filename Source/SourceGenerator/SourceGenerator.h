@@ -9,12 +9,15 @@
 #include <stdbool.h>
 typedef struct {
     DynamicBuffers memoryKey;
-    int assocationCount;
+    int assocCount;
     DynamicBuffers associations;
     DynamicBuffers associators;
+    DynamicBuffers memoryKeyBuffer;
+    DynamicBuffers associationBuffer;
+    DynamicBuffers associatorBuffer;
 } InputForm;
 
 int nexc(FILE *fp, InputForm *form, Export *exp);
-int terminal_input(FILE *fp, InputForm *form);
+int terminal_input(FILE *fp, InputForm *form, int control);
 int usrmor_input(FILE *fp, InputForm *form);
 #endif //SOURCEGENERATOR_H

@@ -6,12 +6,14 @@
 #define NEXUMNTL_COMPRESSOR_H
 #include "../SymbolTable/SymbolTable.h"
 #include "compressorhelpers.h"
+#include "../Usrmor/usrmorhelpers.h"
 
 
 typedef struct {
     DynamicBuffers buffer;
     DynamicBuffers terminalInput;
 } Input;
-
+extern Unencoded* unc_export(void);
+extern Unencoded* unc_exp;
 
 #endif //NEXUMNTL_COMPRESSOR_H

@@ -16,6 +16,9 @@ void input_collect(Input *input) {
 }
 
 // FILE *inFile = fopen("../data/usrmor_upload/", "r");
+Unencoded* unc_export(void) {
+    return unc_exp;
+}
 
 void collect(int control) {
     char** files;
@@ -33,12 +36,17 @@ void collect(int control) {
             }
             free(files);
         }
-
     }
+
     if (control == 1) {
+        bool pCheck = false;
         // input coming from terminal
         printf("Enter term: ");
         scanf("%s", in->terminalInput.data);
+        Unencoded *unencoded = unencoded_init();
+        comp_append_bytes(unencoded, in);
+        *unc_exp = *unencoded;
+        usrmor_match(unencoded, unencoded->morpheme.data[0], pCheck);
 
     }
 }

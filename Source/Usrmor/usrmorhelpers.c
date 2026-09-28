@@ -53,8 +53,11 @@ int usr_append_bytes(Unencoded *unencoded, char *byte, size_t x) {
     return 0;
 }
 // This is an interface for passing a string to append bytes
-int usr_append_string(Unencoded *unencoded, ParserBuffers *pbuff, int foundI, size_t x) {
-    return (usr_append_bytes(unencoded, pbuff->Buffers.data[foundI], strlen(pbuff->Buffers.data[foundI])));
+int terminalToNexcUsrAppendString(Unencoded *unencoded, Export *exp, int foundI, size_t x) {
+    return (usr_append_bytes(unencoded, exp,  sizeof(exp)));
+}
+int usr_append_string(Unencoded *unencoded, char *byte, int foundI, size_t x) {
+    return (usr_append_bytes(unencoded, byte,  sizeof(byte)));
 }
 // This is an interface for passing chars to append_bytes
 int usr_append_char(Unencoded *unencoded, char c) {

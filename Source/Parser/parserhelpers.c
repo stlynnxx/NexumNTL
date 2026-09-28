@@ -124,6 +124,60 @@ int exp_ensure_capacity(Export *export, size_t extra, int control)
             return 0;
             break;
         }
+        case 4: {
+            needed = export->memoryKeyScratch.length + extra;
+            if (needed <= export->memoryKeyScratch.capacity) {
+                return 0;
+            }
+            capacity = export->memoryKeyScratch.capacity ? export->memoryKeyScratch.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(export->memoryKeyScratch.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            export->memoryKeyScratch.data = tmp;
+            export->memoryKeyScratch.capacity = capacity;
+            return 0;
+            break;
+        }
+        case 5: {
+            needed = export->associationScratch.length + extra;
+            if (needed <= export->associationScratch.capacity) {
+                return 0;
+            }
+            capacity = export->associationScratch.capacity ? export->associationScratch.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(export->associationScratch.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            export->associationScratch.data = tmp;
+            export->associationScratch.capacity = capacity;
+            return 0;
+            break;
+        }
+        case 6: {
+            needed = export->associatorScratch.length + extra;
+            if (needed <= export->associatorScratch.capacity) {
+                return 0;
+            }
+            capacity = export->associatorScratch.capacity ? export->associatorScratch.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(export->associatorScratch.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            export->associatorScratch.data = tmp;
+            export->associatorScratch.capacity = capacity;
+            return 0;
+            break;
+        }
         default:
             return -1;
             break;
@@ -135,15 +189,34 @@ Export* exp_init()
     Export *ex = malloc(sizeof(Export));
     ex->assoc.length = 0;
     ex->assoc.capacity = 0;
+
     ex->memKey.length = 0;
     ex->memKey.capacity = 0;
+
     ex->encodedMorpheme.length = 0;
     ex->encodedMorpheme.capacity = 0;
+
+    ex->associators.length = 0;
+    ex->associators.capacity = 0;
+
+    ex->associatorScratch.length = 0;
+    ex->associatorScratch.capacity = 0;
+
+    ex->memoryKeyScratch.length = 0;
+    ex->memoryKeyScratch.capacity = 0;
+
+    ex->associationScratch.length = 0;
+    ex->associationScratch.capacity = 0;
+
     ex->encodedMorpheme.data = malloc(32);
     ex->memKey.data = malloc(32);
-    ex->assoc.data = malloc(64);
+    ex->assoc.data = malloc(32);
     ex->associators.data = malloc(32);
-    if (!ex->memKey.data || !ex->assoc.data || !ex->associators.data) {
+    ex->memoryKeyScratch.data = malloc(32);
+    ex->associationScratch.data = malloc(32);
+    ex->associatorScratch.data = malloc(32);
+
+    if (!ex->memKey.data || !ex->assoc.data || !ex->associators.data || !ex->associatorScratch.data || !ex->memoryKeyScratch.data || !ex->associationScratch.data) {
         perror("exp_init malloc failed");
         exit(EXIT_FAILURE);
     }
@@ -219,9 +292,23 @@ int exp_append_bytes(Export *export, char *byte, size_t x, int control)
             export->encodedMorpheme.length += x;
             return 0;
             break;
+        case 4:
+            memcpy(export->memoryKeyScratch.data + export->memoryKeyScratch.length, byte, x);
+            export->memoryKeyScratch.length += x;
+            return 0;
+            break;
+        case 5:
+            memcpy(export->associationScratch.data + export->associationScratch.length, byte, x);
+            export->associationScratch.length += x;
+            return 0;
+        case 6:
+            memcpy(export->associatorScratch.data + export->associatorScratch.length, byte, x);
+            export->associatorScratch.length += x;
+            return 0;
         default:
             perror("Default error");
             exit(EXIT_FAILURE);
+            break;
     }
 }
 
@@ -229,10 +316,8 @@ int exp_append_bytes(Export *export, char *byte, size_t x, int control)
 int exp_append_string(Export *export, char *string, size_t x, int control) {
     return (exp_append_bytes(export, string, strlen(string), control));
 }
-// This is an interface for passing chars to append_bytes
-int exp_append_char(Export *export, char c, int control) {
-    return (exp_append_bytes(export, &c, 1),control);
-}
+
+
 
 // for builder
 int builder_ensure_capacity(Builder *builderr, size_t extra, int control)
