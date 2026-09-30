@@ -20,7 +20,7 @@ Unencoded* unc_export(void) {
     return unc_exp;
 }
 
-void collect(int control) {
+void compressor_collect(int control) {
     char** files;
     int count;
     Input *in = in_init();

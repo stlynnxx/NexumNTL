@@ -16,14 +16,6 @@
 
 
 
-// This is creating a file
-// I've built create into append instead of keeping it it's own function but
-// have for the time being left this in here commented out
-/* void create(const char *path) {
-    FILE *fp = fopen(path, "a");
-    if (fp != NULL)
-        fclose(fp);
-}*/
 
 
 
@@ -39,7 +31,7 @@ void format(FILE *fp, InputForm *form, int count, int mem_key_idx) {
         fprintf(fp, "%s", "'");
         fprintf(fp, "%s", form->associations.data[i]);
         fprintf(fp, "%s", "'");
-         if (i != form->assocationCount - 1) {
+         if (i != form->assocCount - 1) {
              fprintf(fp, "%c", COMMA);
          }
 

@@ -1060,3 +1060,8 @@ this entry is just going to suck, probably. I'm so close to being done that it's
 to nexc path, with needing to figure if my next move is freeing unencoded or doing something with it Parser.
 
 Big progress today, even if the journal entry is small!
+
+9/29/2026-
+
+Tonight I've been ironing things out and got to work on updating main; I'm  in the process of routing to the differents
+in main and that's where I should pick back up at tomorrow!

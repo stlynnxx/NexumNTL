@@ -80,6 +80,7 @@ void terminalToNexcEncode(Export *ex, int foundI, int row, int flag)
         perror("Encode failure");
         exit(EXIT_FAILURE);
     }
+    // exp needs to be freed here
 
 }
 
@@ -98,12 +99,12 @@ void terminalToNexcVerify(Export *exp, int rowSiZe, int row, int flag)
         else {
             // We need to catch the unverified morpheme here and then hand it over to usrmor
             foundI = i;
-            usrmor_add_p(exp, )
+            terminalToNexcUsrmorAddP(exp, foundI);
 
 
         }
     }
-    return exp;
+
 }
 
 

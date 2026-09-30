@@ -16,7 +16,7 @@ int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, i
             case 0:
                 //  This is for input coming from the terminal
                 // form will be freed as a result of the terminal_input call
-                term_return = terminal_input(fp, form);
+                term_return = terminal_input(fp, form, nexcodeFlag);
                 if (term_return == -1) {
                     printf("terminal input failure");
                     exit(-1);
@@ -49,7 +49,7 @@ int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, i
             case 0:
                 //  This is for input coming from the terminal
                 // form will be freed as a result of the terminal_input call
-                term_return = terminal_input(fp, form);
+                term_return = terminal_input(fp, form, nexcodeFlag);
                 if (term_return == -1) {
                     printf("terminal input failure");
                     exit(-1);
@@ -70,9 +70,9 @@ int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, i
                     printf("SG run success!");
                 }
                 break;
-            case 2:
-                break;
+
             default:
+                break;
         }
         if (pCheck) {
             Export *exp = get_parser_export();
@@ -86,7 +86,7 @@ int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, i
 
 
 
-void sgRun(const char *path, int nexcodeFlag, int pCheck, int sourceFlag) {
+void sgRun(const char *path, int nexcodeFlag, bool pCheck, int sourceFlag) {
     InputForm *form = input_init();
     // create(path); Create has been merged into append
     if (nexcodeFlag == 0) {
