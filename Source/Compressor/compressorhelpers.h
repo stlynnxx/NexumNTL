@@ -2,7 +2,7 @@
 // Created by steviexx on 9/27/26.
 //
 #ifndef NEXUMNTL_COMPRESSORHELPERS_H
-#define NEXUMNTL_COMPRESSORHELPERS_H   // ← Define FIRST
+#define NEXUMNTL_COMPRESSORHELPERS_H
 
 #include "compressor.h"
 #include <ctype.h>

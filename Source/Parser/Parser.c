@@ -239,7 +239,7 @@ Export* encode(Export *ex, int foundI, int row, int flag)
     return ex;
 }
 
-Export* verify(Export *exp, ParserBuffers *pbuffer, int rowSiZe, int row, int scratchOneIdx, int flag)
+Export* verify(Export *exp, ParserBuffers *pbuffer, int rowSiZe, int row, int flag)
 {
     int foundI;
     for (int i = 0; i <= rowSiZe; i++)
@@ -262,9 +262,7 @@ Export* verify(Export *exp, ParserBuffers *pbuffer, int rowSiZe, int row, int sc
     return exp;
 }
 
-//
-
-Export* match(Export *exp,int scratchOneIdx, int flag, ParserBuffers *pbuffers)
+Export* match(Export *exp, int flag, ParserBuffers *pbuffers)
 {
     size_t rowSize;
     const char select = pbuffers->Buffers.data[0];
@@ -277,107 +275,107 @@ Export* match(Export *exp,int scratchOneIdx, int flag, ParserBuffers *pbuffers)
         {
             case 'A':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
-                exp = verify(exp,pbuffers, rowSize, A, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, A,  flag);
                 break;
             case 'B':
                 rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
-                exp = verify(exp,pbuffers, rowSize, B, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, B, flag);
                 break;
             case 'C':
                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
-                exp = verify(exp,pbuffers, rowSize, C, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, C, flag);
                 break;
             case 'D':
                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, D, flag);
                 break;
             case 'E':
                 rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, E,  flag);
                 break;
             case 'F':
                 rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, F,  flag);
                 break;
             case 'G':
                 rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, G,  flag);
                 break;
             case 'H':
                 rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, H,  flag);
                 break;
             case 'I':
                 rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, I,  flag);
                 break;
             case 'J':
                 rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, J,  flag);
                 break;
             case 'K':
                 rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, K,  flag);
                 break;
             case 'L':
                 rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, L,  flag);
                 break;
             case 'M':
                 rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, M,  flag);
                 break;
             case 'N':
                 rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, N,  flag);
                 break;
             case 'O':
                 rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, O,  flag);
                 break;
             case 'P':
                 rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, P,  flag);
                 break;
             case 'Q':
                 rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, Q,  flag);
                 break;
             case 'R':
                 rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, R,  flag);
                 break;
             case 'S':
                 rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, S,  flag);
                 break;
             case 'T':
                 rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, T,  flag);
                 break;
             case 'U':
                 rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, U,  flag);
                 break;
             case 'V':
                 rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, V,  flag);
                 break;
             case 'W':
                 rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, W,  flag);
                 break;
             case 'X':
                 rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, X,  flag);
                 break;
             case 'Y':
                 rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, Y,  flag);
                 break;
             case 'Z':
                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
-                exp = verify(exp,pbuffers, rowSize, D, scratchOneIdx, flag);
+                exp = verify(exp,pbuffers, rowSize, z,  flag);
                 break;
             default:
                 verifyReturn = -1;

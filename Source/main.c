@@ -39,6 +39,12 @@ int run() {
     terminal_to_nexfile();
     // Terminal -> usrmor
     compressor_collect(1);
+    /* Nexfile parsing- append to matrix
+     * This should look like loading the file, parsing line by line, and as we go
+     * checking for matches and adding unmatched morphemes- let's try reusing as much
+     * existing code as possible for this.
+     */
+
     // This initiates the Lexer
     lRun();
     prun();

@@ -7,6 +7,7 @@
 #include <ctype.h>
 
 #include "../Parser/Parser.h"
+#include "../Parser/parserhelpers.h"
 #include "../Usrmor/usermorpheme.h"
 
 
@@ -20,22 +21,43 @@ Unencoded* unc_export(void) {
     return unc_exp;
 }
 
-void compressor_collect(int control) {
+void compressor_collect(int control, int nex_code_flag) {
     char** files;
     int count;
     Input *in = in_init();
+    FILE* inFile;
+    // Control 0 is from file, 1 is from terminal
+    // nex_code_flag 0 is .nex, 1 is .nexc
     if (control == 0) {
+        if (nex_code_flag == 0) {
         // input coming from inFile
-        if (explore_dir("data", ".nex", &files, &count) > 0) {
-            for (int i = 0; i < count; i++) {
-                char filepath[4096];
-                snprintf(filepath, sizeof(filepath), "data/%s", files[i]);
-                FILE* inFile = fopen(filepath, "r");
-                fclose(inFile);
-                free(files[i]);
+            if (explore_dir("data", ".nex", &files, &count) > 0) {
+                for (int i = 0; i < count; i++) {
+                    char filepath[4096];
+                    snprintf(filepath, sizeof(filepath), "data/%s", files[i]);
+                    inFile = fopen(filepath, "r");
+                    fclose(inFile);
+                    free(files[i]);
+                }
+                free(files);
             }
-            free(files);
         }
+        if (nex_code_flag == 1) {
+            if (explore_dir("data", ".nexc", &files, &count) > 0) {
+                for (int i = 0; i < count; i++) {
+                    char filepath[4096];
+                    snprintf(filepath, sizeof(filepath), "data/%s", files[i]);
+                    inFile = fopen(filepath, "r");
+                    fclose(inFile);
+                    free(files[i]);
+                }
+                free(files);
+            }
+        }
+        ParserBuffers *pbuffers = pbuffers_init();
+        comp_append_bytes(*pbuffers, &inFile, nex_code_flag);
+
+
     }
 
     if (control == 1) {

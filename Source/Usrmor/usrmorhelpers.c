@@ -9,8 +9,17 @@ Unencoded* unencoded_init() {
     Unencoded* unencoded = (Unencoded*)malloc(sizeof(Unencoded));
     unencoded->morpheme.length = 0;
     unencoded->morpheme.capacity = 0;
+    unencoded->memoryKey.capacity = 0;
+    unencoded->memoryKey.length = 0;
+    unencoded->association.length = 0;
+    unencoded->association.capacity = 0;
+    unencoded->associator.length = 0;
+    unencoded->associator.capacity = 0;
     unencoded->morpheme.data = malloc(16);
-    if (!unencoded->morpheme.data || !unencoded->morpheme.capacity || !unencoded->morpheme.data) {
+    unencoded->memoryKey.data = malloc(16);
+    unencoded->association.data = malloc(16);
+    unencoded->associator.data = malloc(16);
+    if (!unencoded->morpheme.data || unencoded->memoryKey.data || unencoded->association.data || unencoded->associator.data) {
         perror("malloc failure");
         exit(-1);
     }
@@ -19,6 +28,9 @@ Unencoded* unencoded_init() {
 
 int unencoded_free(Unencoded* unencoded) {
     free(unencoded->morpheme.data);
+    free(unencoded->memoryKey.data);
+    free(unencoded->association.data);
+    free(unencoded->associator.data);
     free(unencoded);
     unencoded = NULL;
     return 0;

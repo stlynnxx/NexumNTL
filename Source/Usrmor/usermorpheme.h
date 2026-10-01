@@ -8,6 +8,9 @@
 
 typedef struct {
     DynamicBuffers morpheme;
+    DynamicBuffers memoryKey;
+    DynamicBuffers associator;
+    DynamicBuffers association;
 } Unencoded;
 
 

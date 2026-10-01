@@ -1,7 +1,9 @@
 //
-// Created by steviexx on 9/21/26.
+// Created by steviexx on 10/1/26.
 //
+
 #include "parserhelpers.h"
+
 #include "Parser.h"
 int exp_free(Export *export) {
     if (export) {
@@ -253,10 +255,13 @@ ParserBuffers* pbuffers_init() {
     pbuffers->compArray.capacity = 0;
     pbuffers->Buffers.length = 0;
     pbuffers->Buffers.capacity = 0;
+    pbuffers->line.length = 0;
+    pbuffers->line.capacity = 0;
+    pbuffers->line.data = malloc(16);
     pbuffers->Buffers.data = malloc(32);
     pbuffers->compArray.data = malloc(32);
     pbuffers->compBuffer.data = malloc(32);
-    if (!pbuffers->Buffers.data || !pbuffers->compArray.data || !pbuffers->compBuffer.data) {
+    if (!pbuffers->Buffers.data || !pbuffers->compArray.data || !pbuffers->compBuffer.data || !pbuffers->line.data) {
         perror("pbuffers_init malloc failed");
         exit(EXIT_FAILURE);
     }
@@ -513,31 +518,31 @@ int pbuff_ensure_capacity(ParserBuffers *pbuffer, size_t extra, int control)
     }
 }
 
-// builder appending
-int builder_append_bytes(Builder *builderr, char *byte, size_t x, int control)
+
+int pbuff_append_bytes(ParserBuffers *pbuffers, char *byte, size_t x, int control)
 {
-    if (builder_ensure_capacity(builderr, x, control) != 0) {
+    if (pbuff_ensure_capacity(pbuffers, x, control) != 0) {
         return -1; // failure
     }
     switch (control) {
         case 0:
-            memcpy(builderr->memKeyScratch.data + builderr->memKeyScratch.length, byte, x);
-            builderr->memKeyScratch.length += x;
+            memcpy(pbuffers->compArray.data + pbuffers->compArray.length, byte, x);
+            pbuffers->compArray.length += x;
             return 0;
             break;
         case 1:
-            memcpy(builderr->associatorScratch.data + builderr->associatorScratch.length, byte, x);
-            builderr->associatorScratch.length += x;
+            memcpy(pbuffers->compBuffer.data + pbuffers->compBuffer.length, byte, x);
+            pbuffers->compBuffer.length += x;
             return 0;
             break;
         case 2:
-            memcpy(builderr->assocScratch.data + builderr->assocScratch.length, byte, x);
-            builderr->assocScratch.length += x;
+            memcpy(pbuffers->Buffers.data + pbuffers->Buffers.length, byte, x);
+            pbuffers->Buffers.length += x;
             return 0;
             break;
         case 3:
-            memcpy(builderr->wC.data + builderr->wC.length, byte, x);
-            builderr->wC.length += x;
+            memcpy(pbuffers->line.data + pbuffers->line.length, byte, x);
+            pbuffers->line.length += x;
             return 0;
             break;
         default:
@@ -547,10 +552,10 @@ int builder_append_bytes(Builder *builderr, char *byte, size_t x, int control)
 }
 
 // This is an interface for passing a string to append bytes
-int builder_append_string(Builder *builderr, char *string, size_t x, int control) {
-    return (builder_append_bytes(builderr, string, strlen(string), control));
+int pbuff_append_string(ParserBuffers *pbuffers, char *string, size_t x, int control) {
+    return (pbuff_append_bytes(pbuffers, string, strlen(string), control));
 }
 // This is an interface for passing chars to append_bytes
-int builder_append_char(Builder *builderr, char c, int control) {
-    return (builder_append_bytes(builderr, &c,sizeof(&c), control));
+int pbuff_append_char(ParserBuffers *pbuffers, char c, int control) {
+    return (pbuff_append_bytes(pbuffers, &c,sizeof(&c), control));
 }

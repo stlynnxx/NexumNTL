@@ -6,7 +6,7 @@
 
 #define PARSER_H
 #include "../SymbolTable/SymbolTable.h"
-#include "parserhelpers.h"
+
 #include "Parser.h"
 #include "../Lexer/Lexer.h"
 #include "../SourceGenerator/SourceGenerator.h"
@@ -23,6 +23,7 @@ typedef struct {
     DynamicBuffers compArray;
     DynamicBuffers compBuffer;
     DynamicBuffers Buffers;
+    DynamicBuffers line;
 }ParserBuffers;
 
 typedef struct {
@@ -45,8 +46,8 @@ typedef struct {
 } Builder;
 
 inline Export* get_parser_export(void);
-Export* match(Export *exp,int scratchOneIdx, int flag, ParserBuffers *pbuffers);
-void terminalToNexcMatch(Export *exp,int flag, char firstLetter)
+Export* match(Export *exp, int flag, ParserBuffers *pbuffers);
+void terminalToNexcMatch(Export *exp,int flag, char firstLetter);
 
 
-#endif //NEXUMNTL_PARSER_H
+#endif //PARSER_H

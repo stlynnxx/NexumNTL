@@ -6,6 +6,7 @@
 #define LEXER_H
 
 #include "../SymbolTable/SymbolTable.h"
+#include "../SourceGenerator/SGhelpers.h"
 #include <stddef.h>
 
 typedef struct {

@@ -1065,3 +1065,19 @@ Big progress today, even if the journal entry is small!
 
 Tonight I've been ironing things out and got to work on updating main; I'm  in the process of routing to the differents
 in main and that's where I should pick back up at tomorrow!
+
+10/1/2026-
+
+I've put in a few hours of work this morning and i'm at a point where there's a lot running through my head about the
+project and I need to think a bit so I figured now was a good time to journal a bit.
+
+I started the Nexfile parsing -> append to matrix path today. I started in the compressor, writing logic for loading the
+file and working on handing it off to the parser. I want to use as much existing logic as possible, although original
+logic is unavoidable.
+
+I'm at a point now where I should have the lines from the given file read into the lines buffer in parser buffers and next
+comes figuring out whats what and saving things appropriately, AKA parsing again.
+
+I made where we are work with Parser's match instead of changing match, and now I need to trace down the usrmor_add_p
+path and make sure all of that is as it needs to be, but first I think I need a break for now.
+
