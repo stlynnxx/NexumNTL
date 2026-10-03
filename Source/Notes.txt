@@ -1081,3 +1081,12 @@ comes figuring out whats what and saving things appropriately, AKA parsing again
 I made where we are work with Parser's match instead of changing match, and now I need to trace down the usrmor_add_p
 path and make sure all of that is as it needs to be, but first I think I need a break for now.
 
+10/3/2026-
+
+I am on a small break. I'll be back in a few days.
+
+I've been working stop since my mom died recently and I just need a few days.
+
+But I wanted to say something in here, so.
+
+Something.

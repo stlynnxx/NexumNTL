@@ -55,20 +55,29 @@ typedef enum {
 
 extern const char alphas[];
 extern const int alphasLength;
+// The following struct will be for engrams objects passed back to agents for use internally
 
-struct MemoryKey {
-    int x;
-    // char associationBank[20];
-    struct associatonBank{
-        char associationsList[200];
-        struct associator {
-            struct MemoryKey *associatonBank;
+typedef struct {
+    DynamicBuffers associations;
+} AssociationBank;
 
-        } associator;
+typedef struct {
+    DynamicBuffers key;
+    AssociationBank *associationBank;
+} MemoryKey;
 
-    } associatonBank;
+typedef struct {
+    MemoryKey key;
+    MemoryKey *associationBank;
+} Associator;
 
-};
+typedef struct {
+    MemoryKey key;
+    MemoryKey *associationBank;
+    Associator.MemoryKey *associationBank;
+    Associator.MemoryKey.key
+
+} Engram;
 
 // These structs are the buffer for the matrix; only columns need to be expanded.
 typedef struct {
