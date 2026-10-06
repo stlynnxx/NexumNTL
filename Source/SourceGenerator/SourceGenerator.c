@@ -10,6 +10,7 @@
 #include "../Lexer/Lexer.h"
 #include "../SymbolTable/SymbolTable.h"
 #include "../Parser/Parser.h"
+#include "../Parser/parserhelpers.h"
 
 
 // Input storage

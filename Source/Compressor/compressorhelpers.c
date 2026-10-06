@@ -56,32 +56,30 @@ void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers) {
     char *workingChar;
     int found_start = 0;
     int first_char = 0;
-
-
     // Appending a single line from the file to pbuffers->line
     while ((*workingChar = fgetc(in_file)) != SEMICOLON) {
-        while ((*workingChar = fgetc(in_file)) != SEMICOLON) {
-            if (!found_start && *workingChar == OPENBRACE) {
-                found_start = 1;
-                pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
-                continue;
-            }
-            if (found_start && *workingChar != SEMICOLON && found_start == 1) {
-                first_char = 1;
-                pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
-                continue;
-            }
-            if (found_start && *workingChar == SEMICOLON && first_char == 1) {
-                pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
-                pbuff_append_string(pbuffers, "\0", sizeof("/0"),3);
-                break;
-            }
+        if (!found_start && *workingChar == OPENBRACE) {
+            found_start = 1;
+            +pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
+            continue;
+        }
+        if (found_start && *workingChar != SEMICOLON && found_start == 1) {
+            first_char = 1;
+            pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
+            continue;
+        }
+        if (found_start && *workingChar == SEMICOLON && first_char == 1) {
+            pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
+            pbuff_append_string(pbuffers, "\0", sizeof("/0"),3);
+            break;
         }
     }
+    fclose(in_file);
+    free(in_file);
 }
+
 void line_parse(ParserBuffers *pbuffers) {
     char *workingChar;
-
     for (int i = 0; i < pbuffers->line.length; i++)
     {
         *workingChar = pbuffers->line.data[i];
@@ -124,17 +122,13 @@ int comp_open_file(FILE* in_file, ParserBuffers *pbuffers, int nex_code_flag) {
     size_t file_size = comp_get_file_size(in_file);
     // Append to pbuffer appropriately
     append_file_to_buffers(in_file, pbuffers);
-    line_parse()
-
-
+    line_parse(pbuffers);
     Export *exp = exp_init();
     match(exp,nex_code_flag,pbuffers);
-
-
-
 }
+
 int comp_from_file_append_bytes(ParserBuffers *pbuffers, FILE* in_file, int nex_code_flag) {
-    //  We are appending the file to unencoded
+    //  We are appending the file to pbuffers
     int cofr;
     cofr = comp_open_file(in_file, pbuffers, nex_code_flag);
     if (cofr == -1) {

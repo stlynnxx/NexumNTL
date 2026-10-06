@@ -1090,3 +1090,20 @@ I've been working stop since my mom died recently and I just need a few days.
 But I wanted to say something in here, so.
 
 Something.
+
+10/6/20226-
+
+I'm back!
+
+Coming back from a break is always a mess but it was a much needed break.
+
+I've just been going over what I've been doing lately, tracing paths and correcting a few things whenever I noticed
+some structural issues within the Parser itself that I think I need to go ahead and address next before going father.
+
+Then i'll get back to my I/O paths and the engrams!
+
+I'm doing a bit of actual correcting today, but also marking things that need corrected and thinkning about
+the overall general flow of the parser at the moment, and how data is flowing in and out of it. I/O was being handled
+differently whenever we started it; I think we may need to rethink how that part of the program begins and how it's called
+and how that changes existing logic downstream.
+

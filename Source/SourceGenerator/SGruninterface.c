@@ -83,20 +83,8 @@ int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, i
     return 0;
 }
 
-
-
-
 void sgRun(const char *path, int nexcodeFlag, bool pCheck, int sourceFlag) {
     InputForm *form = input_init();
     // create(path); Create has been merged into append
-    if (nexcodeFlag == 0) {
-        routing(form,path, nexcodeFlag, sourceFlag, pCheck);
-    }
-    else if (nexcodeFlag == 1) {
-        routing(path, nexcodeFlag, 1);
-    }
-    else {
-        perror("sgrun failure");
-        exit(-1);
-    }
+    routing(form, path, nexcodeFlag, sourceFlag, pCheck);
 }

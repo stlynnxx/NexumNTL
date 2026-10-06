@@ -22,7 +22,7 @@
 void terminal_to_nexfile() {
     char filepath[4096];
     int nex_code_flag;
-    printf("Enter file path for save location: ");
+    printf("Enter filename: ");
     scanf("%s", filepath);
     printf(".nex or .nexc? (0 for .nex/1 for .nexc)");
     scanf("%s", &nex_code_flag);
@@ -30,7 +30,13 @@ void terminal_to_nexfile() {
         perror("Incorrect choice");
         exit(-1);
     }
-    sgRun(filepath, nex_code_flag, false, 0);
+    if (nex_code_flag == 0) {
+        sgRun(filepath, nex_code_flag, false, 0);
+    }
+    if (nex_code_flag == 1) {
+        sgRun(filepath, nex_code_flag, false, 0);
+    }
+
 }
 
 
@@ -38,13 +44,13 @@ int run() {
     // Terminal to Nexfile/Nexcfile
     terminal_to_nexfile();
     // Terminal -> usrmor
-    compressor_collect(1);
+    compressor_collect(1, 0);
     /* Nexfile parsing- append to matrix
      * This should look like loading the file, parsing line by line, and as we go
      * checking for matches and adding unmatched morphemes- let's try reusing as much
      * existing code as possible for this.
      */
-
+    compressor_collect(0,0);
     // This initiates the Lexer
     lRun();
     prun();

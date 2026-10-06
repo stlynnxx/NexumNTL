@@ -24,6 +24,7 @@ typedef struct {
     DynamicBuffers compBuffer;
     DynamicBuffers Buffers;
     DynamicBuffers line;
+    DynamicBuffers writeTarget;
 }ParserBuffers;
 
 typedef struct {
@@ -37,7 +38,9 @@ typedef struct {
     DynamicBuffers associatorScratch;
 
 } Export;
+
 extern Export *parser_export;
+
 typedef struct {
     DynamicBuffers assocScratch;
     DynamicBuffers associatorScratch;

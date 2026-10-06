@@ -30,34 +30,32 @@ void compressor_collect(int control, int nex_code_flag) {
     // nex_code_flag 0 is .nex, 1 is .nexc
     if (control == 0) {
         if (nex_code_flag == 0) {
-        // input coming from inFile
+        // input coming from inFile,.nex
             if (explore_dir("data", ".nex", &files, &count) > 0) {
                 for (int i = 0; i < count; i++) {
                     char filepath[4096];
                     snprintf(filepath, sizeof(filepath), "data/%s", files[i]);
                     inFile = fopen(filepath, "r");
-                    fclose(inFile);
                     free(files[i]);
                 }
                 free(files);
             }
         }
+        // input coming from inFile, .nexc
         if (nex_code_flag == 1) {
             if (explore_dir("data", ".nexc", &files, &count) > 0) {
                 for (int i = 0; i < count; i++) {
                     char filepath[4096];
                     snprintf(filepath, sizeof(filepath), "data/%s", files[i]);
                     inFile = fopen(filepath, "r");
-                    fclose(inFile);
                     free(files[i]);
                 }
                 free(files);
             }
         }
+        // Writing inFile to the appropriate spot in pbuffers
         ParserBuffers *pbuffers = pbuffers_init();
-        comp_append_bytes(*pbuffers, &inFile, nex_code_flag);
-
-
+        comp_from_file_append_bytes(pbuffers, inFile, nex_code_flag);
     }
 
     if (control == 1) {

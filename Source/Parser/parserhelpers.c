@@ -38,6 +38,7 @@ int pbuff_free(ParserBuffers *pbuffers) {
         free(pbuffers->compArray.data);
         free(pbuffers->Buffers.data);
         free(pbuffers->compBuffer.data);
+        free(pbuffers->writeTarget.data);
         free(pbuffers);
         pbuffers = NULL;
         return 0;
@@ -251,16 +252,25 @@ ParserBuffers* pbuffers_init() {
     ParserBuffers *pbuffers = malloc(sizeof(ParserBuffers));
     pbuffers->compBuffer.length = 0;
     pbuffers->compBuffer.capacity = 0;
+
     pbuffers->compArray.length = 0;
     pbuffers->compArray.capacity = 0;
+
     pbuffers->Buffers.length = 0;
     pbuffers->Buffers.capacity = 0;
+
     pbuffers->line.length = 0;
     pbuffers->line.capacity = 0;
+
+    pbuffers->writeTarget.length = 0;
+    pbuffers->writeTarget.capacity = 0;
+
     pbuffers->line.data = malloc(16);
     pbuffers->Buffers.data = malloc(32);
     pbuffers->compArray.data = malloc(32);
     pbuffers->compBuffer.data = malloc(32);
+    pbuffers->writeTarget.data = malloc(8);
+
     if (!pbuffers->Buffers.data || !pbuffers->compArray.data || !pbuffers->compBuffer.data || !pbuffers->line.data) {
         perror("pbuffers_init malloc failed");
         exit(EXIT_FAILURE);
@@ -512,6 +522,44 @@ int pbuff_ensure_capacity(ParserBuffers *pbuffer, size_t extra, int control)
 
             break;
         }
+        case 3: {
+            needed = pbuffer->line.length + extra;
+            if (needed <= pbuffer->line.capacity) {
+                return 0;
+            }
+            capacity = pbuffer->line.capacity ? pbuffer->line.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(pbuffer->line.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            pbuffer->line.data = tmp;
+            pbuffer->line.capacity = capacity;
+            return 0;
+            break;
+        }
+        case 4: {
+            needed = pbuffer->writeTarget.length + extra;
+            if (needed <= pbuffer->writeTarget.capacity) {
+                return 0;
+            }
+            capacity = pbuffer->writeTarget.capacity ? pbuffer->writeTarget.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(pbuffer->writeTarget.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            pbuffer->writeTarget.data = tmp;
+            pbuffer->writeTarget.capacity = capacity;
+            return 0;
+
+            break;
+        }
+
         default:
             return -1;
             break;
@@ -543,6 +591,11 @@ int pbuff_append_bytes(ParserBuffers *pbuffers, char *byte, size_t x, int contro
         case 3:
             memcpy(pbuffers->line.data + pbuffers->line.length, byte, x);
             pbuffers->line.length += x;
+            return 0;
+            break;
+        case 4:
+            memcpy(pbuffers->writeTarget.data + pbuffers->writeTarget.length, byte, x);
+            pbuffers->writeTarget.length += x;
             return 0;
             break;
         default:

@@ -18,6 +18,7 @@ inline int exp_ensure_capacity(Export *export, size_t extra, int control);
 inline int exp_append_bytes(Export *export, char *byte, size_t x, int control);
 inline int exp_append_string(Export *export, char *string, size_t x, int control);
 inline int pbuff_append_string(ParserBuffers *pbuffers, char *string, size_t x, int control);
+inline int pbuff_append_char(ParserBuffers *pbuffers, char c, int control);
 
 
 
