@@ -26,19 +26,18 @@ void usrmor_match(Unencoded *unencoded, char firstLetter, bool pCheck) {
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
                 usrmorIdx = rowSize + 1;
                 valuesMatrix[A][usrmorIdx] = unencoded->morpheme.data;
-                encodedMatrix[A][usrmorIdx] = valuesMatrix[A][usrmorIdx];
                 break;
             case 'B':
                 rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
                 usrmorIdx = rowSize + 1;
                 valuesMatrix[B][usrmorIdx] = unencoded->morpheme.data;
-                encodedMatrix[B][usrmorIdx] = valuesMatrix[B][usrmorIdx];
+
                 break;
             case 'C':
                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
                 usrmorIdx = rowSize + 1;
                 valuesMatrix[C][usrmorIdx] = unencoded->morpheme.data;
-                encodedMatrix[C][usrmorIdx] = valuesMatrix[C][usrmorIdx];
+
                 break;
             case 'D':
                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
@@ -188,11 +187,11 @@ void usrmor_match(Unencoded *unencoded, char firstLetter, bool pCheck) {
 
         }
 }
-void terminalToNexcUsrmorAddP(Export *export, int foundI) {
+void terminalToNexcUsrmorAddP(InputForm *form, int foundI) {
     bool pCheck = true;
     Unencoded *unencoded = unencoded_init();
-    terminalToNexcUsrAppendString(unencoded, export, foundI, export->memKey.length);
-    // exp needs freed here
+    terminalToNexcUsrAppendString(unencoded, form);
+    input_free(form);
     char firstLetter = unencoded->morpheme.data[0];
     usrmor_match(unencoded, firstLetter, pCheck);
 }

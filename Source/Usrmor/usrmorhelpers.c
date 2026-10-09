@@ -56,17 +56,17 @@ int usr_ensure_capacity(Unencoded *unencoded, size_t extra) {
 }
 
 // append_bytes is for appending raw bytes from the given input
-int usr_append_bytes(Unencoded *unencoded, char *byte, size_t x) {
+int usr_append_bytes(Unencoded *unencoded, InputForm *form, size_t x) {
     if (usr_ensure_capacity(unencoded, x) != 0) {
         return -1; // failure
     }
-    memcpy(unencoded->morpheme.data + unencoded->morpheme.length, byte, x);
+    memcpy(unencoded->morpheme.data + unencoded->morpheme.length, form, x);
     unencoded->morpheme.length += x;
     return 0;
 }
 // This is an interface for passing a string to append bytes
-int terminalToNexcUsrAppendString(Unencoded *unencoded, Export *exp, int foundI, size_t x) {
-    return (usr_append_bytes(unencoded, exp,  sizeof(exp)));
+int terminalToNexcUsrAppendString(Unencoded *unencoded, InputForm *form) {
+    return (usr_append_bytes(unencoded, form,  sizeof(form)));
 }
 int usr_append_string(Unencoded *unencoded, char *byte, int foundI, size_t x) {
     return (usr_append_bytes(unencoded, byte,  sizeof(byte)));

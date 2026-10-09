@@ -55,6 +55,7 @@ int terminal_input(FILE *fp, InputForm *form, int control) {
         printf("Assocation Count: \n");
         scanf("%d", form->assocCount);
         printf("Assocations (seperate with spaces, and be sure to match your association count correctly.): \n");
+        // the loop below still needs some sort of call to match&verify
         for (int i = 0; i < form->assocCount; i++ )
         {
             scanf("%s", &form->associationBuffer.data[i]);
@@ -76,19 +77,32 @@ int terminal_input(FILE *fp, InputForm *form, int control) {
     // .nexc
     if (control == 1) {
         Export* exp = exp_init();
+        printf("Enter filename to be appended with .nexc (default is 'export', producing 'export.nexc'");
+        scanf("%s",form->filename.data);
         printf("Memory Key: \n");
         scanf("%s", form->memoryKeyBuffer.data);
         // hand over to parser match
         exp_append_string(exp, form->memoryKeyBuffer.data, form->memoryKeyBuffer.length, 4);
-        terminalToNexcMatch(exp, 4, exp->memoryKeyScratch.data[0]);
+        terminal_to_nexc_match(exp, 4, exp->memoryKeyScratch.data[0]);
         printf("Assocation Count: \n");
         scanf("%d", form->assocCount);
         printf("Assocations (seperate with spaces, and be sure to match your association count correctly.): \n");
+
         for (int i = 0; i < form->assocCount; i++ )
         {
-            scanf("%s", &form->associations.data[i]);
-            exp_append_string(exp, &form->associations.data[i], form->associations.length, 5);
+            scanf("%s", &form->associationBuffer.data[i]);
+            if (form->associationBuffer.data[i] == ASSOCIATOR) {
+                associator_chk = 1;
+            }
+            if (associator_chk == 1) {
 
+                SG_line_parse(form);
+
+                associator_chk = 0;
+            }
+            // 1 for @, 2 for assoc
+            in_append_string(form, &form->associationBuffer.data[i], form->associationBuffer.length, 1);
+            terminalToNexcMatch()
         }
         format(fp, form, form->assocCount, 0);
         return 0;

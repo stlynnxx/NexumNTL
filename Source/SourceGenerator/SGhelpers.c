@@ -26,12 +26,16 @@ InputForm* input_init() {
     form->associatorBuffer.length = 0;
     form->associatorBuffer.capacity = 0;
 
+    form->filename.length = 0;
+    form->filename.capacity = 0;
+
     form->associators.data = malloc(32);
     form->associations.data = malloc(32);
     form->memoryKey.data = malloc(32);
     form->memoryKeyBuffer.data = malloc(32);
     form->associationBuffer.data = malloc(32);
     form->associatorBuffer.data = malloc(32);
+    form->filename.data = malloc(16);
 
     if (!form->associations.data || !form->associators.data || !form->memoryKey.data || !form->memoryKeyBuffer.data || !form->associationBuffer.data || !form->associatorBuffer) {
         perror("input_init failure");
@@ -44,6 +48,10 @@ int input_free(InputForm* form) {
     free(form->associators.data);
     free(form->associations.data);
     free(form->memoryKey.data);
+    free(form->filename.data);
+    free(form->memoryKeyBuffer.data);
+    free(form->associationBuffer.data);
+    free(form->associatorBuffer.data);
     free(form);
     form = NULL;
     return 0;
@@ -137,6 +145,34 @@ int in_append_bytes(InputForm *form, char *byte, size_t x, int control) {
             memcpy(form->associators.data + form->associators.length, byte, x);
             form->associators.length += x;
             break;
+        case 3:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->memoryKeyBuffer.data + form->memoryKey.length, byte, x);
+            form->memoryKeyBuffer.length += x;
+            break;
+        case 4:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->associationBuffer.data + form->associationBuffer.length, byte, x);
+            form->associationBuffer.length += x;
+            break;
+        case 5:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->associatorBuffer.data + form->associatorBuffer.length, byte, x);
+            form->associatorBuffer.length += x;
+            break;
+        case 6:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->filename.data + form->filename.length, byte, x);
+            form->filename.length += x;
+            break;
         default:
             return -1;
             break;
@@ -180,10 +216,8 @@ void SG_line_parse(InputForm *form) {
                         if (*workingChar == COMMA) {
                             associator_chk = 0;
                         }
-                        form->associations.data[i] = *workingChar;
+                        in_append_string(form, workingChar, sizeof(workingChar), 2);
                 }
-                // append pbuffers->line.data[i] to pbuffers->Buffers
-                in_append_string(form, workingChar, sizeof(workingChar), 2);
             }
                 else
                 {

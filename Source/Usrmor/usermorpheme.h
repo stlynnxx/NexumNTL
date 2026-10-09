@@ -16,6 +16,6 @@ typedef struct {
 
 void usrmor_match(Unencoded *unencoded, char firstLetter, bool pCheck);
 void usrmor_add_p(char *byte, int foundI);
-void terminalToNexcUsrmorAddP(Export *export, int foundI);
+void terminalToNexcUsrmorAddP(InputForm *form, int foundI);
 void usrmor_add(char *byte, int foundI);
 #endif //NEXUMNTL_USERMORPHEME_H

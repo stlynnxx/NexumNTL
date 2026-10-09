@@ -26,6 +26,7 @@ void terminal_to_nexfile() {
     scanf("%s", filepath);
     printf(".nex or .nexc? (0 for .nex/1 for .nexc)");
     scanf("%s", &nex_code_flag);
+    // nex_code_flag 0 = .nex; nex_code_flag 1 = .nexc
     if (nex_code_flag > 1 || nex_code_flag < 0) {
         perror("Incorrect choice");
         exit(-1);

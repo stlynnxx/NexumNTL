@@ -70,13 +70,18 @@ int increment(int breakdownIdx, char wC, Organizer *lexerbreakdown, int directio
 }
 
 // terminal to nexc match
-
-void terminalToNexcEncode(Export *ex, int foundI, int row, int flag)
+FILE* init_export(InputForm *form) {
+    FILE *export_file = fopen(form->filename.data, "w");
+}
+void terminal_to_nexc_encode(InputForm *form, int foundI, int row, int flag)
 {
-    int expReturn;
-    ex->encodedMorpheme.data[0] = *encodedMatrix[row][foundI];
-    expReturn = exp_append_string(ex, &ex->encodedMorpheme.data[0], sizeof(ex->encodedMorpheme.data[0]), flag);
-    if (expReturn == -1) {
+    FILE *export_file;
+    int inReturn;
+    // I think that we should write to a file as opposed to an encodedMatrix. The encodedMatrix is likely going away soon.
+    export_file = init_export(form);
+    inReturn = in_append_string(form,)
+    inReturn = exp_append_string(ex, &ex->encodedMorpheme.data[0], sizeof(ex->encodedMorpheme.data[0]), flag);
+    if (inReturn == -1) {
         perror("Encode failure");
         exit(EXIT_FAILURE);
     }
@@ -84,145 +89,230 @@ void terminalToNexcEncode(Export *ex, int foundI, int row, int flag)
 
 }
 
-void terminalToNexcVerify(Export *exp, int rowSiZe, int row, int flag)
+void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
 {
     int foundI;
     for (int i = 0; i <= rowSiZe; i++)
     {
         if (valuesMatrix[row][i] == NULL) perror("values matrix null"); exit(EXIT_FAILURE);
-        if (strncmp(exp->memoryKeyScratch.data, valuesMatrix[row][i], strlen(exp->memoryKeyScratch.data)) == 0)
-        {
-            // match is found here
-            foundI = i;
-            terminalToNexcEncode(exp, foundI, row, flag);
-        }
-        else {
-            // We need to catch the unverified morpheme here and then hand it over to usrmor
-            foundI = i;
-            terminalToNexcUsrmorAddP(exp, foundI);
+            switch (flag) {
+                case 0:
+                    if (strncmp(form->memoryKey.data, valuesMatrix[row][i], strlen(form->memoryKey.data)) == 0)
+                    {
+                        // match is found here
+                        foundI = i;
+                        terminal_to_nexc_encode(form, foundI, row, flag);
+                    }
+                    else {
+                        // We need to catch the unverified morpheme here and then hand it over to usrmor
+                        foundI = i;
+                        terminalToNexcUsrmorAddP(form, foundI);
+                    }
+                    break;
+                case 1:
+                    if (strncmp(form->associations.data, valuesMatrix[row][i], strlen(form->associations.data)) == 0)
+                    {
+                        // match is found here
+                        foundI = i;
+                        terminal_to_nexc_encode(form, foundI, row, flag);
+                    }
+                    else {
+                        // We need to catch the unverified morpheme here and then hand it over to usrmor
+                        foundI = i;
+                        terminalToNexcUsrmorAddP(form, foundI);
+                    }
+                    break;
+                case 2:
+                    if (strncmp(form->associators.data, valuesMatrix[row][i], strlen(form->associators.data)) == 0)
+                    {
+                        // match is found here
+                        foundI = i;
+                        terminal_to_nexc_encode(form, foundI, row, flag);
+                    }
+                    else {
+                        // We need to catch the unverified morpheme here and then hand it over to usrmor
+                        foundI = i;
+                        terminalToNexcUsrmorAddP(form, foundI);
+                    }
+                    break;
+                case 3:
+                    if (strncmp(form->memoryKeyBuffer.data, valuesMatrix[row][i], strlen(form->memoryKeyBuffer.data)) == 0)
+                    {
+                        // match is found here
+                        foundI = i;
+                        terminal_to_nexc_encode(form, foundI, row, flag);
+                    }
+                    else {
+                        // We need to catch the unverified morpheme here and then hand it over to usrmor
+                        foundI = i;
+                        terminalToNexcUsrmorAddP(form, foundI);
+                    }
+                    break;
+                case 4:
+                    if (strncmp(form->associationBuffer.data, valuesMatrix[row][i], strlen(form->associationBuffer.data)) == 0)
+                    {
+                        // match is found here
+                        foundI = i;
+                        terminal_to_nexc_encode(form, foundI, row, flag);
+                    }
+                    else {
+                        // We need to catch the unverified morpheme here and then hand it over to usrmor
+                        foundI = i;
+                        terminalToNexcUsrmorAddP(form, foundI);
+                    }
+                    break;
+                case 5:
+                    if (strncmp(form->associatorBuffer.data, valuesMatrix[row][i], strlen(form->associatorBuffer.data)) == 0)
+                    {
+                        // match is found here
+                        foundI = i;
+                        terminal_to_nexc_encode(form, foundI, row, flag);
+                    }
+                    else {
+                        // We need to catch the unverified morpheme here and then hand it over to usrmor
+                        foundI = i;
+                        terminalToNexcUsrmorAddP(form, foundI);
+                    }
+                    break;
+                case 6:
+                    if (strncmp(form->filename.data, valuesMatrix[row][i], strlen(form->filename.data)) == 0)
+                    {
+                        // match is found here
+                        foundI = i;
+                        terminal_to_nexc_encode(form, foundI, row, flag);
+                    }
+                    else {
+                        // We need to catch the unverified morpheme here and then hand it over to usrmor
+                        foundI = i;
+                        terminalToNexcUsrmorAddP(form, foundI);
+                    }
+                default:
+                    perror("terminal_to_nexc_verify failure");
+                    exit(EXIT_FAILURE);
+                    break;
+            } // EOS
 
-
-        }
     }
 
 }
 
 
 
-void terminalToNexcMatch(Export *exp,int flag, char firstLetter)
+void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter)
 {
     size_t rowSize;
     switch (firstLetter)
     {
         case 'A':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
-                terminalToNexcVerify(exp, rowSize, A,  flag);
+                terminal_to_nexc_verify(form, rowSize, A,  flag);
                 break;
             case 'B':
                 rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
-                terminalToNexcVerify(exp, rowSize, B,  flag);
+                terminal_to_nexc_verify(form, rowSize, B,  flag);
                 break;
             case 'C':
                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
-                terminalToNexcVerify(exp, rowSize, C,  flag);
+                terminal_to_nexc_verify(form, rowSize, C,  flag);
                 break;
             case 'D':
                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
-                terminalToNexcVerify(exp, rowSize, D,  flag);
+                terminal_to_nexc_verify(form, rowSize, D,  flag);
                 break;
             case 'E':
                 rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
-                terminalToNexcVerify(exp, rowSize, E,  flag);
+                terminal_to_nexc_verify(form, rowSize, E,  flag);
                 break;
             case 'F':
                 rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
-                terminalToNexcVerify(exp, rowSize, F,  flag);
+                terminal_to_nexc_verify(form, rowSize, F,  flag);
                 break;
             case 'G':
                 rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
-                terminalToNexcVerify(exp, rowSize, G,  flag);
+                terminal_to_nexc_verify(form, rowSize, G,  flag);
                 break;
             case 'H':
                 rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
-                terminalToNexcVerify(exp, rowSize, H,  flag);
+                terminal_to_nexc_verify(form, rowSize, H,  flag);
                 break;
             case 'I':
                 rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
-                terminalToNexcVerify(exp, rowSize, I,  flag);
+                terminal_to_nexc_verify(form, rowSize, I,  flag);
                 break;
             case 'J':
                 rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
-                terminalToNexcVerify(exp, rowSize, J,  flag);
+                terminal_to_nexc_verify(form, rowSize, J,  flag);
                 break;
             case 'K':
                 rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
-                terminalToNexcVerify(exp, rowSize, K,  flag);
+                terminal_to_nexc_verify(form, rowSize, K,  flag);
                 break;
             case 'L':
                 rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
-                terminalToNexcVerify(exp, rowSize, L,  flag);
+                terminal_to_nexc_verify(form, rowSize, L,  flag);
                 break;
             case 'M':
                 rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
-                terminalToNexcVerify(exp, rowSize, M,  flag);
+                terminal_to_nexc_verify(form, rowSize, M,  flag);
                 break;
             case 'N':
                 rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
-                terminalToNexcVerify(exp, rowSize, N,  flag);
+                terminal_to_nexc_verify(form, rowSize, N,  flag);
                 break;
             case 'O':
                 rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
-                terminalToNexcVerify(exp, rowSize, O,  flag);
+                terminal_to_nexc_verify(form, rowSize, O,  flag);
                 break;
             case 'P':
                 rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
-                terminalToNexcVerify(exp, rowSize, P,  flag);
+                terminal_to_nexc_verify(form, rowSize, P,  flag);
                 break;
             case 'Q':
                 rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
-                terminalToNexcVerify(exp, rowSize, Q,  flag);
+                terminal_to_nexc_verify(form, rowSize, Q,  flag);
                 break;
             case 'R':
                 rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
-                terminalToNexcVerify(exp, rowSize, R,  flag);
+                terminal_to_nexc_verify(form, rowSize, R,  flag);
                 break;
             case 'S':
                 rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
-                terminalToNexcVerify(exp, rowSize, S,  flag);
+                terminal_to_nexc_verify(form, rowSize, S,  flag);
                 break;
             case 'T':
                 rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
-                terminalToNexcVerify(exp, rowSize, T,  flag);
+                terminal_to_nexc_verify(form, rowSize, T,  flag);
                 break;
             case 'U':
                 rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
-                terminalToNexcVerify(exp, rowSize, U,  flag);
+                terminal_to_nexc_verify(form, rowSize, U,  flag);
                 break;
             case 'V':
                 rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
-                terminalToNexcVerify(exp, rowSize, V,  flag);
+                terminal_to_nexc_verify(form, rowSize, V,  flag);
                 break;
             case 'W':
                 rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
-                terminalToNexcVerify(exp, rowSize, W,  flag);
+                terminal_to_nexc_verify(form, rowSize, W,  flag);
                 break;
             case 'X':
                 rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
-                terminalToNexcVerify(exp, rowSize, X,  flag);
+                terminal_to_nexc_verify(form, rowSize, X,  flag);
                 break;
             case 'Y':
                 rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
-                terminalToNexcVerify(exp, rowSize, Y,  flag);
+                terminal_to_nexc_verify(form, rowSize, Y,  flag);
                 break;
             case 'Z':
                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
-                terminalToNexcVerify(exp, rowSize, Z,  flag);
+                terminal_to_nexc_verify(form, rowSize, Z,  flag);
                 break;
             default:
-                verifyReturn = -1;
+                perror("Terminal to .nexc match failure");
+                exit(EXIT_FAILURE);
                 break;
         }
-    } return exp;
+    }
 }
 
 //

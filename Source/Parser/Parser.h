@@ -50,7 +50,7 @@ typedef struct {
 
 inline Export* get_parser_export(void);
 Export* match(Export *exp, int flag, ParserBuffers *pbuffers);
-void terminalToNexcMatch(Export *exp,int flag, char firstLetter);
+void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter);
 
 
 #endif //PARSER_H

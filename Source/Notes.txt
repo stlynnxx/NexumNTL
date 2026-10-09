@@ -1131,3 +1131,18 @@ I consider that a win.
 
 But what's next? That concludes the terminal to .nex path, so, onto the next.
 
+10/9/2026-
+
+Today I'm going to start off by sniffing around the terminal to .nexc path, and considering what it accomplishes vs
+what it actually needs to accomplish. I'll see whatever work that does or does not bring my way, and then go from there.
+
+Okay, I've spent the morning tracing that path and have had to  make some pretty big changes that I'm glad I've caught.
+
+However I've just been steamrolling through them and needed to take a notes break.
+
+So, we've rewrtitten/fixed all parser side logic for this path up to terminal_to_nexc_verify. That function itself is also
+done, and i'm now branching off into the functions that it calls.
+
+Right now I've been fixing the usrmor tangent- if a given morpheme is not a part of the lexicon, it is added to the
+valuesMatrix in usr_match.
+

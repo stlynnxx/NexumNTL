@@ -15,6 +15,7 @@ typedef struct {
     DynamicBuffers memoryKeyBuffer;
     DynamicBuffers associationBuffer;
     DynamicBuffers associatorBuffer;
+    DynamicBuffers filename;
 } InputForm;
 
 int nexc(FILE *fp, InputForm *form, Export *exp);
