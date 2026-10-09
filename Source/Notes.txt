@@ -1102,8 +1102,32 @@ some structural issues within the Parser itself that I think I need to go ahead 
 
 Then i'll get back to my I/O paths and the engrams!
 
-I'm doing a bit of actual correcting today, but also marking things that need corrected and thinkning about
+I'm doing a bit of actual correcting today, but also marking things that need corrected and thinking about
 the overall general flow of the parser at the moment, and how data is flowing in and out of it. I/O was being handled
 differently whenever we started it; I think we may need to rethink how that part of the program begins and how it's called
 and how that changes existing logic downstream.
+
+10/8/2026-
+
+Okay, so I started this morning by making a simple map of the overall logic paths in minder to help keep myself straight
+as I work.
+
+I know I'd left off in Parser last time but where I had left off and what I had seen that needs corrected leads me to
+want to start from the beginning again and trace each path (which is what I was already doing, but now I've a map!) and
+make sure everything is as it should be.
+
+It certainly won't hurt the project to do so in any way other than time, so. I think it'll be worth doing.
+
+We'll start with terminal to .nex file.
+
+It seems terminal_input needs to collect and append associators still, so, that's where we're starting with the
+actual coding today!
+
+Okay, I added the associator logic into terminal_input by adapting line_parse from compressorhelpers and putting it into
+SG helpers. Now the associatons and asssociations split should handle itself automatically and append to the correct
+target and I mostly just reused and adapted existing code!
+
+I consider that a win.
+
+But what's next? That concludes the terminal to .nex path, so, onto the next.
 

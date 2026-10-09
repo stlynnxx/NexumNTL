@@ -85,6 +85,5 @@ int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, i
 
 void sgRun(const char *path, int nexcodeFlag, bool pCheck, int sourceFlag) {
     InputForm *form = input_init();
-    // create(path); Create has been merged into append
     routing(form, path, nexcodeFlag, sourceFlag, pCheck);
 }

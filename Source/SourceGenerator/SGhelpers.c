@@ -153,3 +153,48 @@ int in_append_string(InputForm *form, char *string, size_t x, int control) {
 int in_append_char(InputForm *form, char c, int control) {
     return (in_append_bytes(form, &c, 1, control));
 }
+void SG_line_parse(InputForm *form) {
+    int associator_chk;
+    char *workingChar;
+    for (int i = 0; i < form->associators.length; i++)
+    {
+        *workingChar = form->associators.data[i];
+
+        switch (*workingChar)
+        {
+            case NAMETOKEN:
+                break;
+            case ASSOCIATOR:
+                associator_chk = 1;
+                break;
+            case SEMICOLON:
+                break;
+                // default will handle alphanumerics
+            default:
+                if isalnum(*workingChar) {
+                    if (associator_chk != 1) {
+                        i = form->associators.length;
+                        break;
+                    }
+                    if (associator_chk == 1) {
+                        if (*workingChar == COMMA) {
+                            associator_chk = 0;
+                        }
+                        form->associations.data[i] = *workingChar;
+                }
+                // append pbuffers->line.data[i] to pbuffers->Buffers
+                in_append_string(form, workingChar, sizeof(workingChar), 2);
+            }
+                else
+                {
+                    if (*workingChar == COMMA)
+                    {
+
+                        break;
+                    }
+                }
+                break;
+        }
+    }
+
+}

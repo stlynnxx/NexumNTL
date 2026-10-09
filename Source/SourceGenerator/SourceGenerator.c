@@ -43,20 +43,33 @@ void format(FILE *fp, InputForm *form, int count, int mem_key_idx) {
 // Step Two of the append process, opens the created file
 // and collects input which gets placed into the input storage
 int terminal_input(FILE *fp, InputForm *form, int control) {
+    int associator_chk = 0;
     // .nex
     if (control == 0) {
+        // Memory Key
         printf("Memory Key: \n");
         scanf("%s", form->memoryKeyBuffer.data);
         in_append_string(form, form->memoryKeyBuffer.data, form->memoryKeyBuffer.length, 0);
+        // Association
+        // We need to check for associators here. Associators are associations prefaced with an @ symbol.
         printf("Assocation Count: \n");
         scanf("%d", form->assocCount);
         printf("Assocations (seperate with spaces, and be sure to match your association count correctly.): \n");
         for (int i = 0; i < form->assocCount; i++ )
         {
             scanf("%s", &form->associationBuffer.data[i]);
+            if (form->associationBuffer.data[i] == ASSOCIATOR) {
+                associator_chk = 1;
+            }
+            if (associator_chk == 1) {
+
+                SG_line_parse(form);
+                associator_chk = 0;
+            }
             in_append_string(form, &form->associationBuffer.data[i], form->associationBuffer.length, 1);
 
         }
+
         format(fp, form, form->assocCount, 0);
         return 0;
     }

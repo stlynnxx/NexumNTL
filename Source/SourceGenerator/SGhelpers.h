@@ -13,7 +13,7 @@ inline int in_ensure_capacity(InputForm *form, size_t extra, int control);
 inline int in_append_bytes(InputForm *form, char *byte, size_t x, int control);
 inline int in_append_string(InputForm *form, char *string, size_t x, int control);
 inline int in_append_char(InputForm *form, char c, int control);
-
+inline void SG_line_parse(InputForm *form);
 
 
 #endif //NEXUMNTL_SGHELPERS_H
