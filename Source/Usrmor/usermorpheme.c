@@ -14,10 +14,11 @@
 #define FILE_SOURCE_FLAG 1
 
 void usrmor_commit(bool pCheck) {
-    sgRun(USRMOR_PATH, 0, pCheck,FILE_SOURCE_FLAG);
+    if (!pCheck) {sgRun(USRMOR_PATH, 0, pCheck,FILE_SOURCE_FLAG);}
+    if (pCheck) {sgRun()}
 }
 
-void usrmor_match(Unencoded *unencoded, char firstLetter, bool pCheck) {
+void usrmor_match(InputForm *form, Unencoded *unencoded, char firstLetter, int foundI, bool pCheck) {
     int rowSize;
     int usrmorIdx;
     switch (firstLetter)
@@ -180,20 +181,22 @@ void usrmor_match(Unencoded *unencoded, char firstLetter, bool pCheck) {
             default:
                 break;
         }
-        if (pCheck) {
+
+        if (!pCheck) {
             usrmor_commit(pCheck);
         }
         else {
+            terminal_to_nexc_encode(form, foundI, rowSize, usrmorIdx);
 
         }
 }
-void terminalToNexcUsrmorAddP(InputForm *form, int foundI) {
+void terminal_to_nexc_usrmor_add_p(InputForm *form, int foundI) {
     bool pCheck = true;
     Unencoded *unencoded = unencoded_init();
     terminalToNexcUsrAppendString(unencoded, form);
     input_free(form);
     char firstLetter = unencoded->morpheme.data[0];
-    usrmor_match(unencoded, firstLetter, pCheck);
+    usrmor_match(form, unencoded, firstLetter, foundI, pCheck);
 }
 void usrmor_add_p(char *byte, int foundI) {
     bool pCheck = true;

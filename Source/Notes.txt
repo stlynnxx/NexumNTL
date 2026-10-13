@@ -1146,3 +1146,27 @@ done, and i'm now branching off into the functions that it calls.
 Right now I've been fixing the usrmor tangent- if a given morpheme is not a part of the lexicon, it is added to the
 valuesMatrix in usr_match.
 
+10/13/2026-
+
+Okay, I'm back today after a small break. I took the weekend off and then on Monday had to work on stuff for Slippery
+Penguin, and also non programming stuff. But here I am!
+
+I'm just doing some readinng and getting back to where I left off;
+Notes-
+
+On the terminal to nexc path-
+    usrmor match in usrmorpheme appends unencoded to the values matrix, and now we need to, from there, finish the
+    process of taking said input that was just appened to the values matrix and creating a .nexc file from it.
+
+    in_append_strings seems to have internal issues with the context it's being used in
+
+    Actually, in_append_strings was just all around the wrong function for that situation.
+    I need to be creating formatted lines of nexcode to append to the export file. I had considered creating
+    an engram at this point but I think I'm leaning away from that at this particular point because this is
+    a particular function; that is, collecting terminal input from a human user and formatting it into a
+    .nexc file. There's no real practical reason to over complicate that when it can just be writing text to a file.
+
+I've made some progress this morning, i'm now in terminal_to_nexc_encode, at the step where I need to replace
+what's held in the form with the encoded versions of said data. I'm having some type converstion trip ups but I think
+it's break time anyway, i'll come back at that fresh next!
+

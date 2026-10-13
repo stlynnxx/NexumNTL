@@ -18,7 +18,8 @@ typedef struct {
     DynamicBuffers filename;
 } InputForm;
 
-int nexc(FILE *fp, InputForm *form, Export *exp);
-int terminal_input(FILE *fp, InputForm *form, int control);
-int usrmor_input(FILE *fp, InputForm *form);
+inline int nexc(FILE *fp, InputForm *form, Export *exp);
+inline int terminal_input(FILE *fp, InputForm *form, int control);
+inline int usrmor_input(FILE *fp, InputForm *form);
+inline int format(FILE *fp, InputForm *form, int count, int mem_key_idx);
 #endif //SOURCEGENERATOR_H

@@ -21,7 +21,7 @@
 
 
 // This is what is actually being appended to the file
-void format(FILE *fp, InputForm *form, int count, int mem_key_idx) {
+int format(FILE *fp, InputForm *form, int count, int mem_key_idx) {
      fprintf(fp, "%s\n", "");
      char memoryKeyPrefix[5] = "{'";
      char memoryKeySuffix[5] = "':{";
@@ -38,7 +38,13 @@ void format(FILE *fp, InputForm *form, int count, int mem_key_idx) {
 
     }
      fprintf(fp, "%s", "};");
-    // free form
+    if (!fp) {
+        return -1;
+    }
+    else {
+        return 1;
+    }
+
 }
 // Step Two of the append process, opens the created file
 // and collects input which gets placed into the input storage

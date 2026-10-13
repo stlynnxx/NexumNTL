@@ -3,8 +3,9 @@
 //
 #include "Parser.h"
 #include "../Usrmor/usermorpheme.h"
-
+#include "../SourceGenerator/SourceGenerator.h"
 #include <math.h>
+#include <wctype.h>
 
 #include "parserhelpers.h"
 
@@ -68,45 +69,64 @@ int increment(int breakdownIdx, char wC, Organizer *lexerbreakdown, int directio
     }
     return breakdownIdx;
 }
-
+char row_translate(int row) {
+    char export;
+    char alphabet[30] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+    export = alphabet[row];
+}
 // terminal to nexc match
 FILE* init_export(InputForm *form) {
     FILE *export_file = fopen(form->filename.data, "w");
 }
 void terminal_to_nexc_encode(InputForm *form, int foundI, int row, int flag)
 {
+    int formatReturn;
+    char trans_row;
+    unsigned char encodedMemoryKey[4];
+    unsigned char z = foundI + '0';
     FILE *export_file;
-    int inReturn;
-    // I think that we should write to a file as opposed to an encodedMatrix. The encodedMatrix is likely going away soon.
     export_file = init_export(form);
-    inReturn = in_append_string(form,)
-    inReturn = exp_append_string(ex, &ex->encodedMorpheme.data[0], sizeof(ex->encodedMorpheme.data[0]), flag);
-    if (inReturn == -1) {
+    trans_row = row_translate(row);
+    encodedMemoryKey[0] = trans_row;
+    encodedMemoryKey[1] = z;
+    in_append_string(form,encodedMemoryKey, sizeof(encodedMemoryKey), 0);
+    formatReturn = format(export_file, form, form->assocCount,0);=
+    if (formatReturn == -1) {
         perror("Encode failure");
         exit(EXIT_FAILURE);
     }
-    // exp needs to be freed here
-
+    if (formatReturn == 1) {
+        input_free(form);
+        fclose(export_file);
+    }
 }
+
+/* for  strncmp use-
+* Zero: The two memory blocks are equal up to the specified number of bytes.
+Negative Value: The first differing byte in the first block has a lower value than the corresponding byte in the second block.
+Positive Value: The first differing byte in the first block has a higher value than the corresponding byte in the second block.
+*/
 
 void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
 {
     int foundI;
+    int foundRow;
     for (int i = 0; i <= rowSiZe; i++)
     {
         if (valuesMatrix[row][i] == NULL) perror("values matrix null"); exit(EXIT_FAILURE);
             switch (flag) {
                 case 0:
-                    if (strncmp(form->memoryKey.data, valuesMatrix[row][i], strlen(form->memoryKey.data)) == 0)
+                    if (strncmp(form->memoryKey.data, valuesMatrix[row][i], form->memoryKey.length) == 0)
                     {
                         // match is found here
                         foundI = i;
-                        terminal_to_nexc_encode(form, foundI, row, flag);
+                        foundRow = row;
+                        terminal_to_nexc_encode(form, foundI, foundRow, flag);
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminalToNexcUsrmorAddP(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI);
                     }
                     break;
                 case 1:
@@ -119,7 +139,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminalToNexcUsrmorAddP(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI);
                     }
                     break;
                 case 2:
@@ -132,7 +152,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminalToNexcUsrmorAddP(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI);
                     }
                     break;
                 case 3:
@@ -145,7 +165,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminalToNexcUsrmorAddP(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI);
                     }
                     break;
                 case 4:
@@ -158,7 +178,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminalToNexcUsrmorAddP(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI);
                     }
                     break;
                 case 5:
@@ -171,7 +191,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminalToNexcUsrmorAddP(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI);
                     }
                     break;
                 case 6:
@@ -184,7 +204,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminalToNexcUsrmorAddP(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI);
                     }
                 default:
                     perror("terminal_to_nexc_verify failure");
