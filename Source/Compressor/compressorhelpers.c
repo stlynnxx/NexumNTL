@@ -52,30 +52,32 @@ long comp_get_file_size(FILE *in_file) {
 }
 
 
-void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers) {
-    char *workingChar;
-    int found_start = 0;
-    int first_char = 0;
-    // Appending a single line from the file to pbuffers->line
-    while ((*workingChar = fgetc(in_file)) != SEMICOLON) {
-        if (!found_start && *workingChar == OPENBRACE) {
-            found_start = 1;
-            +pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
-            continue;
+void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers, size_t file_size) {
+    for (int i = 0; i <= file_size; i++) {
+        char *workingChar;
+        int found_start = 0;
+        int first_char = 0;
+        // Appending a single line from the file to pbuffers->line
+        while ((*workingChar = fgetc(in_file)) != SEMICOLON) {
+            if (!found_start && *workingChar == OPENBRACE) {
+                found_start = 1;
+                pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
+                continue;
+            }
+            if (found_start && *workingChar != SEMICOLON && found_start == 1) {
+                first_char = 1;
+                pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
+                continue;
+            }
+            if (found_start && *workingChar == SEMICOLON && first_char == 1) {
+                pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
+                pbuff_append_string(pbuffers, "\0", sizeof("/0"),3);
+                break;
+            }
         }
-        if (found_start && *workingChar != SEMICOLON && found_start == 1) {
-            first_char = 1;
-            pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
-            continue;
-        }
-        if (found_start && *workingChar == SEMICOLON && first_char == 1) {
-            pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
-            pbuff_append_string(pbuffers, "\0", sizeof("/0"),3);
-            break;
-        }
+        // fclose(in_file);
+        // free(in_file);
     }
-    fclose(in_file);
-    free(in_file);
 }
 
 void line_parse(ParserBuffers *pbuffers) {
@@ -119,10 +121,13 @@ int comp_open_file(FILE* in_file, ParserBuffers *pbuffers, int nex_code_flag) {
         perror("comp_open_file error");
         return -1;
     }
+    // Getting the size of inFile
     size_t file_size = comp_get_file_size(in_file);
     // Append to pbuffer appropriately
-    append_file_to_buffers(in_file, pbuffers);
+    append_file_to_buffers(in_file, pbuffers, file_size);
     line_parse(pbuffers);
+
+
     Export *exp = exp_init();
     match(exp,nex_code_flag,pbuffers);
 }

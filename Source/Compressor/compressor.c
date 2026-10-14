@@ -3,9 +3,7 @@
 //
 
 #include "compressor.h"
-
 #include <ctype.h>
-
 #include "../Parser/Parser.h"
 #include "../Parser/parserhelpers.h"
 #include "../Usrmor/usermorpheme.h"
@@ -27,11 +25,10 @@ void compressor_collect(int control, int nex_code_flag) {
     Input *in = in_init();
     FILE* inFile;
     // Control 0 is from file, 1 is from terminal
-    // nex_code_flag 0 is .nex, 1 is .nexc
     if (control == 0) {
         if (nex_code_flag == 0) {
-        // input coming from inFile,.nex
-            if (explore_dir("data", ".nex", &files, &count) > 0) {
+            // THIS IS FOR THE INPUT FILE BEING IN .NEX
+            if (explore_dir("data/Export", ".nex", &files, &count) > 0) {
                 for (int i = 0; i < count; i++) {
                     char filepath[4096];
                     snprintf(filepath, sizeof(filepath), "data/%s", files[i]);
@@ -41,7 +38,7 @@ void compressor_collect(int control, int nex_code_flag) {
                 free(files);
             }
         }
-        // input coming from inFile, .nexc
+        // THIS IS FOR THE INUPT FILE BEING IN .NEXC - WILL LIKELY BE REMOVED
         if (nex_code_flag == 1) {
             if (explore_dir("data", ".nexc", &files, &count) > 0) {
                 for (int i = 0; i < count; i++) {

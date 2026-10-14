@@ -14,6 +14,7 @@ inline int builder_append_bytes(Builder *builderr, char *byte, size_t x, int con
 inline Builder* build_init();
 inline ParserBuffers* pbuffers_init();
 inline Export* exp_init();
+inline int exp_free(Export *export);
 inline int exp_ensure_capacity(Export *export, size_t extra, int control);
 inline int exp_append_bytes(Export *export, char *byte, size_t x, int control);
 inline int exp_append_string(Export *export, char *string, size_t x, int control);

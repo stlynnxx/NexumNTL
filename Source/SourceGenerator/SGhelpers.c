@@ -121,6 +121,66 @@ int in_ensure_capacity(InputForm *form, size_t extra, int control) {
 }
 
 // append_bytes is for appending raw bytes from the given input
+
+int terminal_to_nexc_in_append_bytes(InputForm *form, unsigned char *encoded, size_t x, int control) {
+    switch (control) {
+        case 0:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->memoryKey.data + form->memoryKey.length, encoded, x);
+            form->memoryKey.length += x;
+            break;
+
+        case 1:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->associations.data + form->associations.length, encoded, x);
+            form->associations.length += x;
+            break;
+        case 2:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->associators.data + form->associators.length, encoded, x);
+            form->associators.length += x;
+            break;
+        case 3:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->memoryKeyBuffer.data + form->memoryKey.length, encoded, x);
+            form->memoryKeyBuffer.length += x;
+            break;
+        case 4:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->associationBuffer.data + form->associationBuffer.length, encoded, x);
+            form->associationBuffer.length += x;
+            break;
+        case 5:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->associatorBuffer.data + form->associatorBuffer.length, encoded, x);
+            form->associatorBuffer.length += x;
+            break;
+        case 6:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->filename.data + form->filename.length, encoded, x);
+            form->filename.length += x;
+            break;
+        default:
+            return -1;
+            break;
+    } // EOS
+    return 0;
+}
+//
 int in_append_bytes(InputForm *form, char *byte, size_t x, int control) {
     switch (control) {
         case 0:
@@ -179,7 +239,9 @@ int in_append_bytes(InputForm *form, char *byte, size_t x, int control) {
     } // EOS
     return 0;
 }
-
+int terminal_to_nexc_in_append_string(InputForm  *form, unsigned char *encodedString, size_t x, int control) {
+    return (terminal_to_nexc_in_append_bytes(form, encodedString, x, control));
+}
 // This is an interface for passing a string to append bytes
 int in_append_string(InputForm *form, char *string, size_t x, int control) {
     return (in_append_bytes(form, string, x, control));

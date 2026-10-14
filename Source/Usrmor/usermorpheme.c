@@ -187,23 +187,24 @@ void usrmor_match(InputForm *form, Unencoded *unencoded, char firstLetter, int f
         }
         else {
             terminal_to_nexc_encode(form, foundI, rowSize, usrmorIdx);
-
         }
 }
-void terminal_to_nexc_usrmor_add_p(InputForm *form, int foundI) {
-    bool pCheck = true;
+bool terminal_to_nexc_usrmor_add_p(InputForm *form, int foundI, bool add_p_check) {
+    add_p_check = true;
     Unencoded *unencoded = unencoded_init();
     terminalToNexcUsrAppendString(unencoded, form);
     input_free(form);
     char firstLetter = unencoded->morpheme.data[0];
-    usrmor_match(form, unencoded, firstLetter, foundI, pCheck);
+    usrmor_match(form, unencoded, firstLetter, foundI, add_p_check);
+    return add_p_check;
 }
 void usrmor_add_p(char *byte, int foundI) {
+    InputForm *form = input_init();
     bool pCheck = true;
     Unencoded *unencoded = unencoded_init();
-    usr_append_string(unencoded, byte, foundI, sizeof());
+    usr_append_string(unencoded, byte, foundI, sizeof(byte));
     char firstLetter = unencoded->morpheme.data[0];
-    usrmor_match(unencoded, firstLetter, pCheck);
+    usrmor_match(form, unencoded, firstLetter, foundI, pCheck);
 }
 
 void usrmor_add(char *byte, int foundI) {

@@ -6,9 +6,7 @@
 #include "../SourceGenerator/SourceGenerator.h"
 #include <math.h>
 #include <wctype.h>
-
 #include "parserhelpers.h"
-
 
 // This will be for checking if a given search term is within the values matrix
 const char *valuesSearch(const char *searchTerm)
@@ -51,46 +49,48 @@ int increment(int breakdownIdx, char wC, Organizer *lexerbreakdown, int directio
     {
         case 0:
             breakdownIdx++;
-            builder_append_string(builder, lexerbreakdown->memoryKey.data[breakdownIdx], sizeof(lexerbreakdown->memoryKey.data[breakdownIdx]), 0);
+            builder_append_string(builder, lexerbreakdown->memoryKey.data, sizeof(lexerbreakdown->memoryKey.data[breakdownIdx]), 0);
             break;
         case 1:
             breakdownIdx++;
-            builder_append_string(builder, lexerbreakdown->memoryKey.data[breakdownIdx], sizeof(lexerbreakdown->memoryKey.data[breakdownIdx]), 1);
+            builder_append_string(builder, lexerbreakdown->memoryKey.data, sizeof(lexerbreakdown->memoryKey.data[breakdownIdx]), 1);
             break;
         case 2:
             breakdownIdx++;
-            builder_append_string(builder, lexerbreakdown->memoryKey.data[breakdownIdx], sizeof(lexerbreakdown->memoryKey.data[breakdownIdx]), 2);
+            builder_append_string(builder, lexerbreakdown->memoryKey.data, sizeof(lexerbreakdown->memoryKey.data[breakdownIdx]), 2);
             break;
         case 3:
             breakdownIdx++;
-            builder_append_string(builder, lexerbreakdown->memoryKey.data[breakdownIdx], sizeof(lexerbreakdown->memoryKey.data[breakdownIdx]), 3);
+            builder_append_string(builder, lexerbreakdown->memoryKey.data, sizeof(lexerbreakdown->memoryKey.data[breakdownIdx]), 3);
         default:
             break;
     }
     return breakdownIdx;
 }
+
 char row_translate(int row) {
     char export;
-    char alphabet[30] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+    static char alphabet[30] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
     export = alphabet[row];
 }
-// terminal to nexc match
+
 FILE* init_export(InputForm *form) {
     FILE *export_file = fopen(form->filename.data, "w");
 }
+
 void terminal_to_nexc_encode(InputForm *form, int foundI, int row, int flag)
 {
     int formatReturn;
-    char trans_row;
-    unsigned char encodedMemoryKey[4];
+    unsigned char trans_row;
+    unsigned char encodedMemoryKey[2];
     unsigned char z = foundI + '0';
     FILE *export_file;
     export_file = init_export(form);
     trans_row = row_translate(row);
     encodedMemoryKey[0] = trans_row;
     encodedMemoryKey[1] = z;
-    in_append_string(form,encodedMemoryKey, sizeof(encodedMemoryKey), 0);
-    formatReturn = format(export_file, form, form->assocCount,0);=
+    terminal_to_nexc_in_append_string(form, encodedMemoryKey,sizeof(encodedMemoryKey),flag);
+    formatReturn = format(export_file, form, form->assocCount,0);
     if (formatReturn == -1) {
         perror("Encode failure");
         exit(EXIT_FAILURE);
@@ -109,6 +109,7 @@ Positive Value: The first differing byte in the first block has a higher value t
 
 void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
 {
+    bool add_p_check = false;
     int foundI;
     int foundRow;
     for (int i = 0; i <= rowSiZe; i++)
@@ -126,7 +127,10 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form, foundI);
+                        add_p_check = terminal_to_nexc_usrmor_add_p(form, foundI, add_p_check);
+                        if (add_p_check == true) {
+                            terminal_to_nexc_encode(form, foundI, row, flag);
+                        }
                     }
                     break;
                 case 1:
@@ -139,7 +143,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI, add_p_check);
                     }
                     break;
                 case 2:
@@ -152,7 +156,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI, add_p_check);
                     }
                     break;
                 case 3:
@@ -165,7 +169,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI, add_p_check);
                     }
                     break;
                 case 4:
@@ -178,7 +182,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI, add_p_check);
                     }
                     break;
                 case 5:
@@ -191,7 +195,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI, add_p_check);
                     }
                     break;
                 case 6:
@@ -204,7 +208,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form, foundI);
+                        terminal_to_nexc_usrmor_add_p(form, foundI, add_p_check);
                     }
                 default:
                     perror("terminal_to_nexc_verify failure");
@@ -221,8 +225,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
 void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter)
 {
     size_t rowSize;
-    switch (firstLetter)
-    {
+    switch (firstLetter) {
         case 'A':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
                 terminal_to_nexc_verify(form, rowSize, A,  flag);
@@ -331,11 +334,9 @@ void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter)
                 perror("Terminal to .nexc match failure");
                 exit(EXIT_FAILURE);
                 break;
-        }
+
     }
 }
-
-//
 
 Export* encode(Export *ex, int foundI, int row, int flag)
 {
@@ -362,11 +363,8 @@ Export* verify(Export *exp, ParserBuffers *pbuffer, int rowSiZe, int row, int fl
             exp = encode(exp, foundI, row, flag);
         }
         else {
-            // We need to catch the unverified morpheme here and then hand it over to usrmor
             foundI = i;
-            usrmor_add_p(exp,pbuffer,foundI);
-
-
+            usrmor_add_p(pbuffer->Buffers.data,foundI);
         }
     }
     return exp;
@@ -376,7 +374,6 @@ Export* match(Export *exp, int flag, ParserBuffers *pbuffers)
 {
     size_t rowSize;
     const char select = pbuffers->Buffers.data[0];
-    // const char compSelect =  pbuffers->compBuffer.data[0];
     char workSelect = toupper(select);
     int verifyReturn;
     if (isalnum(select))
@@ -485,7 +482,7 @@ Export* match(Export *exp, int flag, ParserBuffers *pbuffers)
                 break;
             case 'Z':
                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
-                exp = verify(exp,pbuffers, rowSize, z,  flag);
+                exp = verify(exp,pbuffers, rowSize, Z,  flag);
                 break;
             default:
                 verifyReturn = -1;
@@ -561,7 +558,7 @@ int newCheck(Export *exp, int breakdownIdx, int scratchOneIdx, int writeFlag, Bu
                 if (pbuffers->Buffers.length == pbuffers->compBuffer.length)
                 {
                     // Morpheme match
-                    exp = match(exp,scratchOneIdx, writeFlag, pbuffers);
+                    exp = match(exp, writeFlag, pbuffers);
 
 
                 }
@@ -570,12 +567,6 @@ int newCheck(Export *exp, int breakdownIdx, int scratchOneIdx, int writeFlag, Bu
         return breakdownIdx;
     }
 }
-
-void sendToSource() {
-    bool flag = true;
-    sgRun("Testing2.nexcode", flag);
-}
-
 
 void parse(Organizer *breakdown, Export *exp, Builder *builderr, ParserBuffers *pbuffers) {
     int writeFlag;

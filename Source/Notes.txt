@@ -1170,3 +1170,30 @@ I've made some progress this morning, i'm now in terminal_to_nexc_encode, at the
 what's held in the form with the encoded versions of said data. I'm having some type converstion trip ups but I think
 it's break time anyway, i'll come back at that fresh next!
 
+10/14/2026-
+
+I'm back again this morning, and I think I've for the most part gotten both terminal  to .nex and terminal to .nexc
+taken care of; I say for the most part because while I have tested a POC version of everything, this build needs testing
+still, and I expect to encounter bugs just because really I'm still pretty new to this language and definetly still
+learning.
+
+Next i'm moving on to inFile to .nexc. I'm for the moment not doing an inFile to .nex option as I'm going to
+build this branch to rely on the input being in .nex and you can achieve plain text to .nex converstion with
+the source generator and i'm trying to get v0.0.1 done by the end of the year at the latest. One can do what the branch
+will automate manually for the time being, so i'm prioritizing getting through the existing branches and will come back
+and add that later.
+
+It's also trivial to write out your .nex file by hand, so. If anyone out there actually uses this for anything before
+that branch gets added; you'll live.
+
+I get a ways down that branch and i'm currently in the process of going through the inFile line by line
+and appending to buffers.
+
+I'm in append_file_to_buffers, specifically.
+
+However I meant to take a small break which got away from me for a bit so I think i'm going to get on to some other
+things, and maybe try to circle back to this later.
+
+Either way, progress is progress.
+
+
