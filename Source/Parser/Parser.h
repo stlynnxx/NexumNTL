@@ -51,8 +51,8 @@ typedef struct {
 } Builder;
 
 inline Export* get_parser_export(void);
-Export* match(InputForm *in, int flag, ParserBuffers *pbuffers);
-void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter);
-void terminal_to_nexc_encode(InputForm *form, int foundI, int row, int flag);
+inline void match(InputForm *in, int flag, ParserBuffers *pbuffers);
+inline void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter);
+inline void terminal_to_nexc_encode(InputForm *form, int foundI, int row, int flag);
 
 #endif //PARSER_H

@@ -338,27 +338,27 @@ void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter)
     }
 }
 
-Export* encode(Export *ex, int foundI, int row, int flag)
+InputForm* encode(InputForm *in, int foundI, int row, int flag)
 {
     int exp_return;
     unsigned char trans_row;
-    unsigned char encodedMemoryKey[2];
+    unsigned char *encoded_morpheme[2];
     unsigned char z = foundI + '0';
     FILE *export_file;
     // We may need a customized init_export here
-    export_file = init_export(ex);
+    export_file = init_export(in);
     trans_row = row_translate(row);
-    encodedMemoryKey[0] = trans_row;
-    encodedMemoryKey[1] = z;
-    exp_return = exp_append_string(ex, &ex->encodedMorpheme.data[0], sizeof(ex->encodedMorpheme.data[0]), flag);
+    *encoded_morpheme[0] = trans_row;
+    *encoded_morpheme[1] = z;
+    exp_return = infile_to_nexc_exp_append_string(*encoded_morpheme, sizeof(encoded_morpheme), flag);
     if (exp_return == -1) {
         perror("Encode failure");
         exit(EXIT_FAILURE);
     }
-    return ex;
+    return in;
 }
 
-Export* verify(Export *exp, ParserBuffers *pbuffer, int rowSiZe, int row, int flag)
+InputForm* verify(InputForm *in, ParserBuffers *pbuffer, int rowSiZe, int row, int flag)
 {
     int foundI;
     for (int i = 0; i <= rowSiZe; i++)
@@ -368,17 +368,17 @@ Export* verify(Export *exp, ParserBuffers *pbuffer, int rowSiZe, int row, int fl
         {
             // match is found here
             foundI = i;
-            exp = encode(exp, foundI, row, flag);
+            in = encode(in, foundI, row, flag);
         }
         else {
             foundI = i;
             usrmor_add_p(pbuffer->Buffers.data,foundI);
         }
     }
-    return exp;
+    return in;
 }
 
-Export* match(InputForm *in, int flag, ParserBuffers *pbuffers)
+void match(InputForm *in, int flag, ParserBuffers *pbuffers)
 {
     size_t rowSize;
     const char select = pbuffers->Buffers.data[0];
@@ -496,7 +496,7 @@ Export* match(InputForm *in, int flag, ParserBuffers *pbuffers)
                 verifyReturn = -1;
                 break;
         }
-    } return in;
+    }
 }
 
 int newCheck(Export *exp, int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builderr, Organizer *lexerbreakdown, ParserBuffers *pbuffers, int incrementFlag) {

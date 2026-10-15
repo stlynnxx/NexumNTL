@@ -4,6 +4,7 @@
 
 #include "parserhelpers.h"
 #include "Parser.h"
+#include "../SourceGenerator/SourceGenerator.h"
 
 int exp_free(Export *export) {
     if (export) {
@@ -294,8 +295,9 @@ ParserBuffers* pbuffers_init() {
 
 
 // append_bytes is for appending raw bytes from the given input
-int exp_append_bytes(Export *export, char *byte, size_t x, int control)
+int infile_to_nexc_exp_append_bytes(unsigned char *byte, size_t x, int control)
 {
+    Export *export = exp_init();
     if (exp_ensure_capacity(export, x, control) != 0) {
         return -1; // failure
     }
@@ -341,8 +343,8 @@ int exp_append_bytes(Export *export, char *byte, size_t x, int control)
 }
 
 // This is an interface for passing a string to append bytes
-int exp_append_string(Export *export, char *string, size_t x, int control) {
-    return (exp_append_bytes(export, string, strlen(string), control));
+int infile_to_nexc_exp_append_string(unsigned char *string, size_t x, int control) {
+    return (infile_to_nexc_exp_append_bytes(string, strlen(string), control));
 }
 
 

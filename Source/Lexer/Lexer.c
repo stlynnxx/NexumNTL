@@ -159,6 +159,7 @@ void associator(char wC, MemoryFileLoad *load, Organizer *organizer, int increme
 }
 
 void crawler(FILE *fp) {
+    // These inits need changed to return a pointer to a struct
     MemoryFileLoad *memoryFileLoad;
     load_init(memoryFileLoad);
     Organizer *breakdown;
@@ -240,8 +241,6 @@ void crawler(FILE *fp) {
                 wCCheck(wC, "Post NAMETOKEN 2 If Two");
                 // wC will be at COLON
             }
-
-
 
             printf("Line 271\n");
             if (wC == COLON) {

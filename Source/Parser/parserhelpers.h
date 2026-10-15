@@ -16,8 +16,8 @@ inline ParserBuffers* pbuffers_init();
 inline Export* exp_init();
 inline int exp_free(Export *export);
 inline int exp_ensure_capacity(Export *export, size_t extra, int control);
-inline int exp_append_bytes(Export *export, char *byte, size_t x, int control);
-inline int exp_append_string(Export *export, char *string, size_t x, int control);
+inline int infile_to_nexc_exp_append_bytes(unsigned char *byte, size_t x, int control);
+inline int infile_to_nexc_exp_append_string(unsigned char *string, size_t x, int control);
 inline int pbuff_append_string(ParserBuffers *pbuffers, char *string, size_t x, int control);
 inline int pbuff_append_char(ParserBuffers *pbuffers, char c, int control);
 

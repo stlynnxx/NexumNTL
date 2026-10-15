@@ -22,7 +22,6 @@ Unencoded* unc_export(void) {
 void compressor_collect(int control, int nex_code_flag) {
     char** files;
     int count;
-    Input *in = in_init();
     ParserBuffers *pbuffers = pbuffers_init();
     FILE *inFile;
     char out_filepath[4096];
@@ -59,7 +58,7 @@ void compressor_collect(int control, int nex_code_flag) {
             }
         }
         // Writing inFile to the appropriate spot in pbuffers
-        comp_from_file_append_bytes(pbuffers, inFile, out_filepath,nex_code_flag);
+        comp_from_file_append_bytes(pbuffers, inFile, nex_code_flag);
     }
 
     if (control == 1) {

@@ -63,6 +63,7 @@ void line_parse(ParserBuffers *pbuffers, InputForm *in, FILE* export_file) {
     int name_token_two_check = 0;
     int comma_check = 0;
     int close_brace_check = 0;
+
     for (int i = 0; i < pbuffers->line.length; i++)
     {
         *workingChar = pbuffers->line.data[i];
@@ -179,11 +180,6 @@ void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers, InputForm *i
 
 }
 
-int infile_to_nexc_write_to_file() {
-    format()
-
-
-}
 
 int comp_open_file(FILE* in_file, ParserBuffers *pbuffers, int nex_code_flag) {
     if (!in_file) {
@@ -196,6 +192,9 @@ int comp_open_file(FILE* in_file, ParserBuffers *pbuffers, int nex_code_flag) {
     InputForm *in = input_init();
     append_file_to_buffers(in_file, pbuffers, in, file_size);
     match(in,nex_code_flag,pbuffers);
+    input_free(in);
+    // The last two flags in this sgRun call need reviewed
+    sgRun(pbuffers->out_filename.data,nex_code_flag, 0,0);
 }
 
 int comp_from_file_append_bytes(ParserBuffers *pbuffers, FILE* in_file, int nex_code_flag) {

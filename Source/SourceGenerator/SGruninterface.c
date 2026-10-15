@@ -4,7 +4,7 @@
 
 #include "SGruninterface.h"
 #include "SGhelpers.h"
-int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, int pCheck) {
+int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, int parser_check) {
     int usr_return;
     int term_return;
     FILE *fp = fopen(path, "a");
@@ -61,15 +61,18 @@ int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, i
             case 1:
                 // This is for input coming from usermorpheme
                 // form is freed as a result of usrmor_input
-                usr_return = usrmor_input(fp, form);
-                if (usr_return == -1) {
-                    perror("sgrun failure");
-                    exit(-1);
+                if (parser_check == 0) {
+                    usr_return = usrmor_input(fp, form);
+                    if (usr_return == -1) {
+                        perror("sgrun failure");
+                        exit(-1);
+                    }
+                    else {
+                        printf("SG run success!");
+                    }
                 }
-                else {
-                    printf("SG run success!");
-                }
-                break;
+                if (parser_check == 1) {}
+                    break;
 
             default:
                 break;
@@ -82,7 +85,9 @@ int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, i
     fclose(fp);
     return 0;
 }
-
+void infile_to_nexc_sg_run(InputForm *in, const char *path, int nex_code_flag) {
+    routing(in, path, nex_code_flag, 1, 1;
+}
 void sgRun(const char *path, int nexcodeFlag, bool pCheck, int sourceFlag) {
     InputForm *form = input_init();
     routing(form, path, nexcodeFlag, sourceFlag, pCheck);

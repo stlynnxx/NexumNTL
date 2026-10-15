@@ -1207,5 +1207,7 @@ arrange it into a competent file.
 
 I see difficulties ahead.
 
+Okay, I got upppp to calling sgrun after the match in the infile -> nexc path, and need a break as I will need to move
+forward from here thoughtfully
 
 
