@@ -3,8 +3,8 @@
 //
 
 #include "parserhelpers.h"
-
 #include "Parser.h"
+
 int exp_free(Export *export) {
     if (export) {
         free(export->memKey.data);
@@ -19,6 +19,7 @@ int exp_free(Export *export) {
         return -1;
     }
 }
+
 int builder_free(Builder *builder) {
     if (builder) {
         free(builder->associatorScratch.data);
@@ -33,12 +34,15 @@ int builder_free(Builder *builder) {
         return -1;
     }
 }
+
 int pbuff_free(ParserBuffers *pbuffers) {
     if (pbuffers) {
         free(pbuffers->compArray.data);
         free(pbuffers->Buffers.data);
         free(pbuffers->compBuffer.data);
         free(pbuffers->writeTarget.data);
+        free(pbuffers->in_filename.data);
+        free(pbuffers->out_filename.data);
         free(pbuffers);
         pbuffers = NULL;
         return 0;
@@ -47,7 +51,6 @@ int pbuff_free(ParserBuffers *pbuffers) {
         return -1;
     }
 }
-
 
 int exp_ensure_capacity(Export *export, size_t extra, int control)
 {
@@ -265,11 +268,21 @@ ParserBuffers* pbuffers_init() {
     pbuffers->writeTarget.length = 0;
     pbuffers->writeTarget.capacity = 0;
 
+    pbuffers->in_filename.length = 0;
+    pbuffers->in_filename.capacity = 0;
+
+    pbuffers->out_filename.length = 0;
+    pbuffers->out_filename.capacity = 0;
+
+
+
     pbuffers->line.data = malloc(16);
     pbuffers->Buffers.data = malloc(32);
     pbuffers->compArray.data = malloc(32);
     pbuffers->compBuffer.data = malloc(32);
     pbuffers->writeTarget.data = malloc(8);
+    pbuffers->in_filename.data = malloc(8);
+    pbuffers->out_filename.data = malloc(8);
 
     if (!pbuffers->Buffers.data || !pbuffers->compArray.data || !pbuffers->compBuffer.data || !pbuffers->line.data) {
         perror("pbuffers_init malloc failed");
@@ -559,7 +572,43 @@ int pbuff_ensure_capacity(ParserBuffers *pbuffer, size_t extra, int control)
 
             break;
         }
+        case 5: {
+            needed = pbuffer->in_filename.length + extra;
+            if (needed <= pbuffer->in_filename.capacity) {
+                return 0;
+            }
+            capacity = pbuffer->in_filename.capacity ? pbuffer->in_filename.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(pbuffer->in_filename.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            pbuffer->in_filename.data = tmp;
+            pbuffer->in_filename.capacity = capacity;
+            return 0;
 
+            break;
+        }
+        case 6: {
+            needed = pbuffer->out_filename.length + extra;
+            if (needed <= pbuffer->out_filename.capacity) {
+                return 0;
+            }
+            capacity = pbuffer->out_filename.capacity ? pbuffer->out_filename.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(pbuffer->out_filename.data, capacity);
+            if (!tmp) {
+                return -1;
+            }
+            pbuffer->out_filename.data = tmp;
+            pbuffer->out_filename.capacity = capacity;
+            return 0;
+            break;
+        }
         default:
             return -1;
             break;
@@ -598,6 +647,16 @@ int pbuff_append_bytes(ParserBuffers *pbuffers, char *byte, size_t x, int contro
             pbuffers->writeTarget.length += x;
             return 0;
             break;
+        case 5:
+            memcpy(pbuffers->in_filename.data + pbuffers->in_filename.length, byte, x);
+            pbuffers->in_filename.length += x;
+            return 0;
+            break;
+        case 6:
+            memccpy(pbuffers->out_filename.data + pbuffers->out_filename.length, byte, x,);
+            pbuffers->out_filename.length += x;
+            return 0;
+            break;
         default:
             perror("Default error");
             exit(EXIT_FAILURE);
@@ -605,7 +664,7 @@ int pbuff_append_bytes(ParserBuffers *pbuffers, char *byte, size_t x, int contro
 }
 
 // This is an interface for passing a string to append bytes
-int pbuff_append_string(ParserBuffers *pbuffers, char *string, size_t x, int control) {
+int  pbuff_append_string(ParserBuffers *pbuffers, char *string, size_t x, int control) {
     return (pbuff_append_bytes(pbuffers, string, strlen(string), control));
 }
 // This is an interface for passing chars to append_bytes

@@ -20,6 +20,8 @@
 #include <stddef.h>
 int prun();
 typedef struct {
+    DynamicBuffers in_filename;
+    DynamicBuffers out_filename;
     DynamicBuffers compArray;
     DynamicBuffers compBuffer;
     DynamicBuffers Buffers;
@@ -49,7 +51,7 @@ typedef struct {
 } Builder;
 
 inline Export* get_parser_export(void);
-Export* match(Export *exp, int flag, ParserBuffers *pbuffers);
+Export* match(InputForm *in, int flag, ParserBuffers *pbuffers);
 void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter);
 void terminal_to_nexc_encode(InputForm *form, int foundI, int row, int flag);
 

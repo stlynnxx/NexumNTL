@@ -23,17 +23,25 @@ void compressor_collect(int control, int nex_code_flag) {
     char** files;
     int count;
     Input *in = in_init();
-    FILE* inFile;
+    ParserBuffers *pbuffers = pbuffers_init();
+    FILE *inFile;
+    char out_filepath[4096];
+    char in_filepath[4096];
     // Control 0 is from file, 1 is from terminal
     if (control == 0) {
         if (nex_code_flag == 0) {
             // THIS IS FOR THE INPUT FILE BEING IN .NEX
+            printf("Enter output filename, press enter to reuse input filename: ");
+            scanf("%s", out_filepath);
+            pbuff_append_string(pbuffers, out_filepath, sizeof(out_filepath), 6);
             if (explore_dir("data/Export", ".nex", &files, &count) > 0) {
                 for (int i = 0; i < count; i++) {
-                    char filepath[4096];
-                    snprintf(filepath, sizeof(filepath), "data/%s", files[i]);
-                    inFile = fopen(filepath, "r");
+                    snprintf(in_filepath, sizeof(in_filepath), "data/%s", files[i]);
+                    inFile = fopen(in_filepath, "r");
                     free(files[i]);
+                }
+                if (!out_filepath[0]) {
+                    pbuff_append_string(pbuffers, in_filepath, sizeof(in_filepath), 6);
                 }
                 free(files);
             }
@@ -51,8 +59,7 @@ void compressor_collect(int control, int nex_code_flag) {
             }
         }
         // Writing inFile to the appropriate spot in pbuffers
-        ParserBuffers *pbuffers = pbuffers_init();
-        comp_from_file_append_bytes(pbuffers, inFile, nex_code_flag);
+        comp_from_file_append_bytes(pbuffers, inFile, out_filepath,nex_code_flag);
     }
 
     if (control == 1) {

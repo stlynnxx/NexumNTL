@@ -340,10 +340,18 @@ void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter)
 
 Export* encode(Export *ex, int foundI, int row, int flag)
 {
-    int expReturn;
-    ex->encodedMorpheme.data[0] = *encodedMatrix[row][foundI];
-    expReturn = exp_append_string(ex, &ex->encodedMorpheme.data[0], sizeof(ex->encodedMorpheme.data[0]), flag);
-    if (expReturn == -1) {
+    int exp_return;
+    unsigned char trans_row;
+    unsigned char encodedMemoryKey[2];
+    unsigned char z = foundI + '0';
+    FILE *export_file;
+    // We may need a customized init_export here
+    export_file = init_export(ex);
+    trans_row = row_translate(row);
+    encodedMemoryKey[0] = trans_row;
+    encodedMemoryKey[1] = z;
+    exp_return = exp_append_string(ex, &ex->encodedMorpheme.data[0], sizeof(ex->encodedMorpheme.data[0]), flag);
+    if (exp_return == -1) {
         perror("Encode failure");
         exit(EXIT_FAILURE);
     }
@@ -370,7 +378,7 @@ Export* verify(Export *exp, ParserBuffers *pbuffer, int rowSiZe, int row, int fl
     return exp;
 }
 
-Export* match(Export *exp, int flag, ParserBuffers *pbuffers)
+Export* match(InputForm *in, int flag, ParserBuffers *pbuffers)
 {
     size_t rowSize;
     const char select = pbuffers->Buffers.data[0];
@@ -382,113 +390,113 @@ Export* match(Export *exp, int flag, ParserBuffers *pbuffers)
         {
             case 'A':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
-                exp = verify(exp,pbuffers, rowSize, A,  flag);
+                in = verify(in,pbuffers, rowSize, A,  flag);
                 break;
             case 'B':
                 rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
-                exp = verify(exp,pbuffers, rowSize, B, flag);
+                in = verify(in,pbuffers, rowSize, B, flag);
                 break;
             case 'C':
                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
-                exp = verify(exp,pbuffers, rowSize, C, flag);
+                in = verify(in,pbuffers, rowSize, C, flag);
                 break;
             case 'D':
                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
-                exp = verify(exp,pbuffers, rowSize, D, flag);
+                in = verify(in,pbuffers, rowSize, D, flag);
                 break;
             case 'E':
                 rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
-                exp = verify(exp,pbuffers, rowSize, E,  flag);
+                in = verify(in,pbuffers, rowSize, E,  flag);
                 break;
             case 'F':
                 rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
-                exp = verify(exp,pbuffers, rowSize, F,  flag);
+                in = verify(in,pbuffers, rowSize, F,  flag);
                 break;
             case 'G':
                 rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
-                exp = verify(exp,pbuffers, rowSize, G,  flag);
+                in = verify(in,pbuffers, rowSize, G,  flag);
                 break;
             case 'H':
                 rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
-                exp = verify(exp,pbuffers, rowSize, H,  flag);
+                in = verify(in,pbuffers, rowSize, H,  flag);
                 break;
             case 'I':
                 rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
-                exp = verify(exp,pbuffers, rowSize, I,  flag);
+                in = verify(in,pbuffers, rowSize, I,  flag);
                 break;
             case 'J':
                 rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
-                exp = verify(exp,pbuffers, rowSize, J,  flag);
+                in = verify(in,pbuffers, rowSize, J,  flag);
                 break;
             case 'K':
                 rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
-                exp = verify(exp,pbuffers, rowSize, K,  flag);
+                in = verify(in,pbuffers, rowSize, K,  flag);
                 break;
             case 'L':
                 rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
-                exp = verify(exp,pbuffers, rowSize, L,  flag);
+                in = verify(in,pbuffers, rowSize, L,  flag);
                 break;
             case 'M':
                 rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
-                exp = verify(exp,pbuffers, rowSize, M,  flag);
+                in = verify(in,pbuffers, rowSize, M,  flag);
                 break;
             case 'N':
                 rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
-                exp = verify(exp,pbuffers, rowSize, N,  flag);
+                in = verify(in,pbuffers, rowSize, N,  flag);
                 break;
             case 'O':
                 rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
-                exp = verify(exp,pbuffers, rowSize, O,  flag);
+                in = verify(in,pbuffers, rowSize, O,  flag);
                 break;
             case 'P':
                 rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
-                exp = verify(exp,pbuffers, rowSize, P,  flag);
+                in = verify(in,pbuffers, rowSize, P,  flag);
                 break;
             case 'Q':
                 rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
-                exp = verify(exp,pbuffers, rowSize, Q,  flag);
+                in = verify(in,pbuffers, rowSize, Q,  flag);
                 break;
             case 'R':
                 rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
-                exp = verify(exp,pbuffers, rowSize, R,  flag);
+                in = verify(in,pbuffers, rowSize, R,  flag);
                 break;
             case 'S':
                 rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
-                exp = verify(exp,pbuffers, rowSize, S,  flag);
+                in = verify(in,pbuffers, rowSize, S,  flag);
                 break;
             case 'T':
                 rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
-                exp = verify(exp,pbuffers, rowSize, T,  flag);
+                in = verify(in,pbuffers, rowSize, T,  flag);
                 break;
             case 'U':
                 rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
-                exp = verify(exp,pbuffers, rowSize, U,  flag);
+                in = verify(in,pbuffers, rowSize, U,  flag);
                 break;
             case 'V':
                 rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
-                exp = verify(exp,pbuffers, rowSize, V,  flag);
+                in = verify(in,pbuffers, rowSize, V,  flag);
                 break;
             case 'W':
                 rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
-                exp = verify(exp,pbuffers, rowSize, W,  flag);
+                in = verify(in,pbuffers, rowSize, W,  flag);
                 break;
             case 'X':
                 rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
-                exp = verify(exp,pbuffers, rowSize, X,  flag);
+                in = verify(in,pbuffers, rowSize, X,  flag);
                 break;
             case 'Y':
                 rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
-                exp = verify(exp,pbuffers, rowSize, Y,  flag);
+                in = verify(in,pbuffers, rowSize, Y,  flag);
                 break;
             case 'Z':
                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
-                exp = verify(exp,pbuffers, rowSize, Z,  flag);
+                in = verify(in,pbuffers, rowSize, Z,  flag);
                 break;
             default:
                 verifyReturn = -1;
                 break;
         }
-    } return exp;
+    } return in;
 }
 
 int newCheck(Export *exp, int breakdownIdx, int scratchOneIdx, int writeFlag, Builder *builderr, Organizer *lexerbreakdown, ParserBuffers *pbuffers, int incrementFlag) {

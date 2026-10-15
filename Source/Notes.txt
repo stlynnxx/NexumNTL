@@ -1197,3 +1197,15 @@ things, and maybe try to circle back to this later.
 Either way, progress is progress.
 
 
+10/15/2026-
+
+I've done quite a bit of rearranging and rewriting this morning along the infile to .nexc path; I feel considerably closer
+to being done with that path now than whenever I started today, however, I need to take a thinking and lunch break at
+the least, as I have some choices to make. We now have the infile contents loaded into an InputForm, symbololgy included,
+and I think our best move from here is to send that to the lexer so it can make better sense with the source generator
+arrange it into a competent file.
+
+I see difficulties ahead.
+
+
+

@@ -20,7 +20,7 @@
  */
 
 void terminal_to_nexfile() {
-    char filepath[4096];
+    static char filepath[4096];
     int nex_code_flag;
     printf("Enter filename: ");
     scanf("%s", filepath);

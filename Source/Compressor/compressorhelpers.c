@@ -5,13 +5,14 @@
 #include "compressorhelpers.h"
 #include "../Parser/parserhelpers.h"
 #include "../Parser/Parser.h"
+#include "../SourceGenerator/SGruninterface.h"
 #include <stdio.h>
 #include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 
-Input* in_init() {
+/*InputForm* in_init() {
     Input *in = malloc(sizeof(Input));
     in->buffer.capacity = 0;
     in->buffer.length = 0;
@@ -24,7 +25,7 @@ Input* in_init() {
         exit(-1);
     }
     return in;
-}
+}*/
 
 int comp_ensure_capacity(Input *in, size_t extra) {
     size_t needed = in->terminalInput.length + extra;
@@ -51,18 +52,109 @@ long comp_get_file_size(FILE *in_file) {
     return size;
 }
 
+void line_parse(ParserBuffers *pbuffers, InputForm *in, FILE* export_file) {
+    int control;
+    char *workingChar;
+    int open_brace_check = 0;
+    int open_brace_check_two = 0;
+    int semicolon_check = 0;
+    int associator_check = 0;
+    int name_token_one_check = 0;
+    int name_token_two_check = 0;
+    int comma_check = 0;
+    int close_brace_check = 0;
+    for (int i = 0; i < pbuffers->line.length; i++)
+    {
+        *workingChar = pbuffers->line.data[i];
 
-void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers, size_t file_size) {
+        switch (*workingChar) {
+            case OPENBRACE:
+                open_brace_check = 1;
+                control = 0;
+                if (semicolon_check == 1 && open_brace_check == 1) {
+                    open_brace_check_two = 1;
+                    control = 1;
+                }
+                in_append_bytes(in, workingChar, sizeof(*workingChar), control);
+                break;
+            case NAMETOKEN:
+                if (name_token_one_check && name_token_two_check == 0 && open_brace_check == 1) {
+                    name_token_one_check = 1;
+                    control = 0;
+                }
+                if (name_token_one_check == 1 && name_token_two_check == 0 && open_brace_check == 1) {
+                    name_token_two_check = 1;
+                    control = 0;
+                }
+                if (name_token_one_check == 1 && name_token_two_check == 1 && semicolon_check == 1) {
+                    name_token_two_check = 0;
+                    control = 1;
+                }
+                if (comma_check == 1 && associator_check == 1) {
+                    associator_check = 0;
+                    control = 1;
+                }
+                in_append_bytes(in, workingChar, sizeof(*workingChar), control);
+                break;
+            case ASSOCIATOR:
+                associator_check = 1;
+                if (associator_check == 1) {
+                    control = 2;
+                }
+                in_append_bytes(in, workingChar, sizeof(*workingChar), control);
+                break;
+            case SEMICOLON:
+                semicolon_check = 1;
+                in_append_bytes(in, workingChar, sizeof(*workingChar), control);
+                break;
+            case COMMA:
+                if (name_token_one_check && name_token_two_check == 1 && open_brace_check_two == 1) {
+                    comma_check = 1;
+                }
+                in_append_bytes(in, workingChar, sizeof(*workingChar), control);
+                break;
+            case CLOSEBRACE:
+                close_brace_check = 1;
+                in_append_bytes(in, workingChar, sizeof(*workingChar), control);
+                break;
+                // default will handle alphanumerics
+            default:
+                if isalnum(workingChar) {
+                in_append_string(in,workingChar,sizeof(workingChar),control);
+            }
+                break;
+        }
+    }
+}
+
+int pbuffer_line_clear(ParserBuffers *pbuffers) {
+    if (!pbuffers->line.length || !pbuffers->line.data) {return -1;}
+    pbuffers->line.length = 0;
+    pbuffers->line.data = 0;
+    return 0;
+}
+
+void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers, InputForm *in, size_t file_size)
+    {
+    FILE* export_file;
     for (int i = 0; i <= file_size; i++) {
         char *workingChar;
-        int found_start = 0;
+        bool name_token_find;
+        int found_start;
         int first_char = 0;
         // Appending a single line from the file to pbuffers->line
         while ((*workingChar = fgetc(in_file)) != SEMICOLON) {
-            if (!found_start && *workingChar == OPENBRACE) {
+            pbuff_append_char(pbuffers, *workingChar, 3);
+
+            /*
+            if (!found_start && *workingChar == OPENBRACE || CLOSEBRACE) {
                 found_start = 1;
                 pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
                 continue;
+            }
+            if (found_start && *workingChar == NAMETOKEN) {
+                name_token_find = true;
+
             }
             if (found_start && *workingChar != SEMICOLON && found_start == 1) {
                 first_char = 1;
@@ -73,46 +165,23 @@ void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers, size_t file_
                 pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),3);
                 pbuff_append_string(pbuffers, "\0", sizeof("/0"),3);
                 break;
-            }
+            }*/
         }
+        if (*workingChar == SEMICOLON) {
+            pbuff_append_char(pbuffers, *workingChar, 3);
+        }
+        line_parse(pbuffers, in, export_file);
+        pbuffer_line_clear(pbuffers);
+
         // fclose(in_file);
         // free(in_file);
     }
+
 }
 
-void line_parse(ParserBuffers *pbuffers) {
-    char *workingChar;
-    for (int i = 0; i < pbuffers->line.length; i++)
-    {
-        *workingChar = pbuffers->line.data[i];
+int infile_to_nexc_write_to_file() {
+    format()
 
-        switch (*workingChar)
-        {
-            case OPENBRACE:
-                break;
-            case NAMETOKEN:
-                break;
-            case ASSOCIATOR:
-                break;
-            case SEMICOLON:
-                break;
-            // default will handle alphanumerics
-            default:
-                if isalnum(*workingChar) {
-                // append pbuffers->line.data[i] to pbuffers->Buffers
-                pbuff_append_string(pbuffers,workingChar,sizeof(workingChar),2);
-                }
-                else
-                {
-                    if (*workingChar == NAMETOKEN)
-                    {
-
-                        break;
-                    }
-                }
-                break;
-        }
-    }
 
 }
 
@@ -124,12 +193,9 @@ int comp_open_file(FILE* in_file, ParserBuffers *pbuffers, int nex_code_flag) {
     // Getting the size of inFile
     size_t file_size = comp_get_file_size(in_file);
     // Append to pbuffer appropriately
-    append_file_to_buffers(in_file, pbuffers, file_size);
-    line_parse(pbuffers);
-
-
-    Export *exp = exp_init();
-    match(exp,nex_code_flag,pbuffers);
+    InputForm *in = input_init();
+    append_file_to_buffers(in_file, pbuffers, in, file_size);
+    match(in,nex_code_flag,pbuffers);
 }
 
 int comp_from_file_append_bytes(ParserBuffers *pbuffers, FILE* in_file, int nex_code_flag) {

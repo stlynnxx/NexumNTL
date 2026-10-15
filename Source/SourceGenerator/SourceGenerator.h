@@ -7,6 +7,7 @@
 #include "../SymbolTable/SymbolTable.h"
 #include "../Parser/Parser.h"
 #include <stdbool.h>
+
 typedef struct {
     DynamicBuffers memoryKey;
     int assocCount;
