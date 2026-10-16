@@ -15,6 +15,6 @@ typedef struct {
 } Input;
 extern Unencoded* unc_export(void);
 extern Unencoded* unc_exp;
-void compressor_collect(int control, int nex_code_flag);
+void compressor_collect(InputForm *form,int control, int output);
 
 #endif //NEXUMNTL_COMPRESSOR_H

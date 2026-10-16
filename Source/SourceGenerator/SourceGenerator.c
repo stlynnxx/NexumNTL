@@ -84,7 +84,7 @@ int terminal_input(FILE *fp, InputForm *form, int control) {
     if (control == 1) {
         Export* exp = exp_init();
         printf("Enter filename to be appended with .nexc (default is 'export', producing 'export.nexc'");
-        scanf("%s",form->filename.data);
+        scanf("%s",form->output_filename.data);
         printf("Memory Key: \n");
         scanf("%s", form->memoryKeyBuffer.data);
         // hand over to parser match

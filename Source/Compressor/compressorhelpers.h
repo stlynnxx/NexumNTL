@@ -15,4 +15,5 @@ inline int explore_dir(const char* dir_path, const char* extension,
 inline InputForm* in_init();
 int comp_append_bytes(Unencoded *unencoded, InputForm *in);
 int comp_from_file_append_bytes(ParserBuffers *pbuffers, FILE* in_file, int nex_code_flag);
+inline long comp_get_file_size(FILE *in_file);
 #endif //NEXUMNTL_COMPRESSORHELPERS_H

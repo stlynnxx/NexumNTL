@@ -1207,7 +1207,20 @@ arrange it into a competent file.
 
 I see difficulties ahead.
 
-Okay, I got upppp to calling sgrun after the match in the infile -> nexc path, and need a break as I will need to move
+Okay, I got up to calling sgrun after the match in the infile -> nexc path, and need a break as I will need to move
 forward from here thoughtfully
+
+10/16/2026-
+
+Today has been hectic dealing with ome ebay stuff and also internet issues on top of that, so i'm not getting in here
+until much later than normal, but. I intend to spend most of my time this weekend (today is Friday) programming, so.
+It'll be okay.
+
+So far today I've been back in main, replacing some of the old code with improved choices like I started last night. I
+got a little distracted from infile -> nexc in order to clean up the beginning of terminal -> nex/nexc, but those changes
+were both needed and will extend back over to infile -> nexc, so, i'm not going to sweat it.
+
+I did a bit more work and set up the logic for setting both the outfile name and outfile path, then I can
+get through the rest of my main updates and get back to tracing paths!
 
 

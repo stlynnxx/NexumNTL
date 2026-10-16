@@ -4,5 +4,15 @@
 
 #ifndef MAIN_H
 #define MAIN_H
+// replacement for nex_code_flag
+typedef enum {
+    NEX = 0,
+    NEXC = 1
+} OutType;
+extern OutType outType;
+typedef enum {
+    TERMINAL_IN = 0,
+    FILE_IN = 1
+} InType;
 
 #endif //MAIN_H

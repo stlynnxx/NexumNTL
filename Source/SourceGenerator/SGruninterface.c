@@ -4,7 +4,7 @@
 
 #include "SGruninterface.h"
 #include "SGhelpers.h"
-int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, int parser_check) {
+int routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
     int usr_return;
     int term_return;
     FILE *fp = fopen(path, "a");
@@ -88,7 +88,6 @@ int routing(InputForm *form,const char *path, int nexcodeFlag, int sourceFlag, i
 void infile_to_nexc_sg_run(InputForm *in, const char *path, int nex_code_flag) {
     routing(in, path, nex_code_flag, 1, 1;
 }
-void sgRun(const char *path, int nexcodeFlag, bool pCheck, int sourceFlag) {
-    InputForm *form = input_init();
-    routing(form, path, nexcodeFlag, sourceFlag, pCheck);
+void sgRun(InputForm *form, int nexcodeFlag, bool pCheck, int sourceFlag) {
+    routing(form, nexcodeFlag, sourceFlag, pCheck);
 }

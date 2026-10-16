@@ -75,7 +75,7 @@ char row_translate(int row) {
 }
 
 FILE* init_export(InputForm *form) {
-    FILE *export_file = fopen(form->filename.data, "w");
+    FILE *export_file = fopen(form->output_filename.data, "w");
 }
 
 void terminal_to_nexc_encode(InputForm *form, int foundI, int row, int flag)
@@ -89,7 +89,7 @@ void terminal_to_nexc_encode(InputForm *form, int foundI, int row, int flag)
     trans_row = row_translate(row);
     encodedMemoryKey[0] = trans_row;
     encodedMemoryKey[1] = z;
-    terminal_to_nexc_in_append_string(form, encodedMemoryKey,sizeof(encodedMemoryKey),flag);
+    unsigned_char_in_append_string(form, encodedMemoryKey,sizeof(encodedMemoryKey),flag);
     formatReturn = format(export_file, form, form->assocCount,0);
     if (formatReturn == -1) {
         perror("Encode failure");
@@ -199,7 +199,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                     }
                     break;
                 case 6:
-                    if (strncmp(form->filename.data, valuesMatrix[row][i], strlen(form->filename.data)) == 0)
+                    if (strncmp(form->output_filename.data, valuesMatrix[row][i], strlen(form->output_filename.data)) == 0)
                     {
                         // match is found here
                         foundI = i;

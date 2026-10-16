@@ -19,16 +19,15 @@ Unencoded* unc_export(void) {
     return unc_exp;
 }
 
-void compressor_collect(int control, int nex_code_flag) {
+void compressor_collect(InputForm *form,int control, int output) {
     char** files;
     int count;
     ParserBuffers *pbuffers = pbuffers_init();
     FILE *inFile;
-    char out_filepath[4096];
     char in_filepath[4096];
     // Control 0 is from file, 1 is from terminal
     if (control == 0) {
-        if (nex_code_flag == 0) {
+        if (output == 0) {
             // THIS IS FOR THE INPUT FILE BEING IN .NEX
             printf("Enter output filename, press enter to reuse input filename: ");
             scanf("%s", out_filepath);
@@ -46,7 +45,7 @@ void compressor_collect(int control, int nex_code_flag) {
             }
         }
         // THIS IS FOR THE INUPT FILE BEING IN .NEXC - WILL LIKELY BE REMOVED
-        if (nex_code_flag == 1) {
+        if (output == 1) {
             if (explore_dir("data", ".nexc", &files, &count) > 0) {
                 for (int i = 0; i < count; i++) {
                     char filepath[4096];
@@ -58,7 +57,7 @@ void compressor_collect(int control, int nex_code_flag) {
             }
         }
         // Writing inFile to the appropriate spot in pbuffers
-        comp_from_file_append_bytes(pbuffers, inFile, nex_code_flag);
+        comp_from_file_append_bytes(pbuffers, inFile, output);
     }
 
     if (control == 1) {

@@ -26,8 +26,17 @@ InputForm* input_init() {
     form->associatorBuffer.length = 0;
     form->associatorBuffer.capacity = 0;
 
-    form->filename.length = 0;
-    form->filename.capacity = 0;
+    form->output_filename.length = 0;
+    form->output_filename.capacity = 0;
+
+    form->input_filename.length = 0;
+    form->input_filename.capacity = 0;
+
+    form->output_filepath.length = 0;
+    form->output_filepath.capacity = 0;
+
+    form->input_filepath.length = 0;
+    form->input_filepath.capacity = 0;
 
     form->associators.data = malloc(32);
     form->associations.data = malloc(32);
@@ -35,7 +44,10 @@ InputForm* input_init() {
     form->memoryKeyBuffer.data = malloc(32);
     form->associationBuffer.data = malloc(32);
     form->associatorBuffer.data = malloc(32);
-    form->filename.data = malloc(16);
+    form->output_filename.data = malloc(16);
+    form->input_filename.data = malloc(16);
+    form->input_filepath.data = malloc(16);
+    form->output_filepath.data = malloc(16);
 
     if (!form->associations.data || !form->associators.data || !form->memoryKey.data || !form->memoryKeyBuffer.data || !form->associationBuffer.data || !form->associatorBuffer) {
         perror("input_init failure");
@@ -48,10 +60,13 @@ int input_free(InputForm* form) {
     free(form->associators.data);
     free(form->associations.data);
     free(form->memoryKey.data);
-    free(form->filename.data);
+    free(form->output_filename.data);
+    free(form->input_filename.data);
     free(form->memoryKeyBuffer.data);
     free(form->associationBuffer.data);
     free(form->associatorBuffer.data);
+    free(form->output_filepath.data);
+    free(form->input_filepath.data);
     free(form);
     form = NULL;
     return 0;
@@ -114,6 +129,125 @@ int in_ensure_capacity(InputForm *form, size_t extra, int control) {
             form->associators.capacity = capacity;
             return 0;
             break;
+        case 3:
+            needed = form->memoryKeyBuffer.length + extra;
+            if (needed <= form->memoryKeyBuffer.capacity) {
+                return 0;
+            }
+            capacity = form->memoryKeyBuffer.capacity ? form->memoryKeyBuffer.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            tmp = realloc(form->memoryKeyBuffer.data, capacity);
+            if (!tmp)
+                return -1;
+
+            form->memoryKeyBuffer.data = tmp;
+            form->memoryKeyBuffer.capacity = capacity;
+            return 0;
+            break;
+        case 4:
+            needed = form->associationBuffer.length + extra;
+            if (needed <= form->associators.capacity) {
+                return 0;
+            }
+            capacity = form->associationBuffer.capacity ? form->associationBuffer.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            tmp = realloc(form->associationBuffer.data, capacity);
+            if (!tmp)
+                return -1;
+
+            form->associationBuffer.data = tmp;
+            form->associationBuffer.capacity = capacity;
+            return 0;
+            break;
+        case 5:
+            needed = form->associatorBuffer.length + extra;
+            if (needed <= form->associators.capacity) {
+                return 0;
+            }
+            capacity = form->associatorBuffer.capacity ? form->associatorBuffer.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            tmp = realloc(form->associatorBuffer.data, capacity);
+            if (!tmp)
+                return -1;
+
+            form->associatorBuffer.data = tmp;
+            form->associatorBuffer.capacity = capacity;
+            return 0;
+            break;
+        case 6:
+            needed = form->output_filename.length + extra;
+            if (needed <= form->output_filename.capacity) {
+                return 0;
+            }
+            capacity = form->output_filename.capacity ? form->output_filename.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            tmp = realloc(form->output_filename.data, capacity);
+            if (!tmp)
+                return -1;
+
+            form->output_filename.data = tmp;
+            form->output_filename.capacity = capacity;
+            return 0;
+            break;
+        case 7:
+            needed = form->input_filename.length + extra;
+            if (needed <= form->input_filename.capacity) {
+                return 0;
+            }
+            capacity = form->input_filename.capacity ? form->output_filename.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            tmp = realloc(form->input_filename.data, capacity);
+            if (!tmp)
+                return -1;
+
+            form->input_filename.data = tmp;
+            form->input_filename.capacity = capacity;
+            return 0;
+            break;
+        case 8:
+            needed = form->output_filepath.length + extra;
+            if (needed <= form->output_filename.capacity) {
+                return 0;
+            }
+            capacity = form->output_filepath.capacity ? form->output_filepath.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            tmp = realloc(form->output_filepath.data, capacity);
+            if (!tmp)
+                return -1;
+
+            form->output_filepath.data = tmp;
+            form->output_filepath.capacity = capacity;
+            return 0;
+            break;
+        case 8:
+            needed = form->input_filepath.length + extra;
+            if (needed <= form->input_filename.capacity) {
+                return 0;
+            }
+            capacity = form->input_filepath.capacity ? form->input_filepath.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            tmp = realloc(form->input_filepath.data, capacity);
+            if (!tmp)
+                return -1;
+
+            form->input_filepath.data = tmp;
+            form->input_filepath.capacity = capacity;
+            return 0;
+            break;
         default:
             return -1;
             break;
@@ -122,7 +256,7 @@ int in_ensure_capacity(InputForm *form, size_t extra, int control) {
 
 // append_bytes is for appending raw bytes from the given input
 
-int terminal_to_nexc_in_append_bytes(InputForm *form, unsigned char *encoded, size_t x, int control) {
+int unsigned_char_in_append_bytes(InputForm *form, unsigned char *encoded, size_t x, int control) {
     switch (control) {
         case 0:
             if (in_ensure_capacity(&*form, x, control) != 0) {
@@ -150,7 +284,7 @@ int terminal_to_nexc_in_append_bytes(InputForm *form, unsigned char *encoded, si
             if (in_ensure_capacity(&*form, x, control) != 0) {
                 return -1;
             }
-            memcpy(form->memoryKeyBuffer.data + form->memoryKey.length, encoded, x);
+            memcpy(form->memoryKeyBuffer.data + form->memoryKeyBuffer.length, encoded, x);
             form->memoryKeyBuffer.length += x;
             break;
         case 4:
@@ -171,8 +305,29 @@ int terminal_to_nexc_in_append_bytes(InputForm *form, unsigned char *encoded, si
             if (in_ensure_capacity(&*form, x, control) != 0) {
                 return -1;
             }
-            memcpy(form->filename.data + form->filename.length, encoded, x);
-            form->filename.length += x;
+            memcpy(form->output_filename.data + form->output_filename.length, encoded, x);
+            form->output_filename.length += x;
+            break;
+        case 7:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->input_filename.data + form->input_filename.length, encoded, x);
+            form->input_filename.length += x;
+            break;
+        case 8:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->output_filepath.data + form->output_filepath.length, encoded, x);
+            form->output_filepath.length += x;
+            break;
+        case 9:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->input_filepath.data + form->input_filepath.length, encoded, x);
+            form->input_filename.length += x;
             break;
         default:
             return -1;
@@ -180,9 +335,10 @@ int terminal_to_nexc_in_append_bytes(InputForm *form, unsigned char *encoded, si
     } // EOS
     return 0;
 }
+
 //
 int in_append_bytes(InputForm *form, char *byte, size_t x, int control) {
-    switch (control) {
+   switch (control) {
         case 0:
             if (in_ensure_capacity(&*form, x, control) != 0) {
                 return -1;
@@ -230,18 +386,41 @@ int in_append_bytes(InputForm *form, char *byte, size_t x, int control) {
             if (in_ensure_capacity(&*form, x, control) != 0) {
                 return -1;
             }
-            memcpy(form->filename.data + form->filename.length, byte, x);
-            form->filename.length += x;
+            memcpy(form->output_filename.data + form->output_filename.length, byte, x);
+            form->output_filename.length += x;
             break;
+       case 7:
+           if (in_ensure_capacity(&*form, x, control) != 0) {
+               return -1;
+           }
+           memcpy(form->input_filename.data + form->input_filename.length, byte, x);
+           form->input_filename.length += x;
+           break;
+       case 8:
+           if (in_ensure_capacity(&*form, x, control) != 0) {
+               return -1;
+           }
+           memcpy(form->output_filepath.data + form->output_filepath.length, byte, x);
+           form->output_filepath.length += x;
+           break;
+       case 9:
+           if (in_ensure_capacity(&*form, x, control) != 0) {
+               return -1;
+           }
+           memcpy(form->input_filepath.data + form->input_filepath.length, byte, x);
+           form->input_filepath.length += x;
+           break;
         default:
             return -1;
             break;
     } // EOS
     return 0;
 }
-int terminal_to_nexc_in_append_string(InputForm  *form, unsigned char *encodedString, size_t x, int control) {
-    return (terminal_to_nexc_in_append_bytes(form, encodedString, x, control));
+
+int unsigned_char_in_append_string(InputForm  *form, unsigned char *encodedString, size_t x, int control) {
+    return (unsigned_char_in_append_bytes(form, encodedString, x, control));
 }
+
 // This is an interface for passing a string to append bytes
 int in_append_string(InputForm *form, char *string, size_t x, int control) {
     return (in_append_bytes(form, string, x, control));
