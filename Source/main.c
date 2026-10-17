@@ -38,6 +38,7 @@ static InputForm* get_output_filename(int output) {
     // with the longest possible extension being .nexc
     static char unfinished_filename[NAME_MAX - 4];
     size_t unfinished_size;
+    // +4 to get us back up to NAME_MAX
     static char finished_filename[sizeof(unfinished_filename) + 4];
     size_t finished_size = sizeof(finished_filename);
     size_t filepath_size;
