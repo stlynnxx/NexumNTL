@@ -1224,5 +1224,10 @@ I did a bit more work and set up the logic for setting both the outfile name and
 get through the rest of my main updates and get back to tracing paths!
 
 
-10/17/2026
+10/17/2026-
+
+Tonight is lighter work, as I spent most of the day on other things and I'm already slightly tired, but, I have been back
+in main tonight, getting set_filepath reworked. Progress is progress!
+
+
 

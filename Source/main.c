@@ -7,6 +7,7 @@
 #include "Parser/Parser.h"
 #include "Compressor/compressor.h"
 #include <limits.h>
+
 /*
  *Input will be coming in in multiple manners.
  *
@@ -24,15 +25,54 @@ static InputForm* new_input_form() {
     InputForm* input_form = input_init();
     return input_form;
 }
-static char set_filepath(InputForm *form) {
-    static char path[4096] = "./Output_files/";
-    size_t path_size = sizeof(path) - 1;
-    strncpy(path, form->output_filename.data, sizeof(path));
-    in_append_string(form, path, path_size, 8);
+static bool set_filepath(InputForm *form, int source)
+{
+    const char *prefix;
+    const char *name;
+    size_t name_len;
 
+    switch (source) {
+        case OUTPUT_OPT:
+            prefix   = "./Output_files/";
+            name     = form->output_filename.data;
+            name_len = form->output_filename.length;
+            break;
+
+        case INPUT_OPT:
+            prefix   = "./Input_files/";
+            name     = form->input_filename.data;
+            name_len = form->input_filename.length;
+            break;
+
+        default:
+            fprintf(stderr, "set_filepath: invalid source %d\n", source);
+            return false;
+    }
+
+    if (name == NULL) {
+        fprintf(stderr, "set_filepath: filename is NULL\n");
+        return false;
+    }
+
+    const size_t prefix_len = strlen(prefix);
+
+    if (prefix_len + name_len >= PATH_MAX) {
+        fprintf(stderr, "set_filepath: path too long (%zu + %zu >= %d)\n",
+                prefix_len, name_len, PATH_MAX);
+        return false;
+    }
+
+    char path[PATH_MAX];
+
+    memcpy(path, prefix, prefix_len);
+    memcpy(path + prefix_len, name, name_len);
+    path[prefix_len + name_len] = '\0';
+
+    in_append_string(form, path, prefix_len + name_len, control);
+
+    return true;
 }
-
-static InputForm* get_output_filename(int output) {
+static InputForm* get_output_filename(int output, int opt) {
     InputForm *form = new_input_form();
     // NAME_MAX - 4 is to allow as much room as possible without stepping on the extension,
     // with the longest possible extension being .nexc
@@ -58,6 +98,9 @@ static InputForm* get_output_filename(int output) {
     return form;
 }
 
+void get_infile_name(InputForm *form, int opt) {
+
+}
 
 void terminal_to_nexfile(InputForm *form, int intype) {
     // OutType replaces nex_code_flag
@@ -96,22 +139,15 @@ int run() {
     InType intype = (InType)read_choice("Enter 0 or 1: ", 0, 1);
     // replaces nex_code_flag
     OutType output = (OutType)read_choice("Enter 0 or 1: ", 0, 1);
-    InputForm *form = get_output_filename(output);
+    Options options;
+    InputForm *form = get_output_filename(output, OUTPUT_OPT);
     switch (intype) {
         case TERMINAL_IN:
             terminal_to_nexfile(form, intype);
             break;
         case FILE_IN:
-            // get_infile_name
-            switch (output) {
-                case NEX:
-                    break;
-                case NEXC:
-                    break;
-                default:
-                    break;
-
-            }
+            get_infile_name(form, INPUT_OPT);
+            compressor_collect(form, intype, output);
             break;
         default:
             break;
