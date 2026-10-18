@@ -25,7 +25,32 @@ static InputForm* new_input_form() {
     InputForm* input_form = input_init();
     return input_form;
 }
+
+
+
+static char set_filepath(InputForm *form, int source) {
+    switch (source) {
+        case OUTPUT_OPT:
+            static char path[4096] = "./Output_files/";
+            size_t path_size = sizeof(path) - 1;
+            strncpy(path, form->output_filename.data, sizeof(path));
+            in_append_string(form, path, path_size, 8);
+            break;
+        case INPUT_OPT:
+            static char path[4096] = "./Input_files/";
+            size_t path_size = sizeof(path) - 1;
+            strncpy(path, form->input_filename.data, sizeof(path));
+            in_append_string(form, path, path_size, 8);
+            break;
+        default:
+            perror("Invalid input");
+            break;
+    }
+}
+
+
 static bool set_filepath(InputForm *form, int source)
+
 {
     const char *prefix;
     const char *name;
@@ -33,13 +58,13 @@ static bool set_filepath(InputForm *form, int source)
 
     switch (source) {
         case OUTPUT_OPT:
-            prefix   = "./Output_files/";
+            prefix   = "./data/Output_Files/";
             name     = form->output_filename.data;
             name_len = form->output_filename.length;
             break;
 
         case INPUT_OPT:
-            prefix   = "./Input_files/";
+            prefix   = "./data/Input_Files";
             name     = form->input_filename.data;
             name_len = form->input_filename.length;
             break;
@@ -67,9 +92,13 @@ static bool set_filepath(InputForm *form, int source)
     memcpy(path, prefix, prefix_len);
     memcpy(path + prefix_len, name, name_len);
     path[prefix_len + name_len] = '\0';
-
-    in_append_string(form, path, prefix_len + name_len, control);
-
+    switch (source) {
+        case OUTPUT_OPT:
+            in_append_string(form, path, prefix_len + name_len, 8);
+            break;
+        case INPUT_OPT:
+            in_append_string(form, path, prefix_len + name_len, 9);
+    }
     return true;
 }
 static InputForm* get_output_filename(int output, int opt) {
