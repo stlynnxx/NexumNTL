@@ -86,8 +86,7 @@ int routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
     fclose(fp);
     return 0;
 }
-void send_to_generator(Export *exp,InputForm *form, FILE* export_file) {
-    input_free(form);
+void send_to_generator(Export *exp, FILE* export_file) {
     format_from_export(export_file,exp, exp->assocCount, 0);
 
 }

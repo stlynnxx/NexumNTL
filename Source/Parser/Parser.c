@@ -383,114 +383,113 @@ Export* match(Export *export, InputForm *form, int flag, ParserBuffers *pbuffers
     size_t rowSize;
     const char select = pbuffers->Buffers.data[0];
     char workSelect = toupper(select);
-    int verifyReturn;
     if (isalnum(select))
     {
         switch (workSelect)
         {
             case 'A':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
-                form = verify(export, form,pbuffers, rowSize, A,  flag);
+                export = verify(export, form,pbuffers, rowSize, A,  flag);
                 break;
             case 'B':
                 rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
-                form = verify(export, form,pbuffers, rowSize, B, flag);
+                export = verify(export, form,pbuffers, rowSize, B, flag);
                 break;
             case 'C':
                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
-                form = verify(export, form,pbuffers, rowSize, C, flag);
+                export = verify(export, form,pbuffers, rowSize, C, flag);
                 break;
             case 'D':
                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
-                form = verify(export, form,pbuffers, rowSize, D, flag);
+                export = verify(export, form,pbuffers, rowSize, D, flag);
                 break;
             case 'E':
                 rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
-                form = verify(export, form,pbuffers, rowSize, E,  flag);
+                export = verify(export, form,pbuffers, rowSize, E,  flag);
                 break;
             case 'F':
                 rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
-                form = verify(export, form,pbuffers, rowSize, F,  flag);
+                export = verify(export, form,pbuffers, rowSize, F,  flag);
                 break;
             case 'G':
                 rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
-                form = verify(export, form,pbuffers, rowSize, G,  flag);
+                export = verify(export, form,pbuffers, rowSize, G,  flag);
                 break;
             case 'H':
                 rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
-                form = verify(export, form,pbuffers, rowSize, H,  flag);
+                export = verify(export, form,pbuffers, rowSize, H,  flag);
                 break;
             case 'I':
                 rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
-                form = verify(export, form,pbuffers, rowSize, I,  flag);
+                export = verify(export, form,pbuffers, rowSize, I,  flag);
                 break;
             case 'J':
                 rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
-                form = verify(export, form,pbuffers, rowSize, J,  flag);
+                export = verify(export, form,pbuffers, rowSize, J,  flag);
                 break;
             case 'K':
                 rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
-                form = verify(export, form,pbuffers, rowSize, K,  flag);
+                export = verify(export, form,pbuffers, rowSize, K,  flag);
                 break;
             case 'L':
                 rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
-                form = verify(export, form,pbuffers, rowSize, L,  flag);
+                export = verify(export, form,pbuffers, rowSize, L,  flag);
                 break;
             case 'M':
                 rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
-                form = verify(export, form,pbuffers, rowSize, M,  flag);
+                export = verify(export, form,pbuffers, rowSize, M,  flag);
                 break;
             case 'N':
                 rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
-                form = verify(export, form,pbuffers, rowSize, N,  flag);
+                export = verify(export, form,pbuffers, rowSize, N,  flag);
                 break;
             case 'O':
                 rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
-                form = verify(export, form,pbuffers, rowSize, O,  flag);
+                export = verify(export, form,pbuffers, rowSize, O,  flag);
                 break;
             case 'P':
                 rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
-                form = verify(export, form,pbuffers, rowSize, P,  flag);
+                export = verify(export, form,pbuffers, rowSize, P,  flag);
                 break;
             case 'Q':
                 rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
-                form = verify(export, form,pbuffers, rowSize, Q,  flag);
+                export = verify(export, form,pbuffers, rowSize, Q,  flag);
                 break;
             case 'R':
                 rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
-                form = verify(export, form,pbuffers, rowSize, R,  flag);
+                export = verify(export, form,pbuffers, rowSize, R,  flag);
                 break;
             case 'S':
                 rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
-                form = verify(export, form,pbuffers, rowSize, S,  flag);
+                export = verify(export, form,pbuffers, rowSize, S,  flag);
                 break;
             case 'T':
                 rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
-                form = verify(export, form,pbuffers, rowSize, T,  flag);
+                export = verify(export, form,pbuffers, rowSize, T,  flag);
                 break;
             case 'U':
                 rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
-                form = verify(export, form,pbuffers, rowSize, U,  flag);
+                export = verify(export, form,pbuffers, rowSize, U,  flag);
                 break;
             case 'V':
                 rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
-                form = verify(export, form,pbuffers, rowSize, V,  flag);
+                export = verify(export, form,pbuffers, rowSize, V,  flag);
                 break;
             case 'W':
                 rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
-                form = verify(export, form,pbuffers, rowSize, W,  flag);
+                export = verify(export, form,pbuffers, rowSize, W,  flag);
                 break;
             case 'X':
                 rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
-                form = verify(export, form,pbuffers, rowSize, X,  flag);
+                export = verify(export, form,pbuffers, rowSize, X,  flag);
                 break;
             case 'Y':
                 rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
-                form = verify(export, form,pbuffers, rowSize, Y,  flag);
+                export = verify(export, form,pbuffers, rowSize, Y,  flag);
                 break;
             case 'Z':
                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
-                form = verify(export,  form,pbuffers, rowSize, Z,  flag);
+                export = verify(export,  form,pbuffers, rowSize, Z,  flag);
                 break;
             default:
                 verifyReturn = -1;

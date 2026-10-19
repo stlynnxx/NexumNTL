@@ -210,9 +210,9 @@ int comp_open_file(InputForm *form,FILE* in_file, ParserBuffers *pbuffers, int o
     export = match(export,form,output,pbuffers);
     FILE *export_file;
     export_file = init_export(form);
-    // input_free(form);
     // The last two flags in this sgRun call need reviewed
-    sgRun(export,form,export_file,output,  0,1);
+    input_free(form);
+    send_to_generator(export,export_file);
 }
 
 int comp_from_file_append_bytes(InputForm *form,ParserBuffers *pbuffers, FILE* in_file, int nex_code_flag) {
