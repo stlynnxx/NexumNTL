@@ -9,7 +9,7 @@
 int exp_free(Export *export) {
     if (export) {
         free(export->memKey.data);
-        free(export->assoc.data);
+        free(export->association.data);
         free(export->associators.data);
         free(export->encodedMorpheme.data);
         free(export);
@@ -77,20 +77,20 @@ int exp_ensure_capacity(Export *export, size_t extra, int control)
             return 0;
         }
         case 1: {
-            needed = export->assoc.length + extra;
-            if (needed <= export->assoc.capacity) {
+            needed = export->association.length + extra;
+            if (needed <= export->association.capacity) {
                 return 0;
             }
-            capacity = export->assoc.capacity ? export->assoc.capacity : 16;
+            capacity = export->association.capacity ? export->association.capacity : 16;
             while (needed > capacity) {
                 capacity *= 2;
             }
-            char *tmp = realloc(export->assoc.data, capacity);
+            char *tmp = realloc(export->association.data, capacity);
             if (!tmp) {
                 return -1;
             }
-            export->assoc.data = tmp;
-            export->assoc.capacity = capacity;
+            export->association.data = tmp;
+            export->association.capacity = capacity;
             return 0;
             break;
         }
@@ -194,8 +194,8 @@ int exp_ensure_capacity(Export *export, size_t extra, int control)
 Export* exp_init()
 {
     Export *ex = malloc(sizeof(Export));
-    ex->assoc.length = 0;
-    ex->assoc.capacity = 0;
+    ex->association.length = 0;
+    ex->association.capacity = 0;
 
     ex->memKey.length = 0;
     ex->memKey.capacity = 0;
@@ -217,13 +217,13 @@ Export* exp_init()
 
     ex->encodedMorpheme.data = malloc(32);
     ex->memKey.data = malloc(32);
-    ex->assoc.data = malloc(32);
+    ex->association.data = malloc(32);
     ex->associators.data = malloc(32);
     ex->memoryKeyScratch.data = malloc(32);
     ex->associationScratch.data = malloc(32);
     ex->associatorScratch.data = malloc(32);
 
-    if (!ex->memKey.data || !ex->assoc.data || !ex->associators.data || !ex->associatorScratch.data || !ex->memoryKeyScratch.data || !ex->associationScratch.data) {
+    if (!ex->memKey.data || !ex->association.data || !ex->associators.data || !ex->associatorScratch.data || !ex->memoryKeyScratch.data || !ex->associationScratch.data) {
         perror("exp_init malloc failed");
         exit(EXIT_FAILURE);
     }
@@ -295,9 +295,9 @@ ParserBuffers* pbuffers_init() {
 
 
 // append_bytes is for appending raw bytes from the given input
-int infile_to_nexc_exp_append_bytes(unsigned char *byte, size_t x, int control)
+Export* infile_tonexc_exp_append_bytes(Export *export, unsigned char *byte, size_t x, int control)
 {
-    Export *export = exp_init();
+
     if (exp_ensure_capacity(export, x, control) != 0) {
         return -1; // failure
     }
@@ -313,8 +313,8 @@ int infile_to_nexc_exp_append_bytes(unsigned char *byte, size_t x, int control)
             return 0;
             break;
         case 2:
-            memcpy(export->assoc.data + export->assoc.length, byte, x);
-            export->assoc.length += x;
+            memcpy(export->association.data + export->association.length, byte, x);
+            export->association.length += x;
             return 0;
             break;
         case 3:
@@ -340,11 +340,12 @@ int infile_to_nexc_exp_append_bytes(unsigned char *byte, size_t x, int control)
             exit(EXIT_FAILURE);
             break;
     }
+    return export;
 }
 
 // This is an interface for passing a string to append bytes
-int infile_to_nexc_exp_append_string(unsigned char *string, size_t x, int control) {
-    return (infile_to_nexc_exp_append_bytes(string, strlen(string), control));
+int infile_to_nexc_exp_append_string(Export *export,unsigned char *string, size_t x, int control) {
+    return (infile_to_nexc_exp_append_bytes(export,string, strlen(string), control));
 }
 
 

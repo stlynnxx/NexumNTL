@@ -4,6 +4,7 @@
 
 #include "SGruninterface.h"
 #include "SGhelpers.h"
+#include "../main.h"
 int routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
     int usr_return;
     int term_return;
@@ -85,9 +86,10 @@ int routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
     fclose(fp);
     return 0;
 }
-void infile_to_nexc_sg_run(InputForm *in, const char *path, int nex_code_flag) {
-    routing(in, path, nex_code_flag, 1, 1;
+void send_to_generator(Export *exp,InputForm *form,int nexcodeFlag, int sourceFlag) {
+    input_free(form);
+
 }
-void sgRun(InputForm *form, int nexcodeFlag, bool pCheck, int sourceFlag) {
+void sgRun(Export *exp,InputForm *form, int nexcodeFlag, bool pCheck, int sourceFlag) {
     routing(form, nexcodeFlag, sourceFlag, pCheck);
 }

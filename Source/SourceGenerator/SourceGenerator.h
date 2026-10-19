@@ -22,6 +22,8 @@ typedef struct {
 
     DynamicBuffers output_filepath;
     DynamicBuffers input_filepath;
+
+    DynamicBuffers terminal_input;
 } InputForm;
 
 inline int nexc(FILE *fp, InputForm *form, Export *exp);

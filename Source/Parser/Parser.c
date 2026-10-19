@@ -72,11 +72,9 @@ char row_translate(int row) {
     char export;
     static char alphabet[30] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
     export = alphabet[row];
+    return export;
 }
 
-FILE* init_export(InputForm *form) {
-    FILE *export_file = fopen(form->output_filename.data, "w");
-}
 
 void terminal_to_nexc_encode(InputForm *form, int foundI, int row, int flag)
 {
@@ -84,8 +82,8 @@ void terminal_to_nexc_encode(InputForm *form, int foundI, int row, int flag)
     unsigned char trans_row;
     unsigned char encodedMemoryKey[2];
     unsigned char z = foundI + '0';
-    FILE *export_file;
-    export_file = init_export(form);
+    //FILE *export_file;
+    //export_file = init_export(form);
     trans_row = row_translate(row);
     encodedMemoryKey[0] = trans_row;
     encodedMemoryKey[1] = z;
@@ -338,27 +336,29 @@ void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter)
     }
 }
 
-InputForm* encode(InputForm *in, int foundI, int row, int flag)
+Export* encode(Export *export, InputForm *form, int foundI, int row, int flag)
 {
+
     int exp_return;
     unsigned char trans_row;
     unsigned char *encoded_morpheme[2];
     unsigned char z = foundI + '0';
-    FILE *export_file;
+    //FILE *export_file;
     // We may need a customized init_export here
-    export_file = init_export(in);
+    export_file = init_export(form);
     trans_row = row_translate(row);
     *encoded_morpheme[0] = trans_row;
     *encoded_morpheme[1] = z;
     exp_return = infile_to_nexc_exp_append_string(*encoded_morpheme, sizeof(encoded_morpheme), flag);
+    // Write export to file with source generator
     if (exp_return == -1) {
         perror("Encode failure");
         exit(EXIT_FAILURE);
     }
-    return in;
+    return export;
 }
 
-InputForm* verify(InputForm *in, ParserBuffers *pbuffer, int rowSiZe, int row, int flag)
+Export* verify(Export *export, InputForm *form, ParserBuffers *pbuffer, int rowSiZe, int row, int flag)
 {
     int foundI;
     for (int i = 0; i <= rowSiZe; i++)
@@ -368,17 +368,17 @@ InputForm* verify(InputForm *in, ParserBuffers *pbuffer, int rowSiZe, int row, i
         {
             // match is found here
             foundI = i;
-            in = encode(in, foundI, row, flag);
+            export = encode(export,form, foundI, row, flag);
         }
         else {
             foundI = i;
             usrmor_add_p(pbuffer->Buffers.data,foundI);
         }
     }
-    return in;
+    return export;
 }
 
-void match(InputForm *in, int flag, ParserBuffers *pbuffers)
+Export* match(Export *export, InputForm *form, int flag, ParserBuffers *pbuffers)
 {
     size_t rowSize;
     const char select = pbuffers->Buffers.data[0];
@@ -390,107 +390,107 @@ void match(InputForm *in, int flag, ParserBuffers *pbuffers)
         {
             case 'A':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
-                in = verify(in,pbuffers, rowSize, A,  flag);
+                form = verify(export, form,pbuffers, rowSize, A,  flag);
                 break;
             case 'B':
                 rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
-                in = verify(in,pbuffers, rowSize, B, flag);
+                form = verify(export, form,pbuffers, rowSize, B, flag);
                 break;
             case 'C':
                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
-                in = verify(in,pbuffers, rowSize, C, flag);
+                form = verify(export, form,pbuffers, rowSize, C, flag);
                 break;
             case 'D':
                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
-                in = verify(in,pbuffers, rowSize, D, flag);
+                form = verify(export, form,pbuffers, rowSize, D, flag);
                 break;
             case 'E':
                 rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
-                in = verify(in,pbuffers, rowSize, E,  flag);
+                form = verify(export, form,pbuffers, rowSize, E,  flag);
                 break;
             case 'F':
                 rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
-                in = verify(in,pbuffers, rowSize, F,  flag);
+                form = verify(export, form,pbuffers, rowSize, F,  flag);
                 break;
             case 'G':
                 rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
-                in = verify(in,pbuffers, rowSize, G,  flag);
+                form = verify(export, form,pbuffers, rowSize, G,  flag);
                 break;
             case 'H':
                 rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
-                in = verify(in,pbuffers, rowSize, H,  flag);
+                form = verify(export, form,pbuffers, rowSize, H,  flag);
                 break;
             case 'I':
                 rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
-                in = verify(in,pbuffers, rowSize, I,  flag);
+                form = verify(export, form,pbuffers, rowSize, I,  flag);
                 break;
             case 'J':
                 rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
-                in = verify(in,pbuffers, rowSize, J,  flag);
+                form = verify(export, form,pbuffers, rowSize, J,  flag);
                 break;
             case 'K':
                 rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
-                in = verify(in,pbuffers, rowSize, K,  flag);
+                form = verify(export, form,pbuffers, rowSize, K,  flag);
                 break;
             case 'L':
                 rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
-                in = verify(in,pbuffers, rowSize, L,  flag);
+                form = verify(export, form,pbuffers, rowSize, L,  flag);
                 break;
             case 'M':
                 rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
-                in = verify(in,pbuffers, rowSize, M,  flag);
+                form = verify(export, form,pbuffers, rowSize, M,  flag);
                 break;
             case 'N':
                 rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
-                in = verify(in,pbuffers, rowSize, N,  flag);
+                form = verify(export, form,pbuffers, rowSize, N,  flag);
                 break;
             case 'O':
                 rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
-                in = verify(in,pbuffers, rowSize, O,  flag);
+                form = verify(export, form,pbuffers, rowSize, O,  flag);
                 break;
             case 'P':
                 rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
-                in = verify(in,pbuffers, rowSize, P,  flag);
+                form = verify(export, form,pbuffers, rowSize, P,  flag);
                 break;
             case 'Q':
                 rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
-                in = verify(in,pbuffers, rowSize, Q,  flag);
+                form = verify(export, form,pbuffers, rowSize, Q,  flag);
                 break;
             case 'R':
                 rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
-                in = verify(in,pbuffers, rowSize, R,  flag);
+                form = verify(export, form,pbuffers, rowSize, R,  flag);
                 break;
             case 'S':
                 rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
-                in = verify(in,pbuffers, rowSize, S,  flag);
+                form = verify(export, form,pbuffers, rowSize, S,  flag);
                 break;
             case 'T':
                 rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
-                in = verify(in,pbuffers, rowSize, T,  flag);
+                form = verify(export, form,pbuffers, rowSize, T,  flag);
                 break;
             case 'U':
                 rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
-                in = verify(in,pbuffers, rowSize, U,  flag);
+                form = verify(export, form,pbuffers, rowSize, U,  flag);
                 break;
             case 'V':
                 rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
-                in = verify(in,pbuffers, rowSize, V,  flag);
+                form = verify(export, form,pbuffers, rowSize, V,  flag);
                 break;
             case 'W':
                 rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
-                in = verify(in,pbuffers, rowSize, W,  flag);
+                form = verify(export, form,pbuffers, rowSize, W,  flag);
                 break;
             case 'X':
                 rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
-                in = verify(in,pbuffers, rowSize, X,  flag);
+                form = verify(export, form,pbuffers, rowSize, X,  flag);
                 break;
             case 'Y':
                 rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
-                in = verify(in,pbuffers, rowSize, Y,  flag);
+                form = verify(export, form,pbuffers, rowSize, Y,  flag);
                 break;
             case 'Z':
                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
-                in = verify(in,pbuffers, rowSize, Z,  flag);
+                form = verify(export,  form,pbuffers, rowSize, Z,  flag);
                 break;
             default:
                 verifyReturn = -1;
@@ -659,7 +659,7 @@ void parse(Organizer *breakdown, Export *exp, Builder *builderr, ParserBuffers *
         // breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
         breakdownIdx = newCheck(exp,breakdownIdx, scratchOneIdx, 2, builderr, breakdown, pbuffers, incrementFlag); // wC should be at the end of whatever word was last parsed here
         if (breakdownIdx == -1) {exit(EXIT_FAILURE);}
-        exp->assoc.data[breakdownIdx] = pbuffers->writeTarget.data[breakdownIdx]; // Probably should replace BreakdownIDX
+        exp->association.data[breakdownIdx] = pbuffers->writeTarget.data[breakdownIdx]; // Probably should replace BreakdownIDX
         /* This was originally updating wC from memoryKey before increment; i've implemented increment with 2 for association because
             I think that the memoryKey was a mistake */
         breakdownIdx = increment(breakdownIdx, builderr->wC.data[breakdownIdx], breakdown, wCFlag, builderr);

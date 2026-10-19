@@ -17,7 +17,31 @@
 
 
 
+int format_from_export(FILE *fp, Export *export, int count, int mem_key_idx) {
+    fprintf(fp, "%s\n", "");
+    char memoryKeyPrefix[5] = "{'";
+    char memoryKeySuffix[5] = "':{";
+    fprintf(fp, "%s", memoryKeyPrefix);
+    fprintf(fp,"%s", export->memKey.data[mem_key_idx]);
+    fprintf(fp, "%s", memoryKeySuffix);
+    for (int i = 0; i < count; i++) {
+        fprintf(fp, "%s", "'");
+        fprintf(fp, "%s", export->association.data[i]);
+        fprintf(fp, "%s", "'");
+        if (i != export->assocCount - 1) {
+            fprintf(fp, "%c", COMMA);
+        }
 
+    }
+    fprintf(fp, "%s", "};");
+    if (!fp) {
+        return -1;
+    }
+    else {
+        return 1;
+    }
+
+}
 
 
 // This is what is actually being appended to the file
@@ -158,7 +182,7 @@ int usrmor_input(FILE *fp, InputForm *form) {
 
 int nexc(FILE *fp, InputForm *form, Export *exp) {
     // The following variables are establishing the sizes for the arrays within the struct
-    size_t sizeAssoc = sizeof(exp->assoc) / sizeof(exp->assoc.data[0]);
+    size_t sizeAssoc = sizeof(exp->association) / sizeof(exp->association.data[0]);
     size_t sizeAssociators = sizeof(exp->associators) / sizeof(exp->associators.data[0]);
     size_t sizeMemKeys = sizeof(exp->memKey) / sizeof(exp->memKey.data[0]);
     // Control Vars

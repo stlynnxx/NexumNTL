@@ -18,7 +18,8 @@ void usrmor_commit(bool pCheck) {
     if (pCheck) {sgRun()}
 }
 
-void usrmor_match(InputForm *form, Unencoded *unencoded, char firstLetter, int foundI, bool pCheck) {
+void usrmor_match(InputForm *form, Unencoded *unencoded, char firstLetter, bool pCheck) {
+    int foundI;
     int rowSize;
     int usrmorIdx;
     switch (firstLetter)
@@ -38,7 +39,6 @@ void usrmor_match(InputForm *form, Unencoded *unencoded, char firstLetter, int f
                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
                 usrmorIdx = rowSize + 1;
                 valuesMatrix[C][usrmorIdx] = unencoded->morpheme.data;
-
                 break;
             case 'D':
                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);

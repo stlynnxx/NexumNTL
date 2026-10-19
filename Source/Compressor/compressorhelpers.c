@@ -52,7 +52,7 @@ long comp_get_file_size(FILE *in_file) {
     return size;
 }
 
-void line_parse(ParserBuffers *pbuffers, InputForm *in, FILE* export_file) {
+void line_parse(ParserBuffers *pbuffers, InputForm *form, FILE* export_file) {
     int control;
     char *workingChar;
     int open_brace_check = 0;
@@ -76,7 +76,7 @@ void line_parse(ParserBuffers *pbuffers, InputForm *in, FILE* export_file) {
                     open_brace_check_two = 1;
                     control = 1;
                 }
-                in_append_bytes(in, workingChar, sizeof(*workingChar), control);
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
                 break;
             case NAMETOKEN:
                 if (name_token_one_check && name_token_two_check == 0 && open_brace_check == 1) {
@@ -95,33 +95,33 @@ void line_parse(ParserBuffers *pbuffers, InputForm *in, FILE* export_file) {
                     associator_check = 0;
                     control = 1;
                 }
-                in_append_bytes(in, workingChar, sizeof(*workingChar), control);
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
                 break;
             case ASSOCIATOR:
                 associator_check = 1;
                 if (associator_check == 1) {
                     control = 2;
                 }
-                in_append_bytes(in, workingChar, sizeof(*workingChar), control);
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
                 break;
             case SEMICOLON:
                 semicolon_check = 1;
-                in_append_bytes(in, workingChar, sizeof(*workingChar), control);
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
                 break;
             case COMMA:
                 if (name_token_one_check && name_token_two_check == 1 && open_brace_check_two == 1) {
                     comma_check = 1;
                 }
-                in_append_bytes(in, workingChar, sizeof(*workingChar), control);
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
                 break;
             case CLOSEBRACE:
                 close_brace_check = 1;
-                in_append_bytes(in, workingChar, sizeof(*workingChar), control);
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
                 break;
                 // default will handle alphanumerics
             default:
                 if isalnum(workingChar) {
-                in_append_string(in,workingChar,sizeof(workingChar),control);
+                in_append_string(form,workingChar,sizeof(workingChar),control);
             }
                 break;
         }
@@ -135,10 +135,11 @@ int pbuffer_line_clear(ParserBuffers *pbuffers) {
     return 0;
 }
 
-void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers, InputForm *in, size_t file_size)
+void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers, InputForm *form, size_t file_size)
     {
     FILE* export_file;
-    for (int i = 0; i <= file_size; i++) {
+    for (int i = 0; i <= file_size; i++)
+    {
         char *workingChar;
         bool name_token_find;
         int found_start;
@@ -171,7 +172,7 @@ void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers, InputForm *i
         if (*workingChar == SEMICOLON) {
             pbuff_append_char(pbuffers, *workingChar, 3);
         }
-        line_parse(pbuffers, in, export_file);
+        line_parse(pbuffers, form, export_file);
         pbuffer_line_clear(pbuffers);
 
         // fclose(in_file);
@@ -180,8 +181,11 @@ void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers, InputForm *i
 
 }
 
+FILE* init_export(InputForm *form) {
+    FILE *export_file = fopen(form->output_filename.data, "w");
+}
 
-int comp_open_file(FILE* in_file, ParserBuffers *pbuffers, int nex_code_flag) {
+int comp_open_file(InputForm *form,FILE* in_file, ParserBuffers *pbuffers, int output) {
     if (!in_file) {
         perror("comp_open_file error");
         return -1;
@@ -189,18 +193,20 @@ int comp_open_file(FILE* in_file, ParserBuffers *pbuffers, int nex_code_flag) {
     // Getting the size of inFile
     size_t file_size = comp_get_file_size(in_file);
     // Append to pbuffer appropriately
-    InputForm *in = input_init();
-    append_file_to_buffers(in_file, pbuffers, in, file_size);
-    match(in,nex_code_flag,pbuffers);
-    input_free(in);
+    Export *export = exp_init();
+    append_file_to_buffers(in_file, pbuffers, form, file_size);
+    export = match(export,form,output,pbuffers);
+    FILE *export_file;
+    export_file = init_export(form);
+    // input_free(form);
     // The last two flags in this sgRun call need reviewed
-    sgRun(pbuffers->out_filename.data,nex_code_flag, 0,0);
+    sgRun(export,form,output,  0,1);
 }
 
-int comp_from_file_append_bytes(ParserBuffers *pbuffers, FILE* in_file, int nex_code_flag) {
+int comp_from_file_append_bytes(InputForm *form,ParserBuffers *pbuffers, FILE* in_file, int nex_code_flag) {
     //  We are appending the file to pbuffers
     int cofr;
-    cofr = comp_open_file(in_file, pbuffers, nex_code_flag);
+    cofr = comp_open_file(form,in_file, pbuffers, nex_code_flag);
     if (cofr == -1) {
         exit(-1);
     }

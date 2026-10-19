@@ -9,12 +9,9 @@
 #include "../Usrmor/usrmorhelpers.h"
 
 
-typedef struct {
-    DynamicBuffers buffer;
-    DynamicBuffers terminalInput;
-} Input;
+
 extern Unencoded* unc_export(void);
 extern Unencoded* unc_exp;
-void compressor_collect(InputForm *form,int control, int output);
+void compressor_collect(InputForm *form,int intype, int output);
 
 #endif //NEXUMNTL_COMPRESSOR_H

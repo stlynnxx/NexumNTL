@@ -30,7 +30,7 @@ typedef struct {
 }ParserBuffers;
 
 typedef struct {
-    DynamicBuffers assoc;
+    DynamicBuffers association;
     DynamicBuffers associators;
     DynamicBuffers memKey;
     DynamicBuffers encodedMorpheme;
@@ -51,8 +51,9 @@ typedef struct {
 } Builder;
 
 inline Export* get_parser_export(void);
-inline void match(InputForm *in, int flag, ParserBuffers *pbuffers);
+inline Export* match(Export *export, InputForm *form, int flag, ParserBuffers *pbuffers);
 inline void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter);
 inline void terminal_to_nexc_encode(InputForm *form, int foundI, int row, int flag);
-
+inline int infile_to_nexc_exp_append_bytes(Export *export, unsigned char *byte, size_t x, int control);
+inline int infile_to_nexc_exp_append_string(Export *export,unsigned char *string, size_t x, int control);
 #endif //PARSER_H

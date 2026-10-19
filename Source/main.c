@@ -27,29 +27,7 @@ static InputForm* new_input_form() {
 }
 
 
-
-static char set_filepath(InputForm *form, int source) {
-    switch (source) {
-        case OUTPUT_OPT:
-            static char path[4096] = "./Output_files/";
-            size_t path_size = sizeof(path) - 1;
-            strncpy(path, form->output_filename.data, sizeof(path));
-            in_append_string(form, path, path_size, 8);
-            break;
-        case INPUT_OPT:
-            static char path[4096] = "./Input_files/";
-            size_t path_size = sizeof(path) - 1;
-            strncpy(path, form->input_filename.data, sizeof(path));
-            in_append_string(form, path, path_size, 8);
-            break;
-        default:
-            perror("Invalid input");
-            break;
-    }
-}
-
-
-static bool set_filepath(InputForm *form, int source)
+void set_filepath(InputForm *form, int source)
 
 {
     const char *prefix;
@@ -71,12 +49,12 @@ static bool set_filepath(InputForm *form, int source)
 
         default:
             fprintf(stderr, "set_filepath: invalid source %d\n", source);
-            return false;
+            exit(-1);
     }
 
     if (name == NULL) {
         fprintf(stderr, "set_filepath: filename is NULL\n");
-        return false;
+        exit(-1);
     }
 
     const size_t prefix_len = strlen(prefix);
@@ -84,7 +62,6 @@ static bool set_filepath(InputForm *form, int source)
     if (prefix_len + name_len >= PATH_MAX) {
         fprintf(stderr, "set_filepath: path too long (%zu + %zu >= %d)\n",
                 prefix_len, name_len, PATH_MAX);
-        return false;
     }
 
     char path[PATH_MAX];
@@ -99,8 +76,8 @@ static bool set_filepath(InputForm *form, int source)
         case INPUT_OPT:
             in_append_string(form, path, prefix_len + name_len, 9);
     }
-    return true;
 }
+
 static InputForm* get_output_filename(int output, int opt) {
     InputForm *form = new_input_form();
     // NAME_MAX - 4 is to allow as much room as possible without stepping on the extension,
@@ -123,7 +100,7 @@ static InputForm* get_output_filename(int output, int opt) {
     finished_filename[sizeof(finished_filename) - 1] = '\0';
     // sets output filename in form as finished_filename
     in_append_string(form, finished_filename, sizeof(finished_filename) - 1, 6);
-    set_filepath(form);
+    set_filepath(form, opt);
     return form;
 }
 

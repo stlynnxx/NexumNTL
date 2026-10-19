@@ -19,26 +19,26 @@ Unencoded* unc_export(void) {
     return unc_exp;
 }
 
-void compressor_collect(InputForm *form,int control, int output) {
+void compressor_collect(InputForm *form,int intype, int output) {
     char** files;
     int count;
     ParserBuffers *pbuffers = pbuffers_init();
     FILE *inFile;
     char in_filepath[4096];
     // Control 0 is from file, 1 is from terminal
-    if (control == 0) {
+    if (intype == 0) {
         if (output == 0) {
             // THIS IS FOR THE INPUT FILE BEING IN .NEX
             printf("Enter output filename, press enter to reuse input filename: ");
-            scanf("%s", out_filepath);
-            pbuff_append_string(pbuffers, out_filepath, sizeof(out_filepath), 6);
+            scanf("%s", form->output_filepath.data);
+            pbuff_append_string(pbuffers, form->output_filepath.data, form->output_filepath.length, 6);
             if (explore_dir("data/Export", ".nex", &files, &count) > 0) {
                 for (int i = 0; i < count; i++) {
                     snprintf(in_filepath, sizeof(in_filepath), "data/%s", files[i]);
                     inFile = fopen(in_filepath, "r");
                     free(files[i]);
                 }
-                if (!out_filepath[0]) {
+                if (!form->output_filepath.data[0]) {
                     pbuff_append_string(pbuffers, in_filepath, sizeof(in_filepath), 6);
                 }
                 free(files);
@@ -57,18 +57,18 @@ void compressor_collect(InputForm *form,int control, int output) {
             }
         }
         // Writing inFile to the appropriate spot in pbuffers
-        comp_from_file_append_bytes(pbuffers, inFile, output);
+        comp_from_file_append_bytes(form, pbuffers, inFile, output);
     }
 
-    if (control == 1) {
+    if (intype == 1) {
         bool pCheck = false;
         // input coming from terminal
         printf("Enter term: ");
-        scanf("%s", in->terminalInput.data);
+        scanf("%s", form->terminal_input.data);
         Unencoded *unencoded = unencoded_init();
-        comp_append_bytes(unencoded, in);
+        comp_append_bytes(unencoded, form);
         *unc_exp = *unencoded;
-        usrmor_match(unencoded, unencoded->morpheme.data[0], pCheck);
+        usrmor_match(form,unencoded, unencoded->morpheme.data[0], pCheck);
 
     }
 }
