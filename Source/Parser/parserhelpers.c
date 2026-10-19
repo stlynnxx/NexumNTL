@@ -194,6 +194,7 @@ int exp_ensure_capacity(Export *export, size_t extra, int control)
 Export* exp_init()
 {
     Export *ex = malloc(sizeof(Export));
+
     ex->association.length = 0;
     ex->association.capacity = 0;
 
@@ -214,6 +215,7 @@ Export* exp_init()
 
     ex->associationScratch.length = 0;
     ex->associationScratch.capacity = 0;
+
 
     ex->encodedMorpheme.data = malloc(32);
     ex->memKey.data = malloc(32);

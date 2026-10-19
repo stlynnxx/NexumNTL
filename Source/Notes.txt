@@ -1236,4 +1236,10 @@ formatted and written to file! However, a few things need done still; the pointe
 the way to the new format function and export needs an association count field added, but it's late and i'm getting
 tired so all of that may be tomorrow work. Progress is progress!
 
+I think we also may need to back up and take the non alphanumerics off before the terms get appended
+
+I came back and got through calling the new format, which means that after I cirlce back and make sure that
+the usrmor branch is handled, this I/O path will be done and we can move on to the next!
+
+
 

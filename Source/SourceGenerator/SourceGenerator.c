@@ -17,24 +17,24 @@
 
 
 
-int format_from_export(FILE *fp, Export *export, int count, int mem_key_idx) {
-    fprintf(fp, "%s\n", "");
+int format_from_export(FILE *export_file, Export *export, int count, int mem_key_idx) {
+    fprintf(export_file, "%s\n", "");
     char memoryKeyPrefix[5] = "{'";
     char memoryKeySuffix[5] = "':{";
-    fprintf(fp, "%s", memoryKeyPrefix);
-    fprintf(fp,"%s", export->memKey.data[mem_key_idx]);
-    fprintf(fp, "%s", memoryKeySuffix);
+    fprintf(export_file, "%s", memoryKeyPrefix);
+    fprintf(export_file,"%s", export->memKey.data[mem_key_idx]);
+    fprintf(export_file, "%s", memoryKeySuffix);
     for (int i = 0; i < count; i++) {
-        fprintf(fp, "%s", "'");
-        fprintf(fp, "%s", export->association.data[i]);
-        fprintf(fp, "%s", "'");
+        fprintf(export_file, "%s", "'");
+        fprintf(export_file, "%s", export->association.data[i]);
+        fprintf(export_file, "%s", "'");
         if (i != export->assocCount - 1) {
-            fprintf(fp, "%c", COMMA);
+            fprintf(export_file, "%c", COMMA);
         }
 
     }
-    fprintf(fp, "%s", "};");
-    if (!fp) {
+    fprintf(export_file, "%s", "};");
+    if (!export_file) {
         return -1;
     }
     else {

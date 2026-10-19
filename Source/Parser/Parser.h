@@ -30,6 +30,7 @@ typedef struct {
 }ParserBuffers;
 
 typedef struct {
+    int assocCount;
     DynamicBuffers association;
     DynamicBuffers associators;
     DynamicBuffers memKey;
@@ -44,6 +45,7 @@ typedef struct {
 extern Export *parser_export;
 
 typedef struct {
+
     DynamicBuffers assocScratch;
     DynamicBuffers associatorScratch;
     DynamicBuffers memKeyScratch;

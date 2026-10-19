@@ -86,10 +86,11 @@ int routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
     fclose(fp);
     return 0;
 }
-void send_to_generator(Export *exp,InputForm *form,int nexcodeFlag, int sourceFlag) {
+void send_to_generator(Export *exp,InputForm *form, FILE* export_file) {
     input_free(form);
+    format_from_export(export_file,exp, exp->assocCount, 0);
 
 }
-void sgRun(Export *exp,InputForm *form, int nexcodeFlag, bool pCheck, int sourceFlag) {
+void sgRun(InputForm *form,int nexcodeFlag, bool pCheck, int sourceFlag) {
     routing(form, nexcodeFlag, sourceFlag, pCheck);
 }

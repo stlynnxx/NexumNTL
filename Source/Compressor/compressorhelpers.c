@@ -27,9 +27,9 @@
     return in;
 }*/
 
-int comp_ensure_capacity(Input *in, size_t extra) {
-    size_t needed = in->terminalInput.length + extra;
-    if (needed <= in->terminalInput.capacity) {
+int comp_ensure_capacity(InputForm *form, size_t extra) {
+    size_t needed = form->terminalInput.length + extra;
+    if (needed <= form->terminalInput.capacity) {
         return 0;
     }
     size_t capacity = in->terminalInput.capacity ? in->terminalInput.capacity : 16;
@@ -52,17 +52,20 @@ long comp_get_file_size(FILE *in_file) {
     return size;
 }
 
-void line_parse(ParserBuffers *pbuffers, InputForm *form, FILE* export_file) {
+void line_parse(Export *export,ParserBuffers *pbuffers, InputForm *form, FILE* export_file) {
     int control;
     char *workingChar;
-    int open_brace_check = 0;
-    int open_brace_check_two = 0;
-    int semicolon_check = 0;
-    int associator_check = 0;
-    int name_token_one_check = 0;
-    int name_token_two_check = 0;
-    int comma_check = 0;
-    int close_brace_check = 0;
+    bool open_brace_check = false;
+    bool open_brace_check_two = false;
+    bool semicolon_check = false;
+    bool association_check = false;
+    int association_count = 0;
+    bool associator_check = false;
+    int associator_count = 0;
+    bool name_token_one_check = false;
+    bool name_token_two_check = false;
+    bool comma_check = false;
+    bool close_brace_check = false;
 
     for (int i = 0; i < pbuffers->line.length; i++)
     {
@@ -70,59 +73,68 @@ void line_parse(ParserBuffers *pbuffers, InputForm *form, FILE* export_file) {
 
         switch (*workingChar) {
             case OPENBRACE:
-                open_brace_check = 1;
+                open_brace_check = false;
                 control = 0;
-                if (semicolon_check == 1 && open_brace_check == 1) {
+                if (semicolon_check == true && open_brace_check == true) {
                     open_brace_check_two = 1;
                     control = 1;
                 }
                 in_append_bytes(form, workingChar, sizeof(*workingChar), control);
                 break;
             case NAMETOKEN:
-                if (name_token_one_check && name_token_two_check == 0 && open_brace_check == 1) {
-                    name_token_one_check = 1;
+                if (name_token_one_check && name_token_two_check == false && open_brace_check == true) {
+                    name_token_one_check = true;
                     control = 0;
                 }
-                if (name_token_one_check == 1 && name_token_two_check == 0 && open_brace_check == 1) {
-                    name_token_two_check = 1;
+                if (name_token_one_check == true && name_token_two_check == false && open_brace_check == true) {
+                    name_token_two_check = true;
                     control = 0;
                 }
-                if (name_token_one_check == 1 && name_token_two_check == 1 && semicolon_check == 1) {
-                    name_token_two_check = 0;
+                if (name_token_one_check == true && name_token_two_check == true && semicolon_check == true) {
+                    name_token_two_check = false;
                     control = 1;
                 }
-                if (comma_check == 1 && associator_check == 1) {
-                    associator_check = 0;
+                if (comma_check == true && associator_check == true) {
+                    associator_check = false;
                     control = 1;
                 }
                 in_append_bytes(form, workingChar, sizeof(*workingChar), control);
                 break;
             case ASSOCIATOR:
-                associator_check = 1;
-                if (associator_check == 1) {
+                associator_check = true;
+                if (associator_check == true) {
+                    association_count++;
                     control = 2;
                 }
                 in_append_bytes(form, workingChar, sizeof(*workingChar), control);
                 break;
             case SEMICOLON:
-                semicolon_check = 1;
+                semicolon_check = true;
                 in_append_bytes(form, workingChar, sizeof(*workingChar), control);
                 break;
             case COMMA:
-                if (name_token_one_check && name_token_two_check == 1 && open_brace_check_two == 1) {
-                    comma_check = 1;
+                if (name_token_one_check && name_token_two_check == true && open_brace_check_two == true) {
+                    comma_check = true;
                 }
                 in_append_bytes(form, workingChar, sizeof(*workingChar), control);
                 break;
             case CLOSEBRACE:
-                close_brace_check = 1;
+                close_brace_check = true;
                 in_append_bytes(form, workingChar, sizeof(*workingChar), control);
                 break;
                 // default will handle alphanumerics
             default:
-                if isalnum(workingChar) {
+                while (isalnum(workingChar)) {
+                if (semicolon_check) {
+                    association_check = true;
+                    association_count++;
+                }
                 in_append_string(form,workingChar,sizeof(workingChar),control);
             }
+                if (!isalnum(workingChar) && association_check == true) {
+                    name_token_two_check = true;
+                }
+                export->assocCount = form->assocCount + association_count;
                 break;
         }
     }
@@ -135,7 +147,7 @@ int pbuffer_line_clear(ParserBuffers *pbuffers) {
     return 0;
 }
 
-void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers, InputForm *form, size_t file_size)
+void append_file_to_buffers(Export* export,FILE* in_file, ParserBuffers *pbuffers, InputForm *form, size_t file_size)
     {
     FILE* export_file;
     for (int i = 0; i <= file_size; i++)
@@ -172,7 +184,7 @@ void append_file_to_buffers(FILE* in_file, ParserBuffers *pbuffers, InputForm *f
         if (*workingChar == SEMICOLON) {
             pbuff_append_char(pbuffers, *workingChar, 3);
         }
-        line_parse(pbuffers, form, export_file);
+        line_parse(export,pbuffers, form, export_file);
         pbuffer_line_clear(pbuffers);
 
         // fclose(in_file);
@@ -194,13 +206,13 @@ int comp_open_file(InputForm *form,FILE* in_file, ParserBuffers *pbuffers, int o
     size_t file_size = comp_get_file_size(in_file);
     // Append to pbuffer appropriately
     Export *export = exp_init();
-    append_file_to_buffers(in_file, pbuffers, form, file_size);
+    append_file_to_buffers(export,in_file, pbuffers, form, file_size);
     export = match(export,form,output,pbuffers);
     FILE *export_file;
     export_file = init_export(form);
     // input_free(form);
     // The last two flags in this sgRun call need reviewed
-    sgRun(export,form,output,  0,1);
+    sgRun(export,form,export_file,output,  0,1);
 }
 
 int comp_from_file_append_bytes(InputForm *form,ParserBuffers *pbuffers, FILE* in_file, int nex_code_flag) {
