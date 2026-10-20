@@ -14,8 +14,8 @@ typedef struct {
 } Unencoded;
 
 
-void usrmor_match(InputForm *form, Unencoded *unencoded, char firstLetter, int foundI, bool pCheck);
-void usrmor_add_p(char *byte, int foundI);
-bool terminal_to_nexc_usrmor_add_p(InputForm *form, int foundI, bool add_p_check);
-void usrmor_add(char *byte, int foundI);
+inline void usrmor_match(InputForm *form, Export *export, ParserBuffers *pbuffers, Unencoded *unencoded, char first_letter, bool pCheck, int flag);
+inline void usrmor_add_p(InputForm *form,Export *export,ParserBuffers *pbuffers,char *byte, int foundI, int flag);
+inline bool terminal_to_nexc_usrmor_add_p(InputForm *form, int foundI, bool add_p_check);
+inline void usrmor_add(char *byte, int foundI);
 #endif //NEXUMNTL_USERMORPHEME_H

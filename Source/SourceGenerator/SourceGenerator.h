@@ -25,6 +25,7 @@ typedef struct {
 
     DynamicBuffers terminal_input;
 } InputForm;
+
 inline int format_from_export(FILE *export_file, Export *export, int count, int mem_key_idx);
 inline int nexc(FILE *fp, InputForm *form, Export *exp);
 inline int terminal_input(FILE *fp, InputForm *form, int control);

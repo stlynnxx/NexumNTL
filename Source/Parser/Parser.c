@@ -4,6 +4,7 @@
 #include "Parser.h"
 #include "../Usrmor/usermorpheme.h"
 #include "../SourceGenerator/SourceGenerator.h"
+#include "../Compressor/compressorhelpers.h"
 #include <math.h>
 #include <wctype.h>
 #include "parserhelpers.h"
@@ -338,18 +339,17 @@ void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter)
 
 Export* encode(Export *export, InputForm *form, int foundI, int row, int flag)
 {
-
     int exp_return;
     unsigned char trans_row;
     unsigned char *encoded_morpheme[2];
     unsigned char z = foundI + '0';
-    //FILE *export_file;
+    FILE *export_file;
     // We may need a customized init_export here
     export_file = init_export(form);
     trans_row = row_translate(row);
     *encoded_morpheme[0] = trans_row;
     *encoded_morpheme[1] = z;
-    exp_return = infile_to_nexc_exp_append_string(*encoded_morpheme, sizeof(encoded_morpheme), flag);
+    exp_return = infile_to_nexc_exp_append_string(export,*encoded_morpheme, sizeof(encoded_morpheme), flag);
     // Write export to file with source generator
     if (exp_return == -1) {
         perror("Encode failure");
@@ -358,13 +358,13 @@ Export* encode(Export *export, InputForm *form, int foundI, int row, int flag)
     return export;
 }
 
-Export* verify(Export *export, InputForm *form, ParserBuffers *pbuffer, int rowSiZe, int row, int flag)
+Export* verify(Export *export, InputForm *form, ParserBuffers *pbuffers, int rowSiZe, int row, int flag)
 {
     int foundI;
     for (int i = 0; i <= rowSiZe; i++)
     {
         if (valuesMatrix[row][i] == NULL) perror("values matrix null"); exit(EXIT_FAILURE);
-        if (strncmp(pbuffer->Buffers.data, valuesMatrix[row][i], strlen(pbuffer->Buffers.data)) == 0)
+        if (strncmp(pbuffers->Buffers.data, valuesMatrix[row][i], strlen(pbuffers->Buffers.data)) == 0)
         {
             // match is found here
             foundI = i;
@@ -372,7 +372,7 @@ Export* verify(Export *export, InputForm *form, ParserBuffers *pbuffer, int rowS
         }
         else {
             foundI = i;
-            usrmor_add_p(pbuffer->Buffers.data,foundI);
+            usrmor_add_p(form,export,pbuffers,pbuffers->Buffers.data,foundI,flag);
         }
     }
     return export;

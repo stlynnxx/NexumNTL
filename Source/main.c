@@ -78,7 +78,7 @@ void set_filepath(InputForm *form, int source)
     }
 }
 
-static InputForm* get_output_filename(int output, int opt) {
+static InputForm* get_filename(int output, int opt) {
     InputForm *form = new_input_form();
     // NAME_MAX - 4 is to allow as much room as possible without stepping on the extension,
     // with the longest possible extension being .nexc
@@ -99,14 +99,11 @@ static InputForm* get_output_filename(int output, int opt) {
     strncat(finished_filename, unfinished_filename, finished_size);
     finished_filename[sizeof(finished_filename) - 1] = '\0';
     // sets output filename in form as finished_filename
-    in_append_string(form, finished_filename, sizeof(finished_filename) - 1, 6);
+    in_append_string(form, finished_filename, sizeof(finished_filename) - 1, opt);
     set_filepath(form, opt);
     return form;
 }
 
-void get_infile_name(InputForm *form, int opt) {
-
-}
 
 void terminal_to_nexfile(InputForm *form, int intype) {
     // OutType replaces nex_code_flag
@@ -141,18 +138,19 @@ static int read_choice(const char *prompt, int lo, int hi) {
 
 int run() {
     // Input collection is a placeholder; this will eventually likely be moved to python
-    //
     InType intype = (InType)read_choice("Enter 0 or 1: ", 0, 1);
-    // replaces nex_code_flag
+    // output replaces nex_code_flag
     OutType output = (OutType)read_choice("Enter 0 or 1: ", 0, 1);
     Options options;
-    InputForm *form = get_output_filename(output, OUTPUT_OPT);
+    InputForm *form = get_filename(output, OUTPUT_OPT);
     switch (intype) {
         case TERMINAL_IN:
+            // This is where terminal -> nex and terminal -> nexc go
             terminal_to_nexfile(form, intype);
             break;
         case FILE_IN:
-            get_infile_name(form, INPUT_OPT);
+            //  Setting the inFile name
+            get_filename(output, INPUT_OPT);
             compressor_collect(form, intype, output);
             break;
         default:

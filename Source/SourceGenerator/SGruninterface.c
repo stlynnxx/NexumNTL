@@ -5,11 +5,11 @@
 #include "SGruninterface.h"
 #include "SGhelpers.h"
 #include "../main.h"
-int routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
+int sg_routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
     int usr_return;
     int term_return;
-    FILE *fp = fopen(path, "a");
-    if (fp == NULL)
+    FILE *output_file = fopen(form->output_filename.data, "a");
+    if (output_file == NULL)
         return 1;
     if (nexcodeFlag == 0) {
         // This is for handling .nex
@@ -17,7 +17,7 @@ int routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
             case 0:
                 //  This is for input coming from the terminal
                 // form will be freed as a result of the terminal_input call
-                term_return = terminal_input(fp, form, nexcodeFlag);
+                term_return = terminal_input(output_file, form, nexcodeFlag);
                 if (term_return == -1) {
                     printf("terminal input failure");
                     exit(-1);
@@ -29,7 +29,7 @@ int routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
             case 1:
                 // This is for input coming from usermorpheme
                 // form is freed as a result of usrmor_input
-                usr_return = usrmor_input(fp, form);
+                usr_return = usrmor_input(output_file, form);
                 if (usr_return == -1) {
                     perror("sgrun failure");
                     exit(-1);
@@ -50,7 +50,7 @@ int routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
             case 0:
                 //  This is for input coming from the terminal
                 // form will be freed as a result of the terminal_input call
-                term_return = terminal_input(fp, form, nexcodeFlag);
+                term_return = terminal_input(output_file, form, nexcodeFlag);
                 if (term_return == -1) {
                     printf("terminal input failure");
                     exit(-1);
@@ -63,7 +63,7 @@ int routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
                 // This is for input coming from usermorpheme
                 // form is freed as a result of usrmor_input
                 if (parser_check == 0) {
-                    usr_return = usrmor_input(fp, form);
+                    usr_return = usrmor_input(output_file, form);
                     if (usr_return == -1) {
                         perror("sgrun failure");
                         exit(-1);
@@ -80,10 +80,10 @@ int routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
         }
         if (pCheck) {
             Export *exp = get_parser_export();
-            nexc(fp, form, exp);
+            nexc(output_file, form, exp);
         }
     }
-    fclose(fp);
+    fclose(output_file);
     return 0;
 }
 void send_to_generator(Export *exp, FILE* export_file) {
@@ -91,5 +91,5 @@ void send_to_generator(Export *exp, FILE* export_file) {
 
 }
 void sgRun(InputForm *form,int nexcodeFlag, bool pCheck, int sourceFlag) {
-    routing(form, nexcodeFlag, sourceFlag, pCheck);
+    sg_routing(form, nexcodeFlag, sourceFlag, pCheck);
 }

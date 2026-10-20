@@ -19,19 +19,20 @@ Unencoded* unc_export(void) {
     return unc_exp;
 }
 
-void compressor_collect(InputForm *form,int intype, int output) {
+void git compressor_collect(InputForm *form,int intype, int output) {
     char** files;
     int count;
     ParserBuffers *pbuffers = pbuffers_init();
     FILE *inFile;
     char in_filepath[4096];
-    // Control 0 is from file, 1 is from terminal
+    // intype 0 is from file, 1 is from terminal
     if (intype == 0) {
+        // output 0 is nex
         if (output == 0) {
             // THIS IS FOR THE INPUT FILE BEING IN .NEX
             printf("Enter output filename, press enter to reuse input filename: ");
-            scanf("%s", form->output_filepath.data);
-            pbuff_append_string(pbuffers, form->output_filepath.data, form->output_filepath.length, 6);
+            scanf("%s", form->output_filename.data);
+            pbuff_append_string(pbuffers, form->output_filename.data, form->output_filename.length, 6);
             if (explore_dir("data/Export", ".nex", &files, &count) > 0) {
                 for (int i = 0; i < count; i++) {
                     snprintf(in_filepath, sizeof(in_filepath), "data/%s", files[i]);
@@ -44,14 +45,20 @@ void compressor_collect(InputForm *form,int intype, int output) {
                 free(files);
             }
         }
-        // THIS IS FOR THE INUPT FILE BEING IN .NEXC - WILL LIKELY BE REMOVED
+        // output 1 is nexc
         if (output == 1) {
-            if (explore_dir("data", ".nexc", &files, &count) > 0) {
+            printf("Enter output filename, press enter to reuse input filename: ");
+            scanf("%s", form->output_filepath.data);
+            pbuff_append_string(pbuffers, form->output_filepath.data, form->output_filepath.length, 6);
+            if (explore_dir("data/Export", ".nexc", &files, &count) > 0) {
                 for (int i = 0; i < count; i++) {
                     char filepath[4096];
                     snprintf(filepath, sizeof(filepath), "data/%s", files[i]);
                     inFile = fopen(filepath, "r");
                     free(files[i]);
+                }
+                if (!form->output_filepath.data[0]) {
+                    pbuff_append_string(pbuffers, in_filepath, sizeof(in_filepath), 6);
                 }
                 free(files);
             }

@@ -6,8 +6,8 @@
 #define MAIN_H
 // replacement for nex_code_flag
 typedef enum {
-  OUTPUT_OPT = 0,
-  INPUT_OPT = 1,
+  OUTPUT_OPT = 6,
+  INPUT_OPT = 7,
 } Options;
 
 typedef enum {

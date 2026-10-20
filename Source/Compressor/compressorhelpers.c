@@ -215,10 +215,10 @@ int comp_open_file(InputForm *form,FILE* in_file, ParserBuffers *pbuffers, int o
     send_to_generator(export,export_file);
 }
 
-int comp_from_file_append_bytes(InputForm *form,ParserBuffers *pbuffers, FILE* in_file, int nex_code_flag) {
+int comp_from_file_append_bytes(InputForm *form,ParserBuffers *pbuffers, FILE* in_file, int output) {
     //  We are appending the file to pbuffers
     int cofr;
-    cofr = comp_open_file(form,in_file, pbuffers, nex_code_flag);
+    cofr = comp_open_file(form,in_file, pbuffers, output);
     if (cofr == -1) {
         exit(-1);
     }

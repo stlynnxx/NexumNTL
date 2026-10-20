@@ -7,7 +7,7 @@
 #include "../SymbolTable/SymbolTable.h"
 #include "SourceGenerator.h"
 #include "../Parser/Parser.h"
-inline void sgRun(Export *exp,InputForm *form, int nexcodeFlag, bool pCheck, int sourceFlag);
+inline void sgRun(InputForm *form, int nexcodeFlag, bool pCheck, int sourceFlag);
 inline void send_to_generator(Export *exp, FILE* export_file);
 
 #endif //NEXUMNTL_SGRUNINTERFACE_H
