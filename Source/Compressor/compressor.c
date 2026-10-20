@@ -19,7 +19,7 @@ Unencoded* unc_export(void) {
     return unc_exp;
 }
 
-void git compressor_collect(InputForm *form,int intype, int output) {
+void compressor_collect(InputForm *form,int intype, int output) {
     char** files;
     int count;
     ParserBuffers *pbuffers = pbuffers_init();
