@@ -1245,4 +1245,9 @@ We should pick up in Verify in Parser going to usrmor.
 
 10/20/2026-
 
+I think I've more or less finished the infile -> nexc path, but I made many structural changes/refinements in
+the process and so I've back up a bit to go back overr all the paths before this. I was able to go back over both
+terminal tangents, and now I'm about to review infile -> nexc itself, and then go from there!
+
+
 
