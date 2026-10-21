@@ -1249,5 +1249,12 @@ I think I've more or less finished the infile -> nexc path, but I made many stru
 the process and so I've back up a bit to go back overr all the paths before this. I was able to go back over both
 terminal tangents, and now I'm about to review infile -> nexc itself, and then go from there!
 
+10/21/2026-
+
+This morning I finished the rough draft of the infile -> nexc path, and now I'm going back over all of the paths thus
+far, updating variable names and double checking everything.
+
+I'm going to take a break, but I need to pick back up on correcting terminal_to_nexc_verify in parser!
+
 
 

@@ -106,14 +106,14 @@ int terminal_input(FILE *fp, InputForm *form, int control) {
     }
     // .nexc
     if (control == 1) {
-        Export* exp = exp_init();
+        Export* export_file = exp_init();
         printf("Enter filename to be appended with .nexc (default is 'export', producing 'export.nexc'");
         scanf("%s",form->output_filename.data);
         printf("Memory Key: \n");
         scanf("%s", form->memoryKeyBuffer.data);
         // hand over to parser match
-        exp_append_string(exp, form->memoryKeyBuffer.data, form->memoryKeyBuffer.length, 4);
-        terminal_to_nexc_match(exp, 4, exp->memoryKeyScratch.data[0]);
+        infile_to_nexc_exp_append_string(export_file, form->memoryKeyBuffer.data, form->memoryKeyBuffer.length, 4);
+        terminal_to_nexc_match(export_file, 4, export_file->memoryKeyScratch.data[0]);
         printf("Assocation Count: \n");
         scanf("%d", form->assocCount);
         printf("Assocations (seperate with spaces, and be sure to match your association count correctly.): \n");
@@ -132,7 +132,7 @@ int terminal_input(FILE *fp, InputForm *form, int control) {
             }
             // 1 for @, 2 for assoc
             in_append_string(form, &form->associationBuffer.data[i], form->associationBuffer.length, 1);
-            terminalToNexcMatch()
+            terminal_to_nexc_match(form,control,form->associationBuffer.data[i]);
         }
         format(fp, form, form->assocCount, 0);
         return 0;

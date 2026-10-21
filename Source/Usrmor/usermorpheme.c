@@ -13,12 +13,11 @@
 #define TERMINAL_SOURCE_FLAG 0
 #define FILE_SOURCE_FLAG 1
 
-void usrmor_commit(InputForm *form, Export *export, ParserBuffers *pbuffers, int row, int row_size,int flag) {
-    verify(export, form, pbuffers, row, row_size,flag);
-
+void usrmor_commit(InputForm *form, Export *export, FILE* export_file, ParserBuffers *pbuffers, int row, int row_size,int flag) {
+    verify(export, form,export_file, pbuffers, row, row_size,flag);
 }
 
-void usrmor_match(InputForm *form, Export *export, ParserBuffers *pbuffers, Unencoded *unencoded, char first_letter, bool pCheck, int flag) {
+void usrmor_match(InputForm *form, Export *export_form, FILE* export_file, ParserBuffers *pbuffers, Unencoded *unencoded, char first_letter, bool pCheck, int flag) {
     int found_i;
     int row_size;
     int row;
@@ -210,27 +209,27 @@ void usrmor_match(InputForm *form, Export *export, ParserBuffers *pbuffers, Unen
         }
 
         if (!pCheck) {
-            usrmor_commit(form,export,pbuffers,row,row_size,flag);
+            usrmor_commit(form,export_form,export_file,pbuffers,row,row_size,flag);
         }
         else {
-            terminal_to_nexc_encode(form, found_i, row_size, usrmor_idx);
+            terminal_to_nexc_encode(form, export_form,export_file,found_i, row_size, usrmor_idx);
         }
 }
-bool terminal_to_nexc_usrmor_add_p(InputForm *form, int foundI, bool add_p_check) {
+bool terminal_to_nexc_usrmor_add_p(InputForm *form, Export *export_form, FILE* export_file,int foundI, bool add_p_check) {
     add_p_check = true;
     Unencoded *unencoded = unencoded_init();
     terminalToNexcUsrAppendString(unencoded, form);
     input_free(form);
     char firstLetter = unencoded->morpheme.data[0];
-    usrmor_match(form, unencoded, firstLetter, foundI, add_p_check);
+    usrmor_match(form, export_form, export_file,unencoded, firstLetter, foundI, add_p_check);
     return add_p_check;
 }
-void usrmor_add_p(InputForm *form,Export *export,ParserBuffers *pbuffers,char *byte, int foundI, int flag) {
+void usrmor_add_p(InputForm *form,Export *export,FILE* export_file,ParserBuffers *pbuffers,char *byte, int foundI, int flag) {
     bool pCheck = true;
     Unencoded *unencoded = unencoded_init();
     usr_append_string(unencoded, byte, foundI, sizeof(byte));
     char firstLetter = unencoded->morpheme.data[0];
-    usrmor_match(form,export, pbuffers,unencoded, firstLetter, pCheck, flag);
+    usrmor_match(form,export,export_file, pbuffers,unencoded, firstLetter, pCheck, flag);
 }
 
 void usrmor_add(char *byte, int foundI) {

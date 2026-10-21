@@ -5,19 +5,20 @@
 #include "SGruninterface.h"
 #include "SGhelpers.h"
 #include "../main.h"
-int sg_routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check) {
+int sg_routing(InputForm *form,int output, int in_type, int parser_check) {
     int usr_return;
     int term_return;
     FILE *output_file = fopen(form->output_filename.data, "a");
     if (output_file == NULL)
         return 1;
-    if (nexcodeFlag == 0) {
+    // output 0 is nex, 1 is nexc
+    // in_type 0 is terminal, 1 is inFile
+    if (output == 0) {
         // This is for handling .nex
-        switch (sourceFlag) {
+        switch (in_type) {
             case 0:
-                //  This is for input coming from the terminal
                 // form will be freed as a result of the terminal_input call
-                term_return = terminal_input(output_file, form, nexcodeFlag);
+                term_return = terminal_input(output_file, form, output);
                 if (term_return == -1) {
                     printf("terminal input failure");
                     exit(-1);
@@ -46,11 +47,11 @@ int sg_routing(InputForm *form,int nexcodeFlag, int sourceFlag, int parser_check
     }
     else {
         // This is for handling .nexc
-        switch (sourceFlag) {
+        switch (in_type) {
             case 0:
                 //  This is for input coming from the terminal
                 // form will be freed as a result of the terminal_input call
-                term_return = terminal_input(output_file, form, nexcodeFlag);
+                term_return = terminal_input(output_file, form, output);
                 if (term_return == -1) {
                     printf("terminal input failure");
                     exit(-1);

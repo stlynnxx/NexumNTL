@@ -297,7 +297,7 @@ ParserBuffers* pbuffers_init() {
 
 
 // append_bytes is for appending raw bytes from the given input
-int infile_tonexc_exp_append_bytes(Export *export, unsigned char *byte, size_t x, int control)
+int infile_to_nexc_exp_append_bytes(Export *export, unsigned char *byte, size_t x, int control)
 {
 
     if (exp_ensure_capacity(export, x, control) != 0) {

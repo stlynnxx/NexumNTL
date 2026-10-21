@@ -29,7 +29,6 @@ void compressor_collect(InputForm *form,int intype, int output) {
     if (intype == 0) {
         // output 0 is nex
         if (output == 0) {
-            // THIS IS FOR THE INPUT FILE BEING IN .NEX
             printf("Enter output filename, press enter to reuse input filename: ");
             scanf("%s", form->output_filename.data);
             pbuff_append_string(pbuffers, form->output_filename.data, form->output_filename.length, 6);

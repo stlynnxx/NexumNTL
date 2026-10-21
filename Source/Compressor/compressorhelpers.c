@@ -198,21 +198,20 @@ FILE* init_export(InputForm *form) {
 }
 
 int comp_open_file(InputForm *form,FILE* in_file, ParserBuffers *pbuffers, int output) {
+    size_t file_size = comp_get_file_size(in_file);
+    FILE *export_file;
+    export_file = init_export(form);
+    Export *export_form = exp_init();
     if (!in_file) {
         perror("comp_open_file error");
         return -1;
     }
-    // Getting the size of inFile
-    size_t file_size = comp_get_file_size(in_file);
-    // Append to pbuffer appropriately
-    Export *export = exp_init();
-    append_file_to_buffers(export,in_file, pbuffers, form, file_size);
-    export = match(export,form,output,pbuffers);
-    FILE *export_file;
-    export_file = init_export(form);
-    // The last two flags in this sgRun call need reviewed
+    append_file_to_buffers(export_form,in_file, pbuffers, form, file_size);
+    export_form = match(export_form,form,export_file,output,pbuffers);
+    // sending export and export file to the source generator
+    send_to_generator(export_form,export_file);
+    // Cleanup
     input_free(form);
-    send_to_generator(export,export_file);
 }
 
 int comp_from_file_append_bytes(InputForm *form,ParserBuffers *pbuffers, FILE* in_file, int output) {

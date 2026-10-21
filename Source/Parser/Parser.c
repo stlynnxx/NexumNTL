@@ -77,7 +77,7 @@ char row_translate(int row) {
 }
 
 
-void terminal_to_nexc_encode(InputForm *form, int foundI, int row, int flag)
+void terminal_to_nexc_encode(InputForm *form, Export *export_form,FILE* export_file,int foundI, int row, int flag)
 {
     int formatReturn;
     unsigned char trans_row;
@@ -106,7 +106,7 @@ Negative Value: The first differing byte in the first block has a lower value th
 Positive Value: The first differing byte in the first block has a higher value than the corresponding byte in the second block.
 */
 
-void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
+void terminal_to_nexc_verify(InputForm *form, Export *export_form, FILE* export_file, int rowSiZe, int row, int flag)
 {
     bool add_p_check = false;
     int foundI;
@@ -121,7 +121,7 @@ void terminal_to_nexc_verify(InputForm *form, int rowSiZe, int row, int flag)
                         // match is found here
                         foundI = i;
                         foundRow = row;
-                        terminal_to_nexc_encode(form, foundI, foundRow, flag);
+                        terminal_to_nexc_encode(form, export_form,export_file, foundI, foundRow, flag);
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
@@ -358,7 +358,7 @@ Export* encode(Export *export, InputForm *form, int foundI, int row, int flag)
     return export;
 }
 
-Export* verify(Export *export, InputForm *form, ParserBuffers *pbuffers, int rowSiZe, int row, int flag)
+Export* verify(Export *export, InputForm *form, FILE* export_file,ParserBuffers *pbuffers, int rowSiZe, int row, int flag)
 {
     int foundI;
     for (int i = 0; i <= rowSiZe; i++)
@@ -372,13 +372,13 @@ Export* verify(Export *export, InputForm *form, ParserBuffers *pbuffers, int row
         }
         else {
             foundI = i;
-            usrmor_add_p(form,export,pbuffers,pbuffers->Buffers.data,foundI,flag);
+            usrmor_add_p(form,export,export_file,pbuffers,pbuffers->Buffers.data,foundI,flag);
         }
     }
     return export;
 }
 
-Export* match(Export *export, InputForm *form, int flag, ParserBuffers *pbuffers)
+Export* match(Export *export, InputForm *form, FILE* export_file,int flag, ParserBuffers *pbuffers)
 {
     size_t rowSize;
     const char select = pbuffers->Buffers.data[0];
@@ -389,7 +389,7 @@ Export* match(Export *export, InputForm *form, int flag, ParserBuffers *pbuffers
         {
             case 'A':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
-                export = verify(export, form,pbuffers, rowSize, A,  flag);
+                export = verify(export, form, export_file,pbuffers, rowSize, A,  flag);
                 break;
             case 'B':
                 rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
@@ -492,9 +492,11 @@ Export* match(Export *export, InputForm *form, int flag, ParserBuffers *pbuffers
                 export = verify(export,  form,pbuffers, rowSize, Z,  flag);
                 break;
             default:
-                verifyReturn = -1;
+                perror("Unknown flag");
+                exit(EXIT_FAILURE);
                 break;
         }
+        return export;
     }
 }
 
