@@ -1256,5 +1256,17 @@ far, updating variable names and double checking everything.
 
 I'm going to take a break, but I need to pick back up on correcting terminal_to_nexc_verify in parser!
 
+10/24/2026-
+
+I didn't mean to be gone for as long as I was, I just had other work and
+life team up and get in the way.
+
+So far today I picked back up at terminal_to_nexc_verify where I had
+left off last time and finished correcting that and then corrected
+terminal_to_nexc_match and now I need to back up and think over
+some things that happen earlier in the path.
+
+Progress is progress.
+
 
 

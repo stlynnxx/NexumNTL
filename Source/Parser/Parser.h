@@ -54,7 +54,7 @@ typedef struct {
 
 inline Export* get_parser_export(void);
 inline Export* match(Export *export, InputForm *form, FILE* export_file,int flag, ParserBuffers *pbuffers);
-inline void terminal_to_nexc_match(InputForm *form,int flag, char firstLetter);
+inline void terminal_to_nexc_match(InputForm *form,FILE* export_file,int flag, char firstLetter);
 inline void terminal_to_nexc_encode(InputForm *form, Export *export_form,FILE* export_file,int foundI, int row, int flag);
 inline int infile_to_nexc_exp_append_bytes(Export *export, unsigned char *byte, size_t x, int control);
 inline int infile_to_nexc_exp_append_string(Export *export,unsigned char *string, size_t x, int control);

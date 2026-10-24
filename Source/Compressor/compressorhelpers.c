@@ -201,7 +201,7 @@ int comp_open_file(InputForm *form,FILE* in_file, ParserBuffers *pbuffers, int o
     size_t file_size = comp_get_file_size(in_file);
     FILE *export_file;
     export_file = init_export(form);
-    Export *export_form = exp_init();
+    Export *export_form = export_form_init();
     if (!in_file) {
         perror("comp_open_file error");
         return -1;

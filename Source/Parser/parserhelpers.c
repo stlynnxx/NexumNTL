@@ -191,7 +191,7 @@ int exp_ensure_capacity(Export *export, size_t extra, int control)
     }
 }
 
-Export* exp_init()
+Export* export_form_init()
 {
     Export *ex = malloc(sizeof(Export));
 
