@@ -5,6 +5,7 @@
 #include "SymbolTable/SymbolTable.h"
 #include "SourceGenerator/SourceGenerator.h"
 #include "Parser/Parser.h"
+#include "Parser/parserhelpers.h"
 #include "Compressor/compressor.h"
 #include <limits.h>
 
@@ -26,8 +27,21 @@ static InputForm* new_input_form() {
     return input_form;
 }
 
-
-void set_filepath(InputForm *form, int source)
+FILE* create_file(InputForm *form, int control) {
+    switch (control) {
+        case 0:
+            FILE *in_file = fopen(form->input_filename.data, "w+");
+            return in_file;
+            break;
+        case 1:
+            FILE *out_file = fopen(form->output_filename.data, "w+");
+            return out_file;
+            break;
+        default:
+            return NULL;
+    }
+}
+int set_filepath(InputForm *form, int source)
 
 {
     const char *prefix;
@@ -49,12 +63,12 @@ void set_filepath(InputForm *form, int source)
 
         default:
             fprintf(stderr, "set_filepath: invalid source %d\n", source);
-            exit(-1);
+            return -1;
     }
 
     if (name == NULL) {
         fprintf(stderr, "set_filepath: filename is NULL\n");
-        exit(-1);
+        return -1;
     }
 
     const size_t prefix_len = strlen(prefix);
@@ -72,14 +86,20 @@ void set_filepath(InputForm *form, int source)
     switch (source) {
         case OUTPUT_OPT:
             in_append_string(form, path, prefix_len + name_len, 8);
+            return 1;
             break;
         case INPUT_OPT:
             in_append_string(form, path, prefix_len + name_len, 9);
+            return 1;
+            break;
+        default:
+            return -1;
+            break;
     }
 }
 
-static InputForm* get_filename(int output, int opt) {
-    InputForm *form = new_input_form();
+static int get_filename(InputForm *form,int output, int opt) {
+    int set_filepath_return;
     // NAME_MAX - 4 is to allow as much room as possible without stepping on the extension,
     // with the longest possible extension being .nexc
     static char unfinished_filename[NAME_MAX - 4];
@@ -100,8 +120,14 @@ static InputForm* get_filename(int output, int opt) {
     finished_filename[sizeof(finished_filename) - 1] = '\0';
     // sets output filename in form as finished_filename
     in_append_string(form, finished_filename, sizeof(finished_filename) - 1, opt);
-    set_filepath(form, opt);
-    return form;
+    set_filepath_return = set_filepath(form, opt);
+    if (set_filepath_return > 0) {
+        return 1;
+    }
+    if (set_filepath_return < 0) {
+        return -1;
+    }
+
 }
 
 
@@ -137,21 +163,29 @@ static int read_choice(const char *prompt, int lo, int hi) {
 }
 
 int run() {
+    FILE *in_file;
+    FILE *export_file;
+    int get_filename_return;
     // Input collection is a placeholder; this will eventually likely be moved to python
     InType intype = (InType)read_choice("Enter 0 or 1: ", 0, 1);
     // output replaces nex_code_flag
     OutType output = (OutType)read_choice("Enter 0 or 1: ", 0, 1);
     Options options;
-    InputForm *form = get_filename(output, OUTPUT_OPT);
+    InputForm *form = new_input_form();
+    // Setting output filename
+    get_filename_return = get_filename(form, output, OUTPUT_OPT);
+    export_file = create_file(form,1);
+    // Needs cleanup
+    ParserBuffers *pbuffers = pbuffers_init();
     switch (intype) {
         case TERMINAL_IN:
             // This is where terminal -> nex and terminal -> nexc go
             terminal_to_nexfile(form, intype);
             break;
         case FILE_IN:
-            //  Setting the inFile name
-            get_filename(output, INPUT_OPT);
-            compressor_collect(form, intype, output);
+            get_filename_return = get_filename(form, output, INPUT_OPT);
+            in_file = create_file(form,0);
+            comp_from_file_append_bytes(form, pbuffers, in_file,export_file, output);
             break;
         default:
             break;

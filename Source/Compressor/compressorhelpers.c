@@ -197,27 +197,27 @@ FILE* init_export(InputForm *form) {
     FILE *export_file = fopen(form->output_filename.data, "w");
 }
 
-int comp_open_file(InputForm *form,FILE* in_file, ParserBuffers *pbuffers, int output) {
+int comp_open_file(InputForm *form,FILE* in_file,FILE* export_file,ParserBuffers *pbuffers, int output) {
     size_t file_size = comp_get_file_size(in_file);
-    FILE *export_file;
-    export_file = init_export(form);
     Export *export_form = export_form_init();
     if (!in_file) {
         perror("comp_open_file error");
         return -1;
     }
+    // calls line parse and appends file contents to pbuffers
     append_file_to_buffers(export_form,in_file, pbuffers, form, file_size);
+    // match, verify, encode, and appending to export_form
     export_form = match(export_form,form,export_file,output,pbuffers);
     // sending export and export file to the source generator
     send_to_generator(export_form,export_file);
-    // Cleanup
+    // This should be an infile -> nexc specfic cleanup function
     input_free(form);
 }
 
-int comp_from_file_append_bytes(InputForm *form,ParserBuffers *pbuffers, FILE* in_file, int output) {
+int comp_from_file_append_bytes(InputForm *form,ParserBuffers *pbuffers, FILE* in_file, FILE* export_file,int output) {
     //  We are appending the file to pbuffers
     int cofr;
-    cofr = comp_open_file(form,in_file, pbuffers, output);
+    cofr = comp_open_file(form,in_file,export_file, pbuffers, output);
     if (cofr == -1) {
         exit(-1);
     }

@@ -30,5 +30,7 @@ add_executable(NexumNTL Source/main.c
         Source/Compressor/compressorhelpers.h
         Source/Parser/parserhelpers.h
         Source/Parser/parserhelpers.c
+        Source/mainhelpers.c
+        Source/mainhelpers.h
 )
 target_compile_options(NexumNTL PRIVATE -Wall)

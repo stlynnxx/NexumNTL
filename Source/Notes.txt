@@ -1268,5 +1268,12 @@ some things that happen earlier in the path.
 
 Progress is progress.
 
+10/25/2026-
+
+Back today, trying to finish up infile -> nexc. I had to make some changes in main.c that still need polished over as
+does their integration, but it was progress and, as I like to say, progress is progress.
+
+I'm going to be taking a lunch break and hopefully coming back to this later today.
+
 
 

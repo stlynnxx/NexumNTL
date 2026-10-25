@@ -44,9 +44,9 @@ void compressor_collect(InputForm *form,int intype, int output) {
                 free(files);
             }
         }
-        // output 1 is nexc
+        // inFile -> nexc
         if (output == 1) {
-            printf("Enter output filename, press enter to reuse input filename: ");
+            printf("Enter output filename: ");
             scanf("%s", form->output_filepath.data);
             pbuff_append_string(pbuffers, form->output_filepath.data, form->output_filepath.length, 6);
             if (explore_dir("data/Export", ".nexc", &files, &count) > 0) {
