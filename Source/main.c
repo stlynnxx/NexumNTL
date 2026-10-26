@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include "main.h"
+
+#include <dirent.h>
+
+#include "mainhelpers.h"
 #include "SourceGenerator/SGruninterface.h"
 #include "Lexer/Lexer.h"
 #include "SymbolTable/SymbolTable.h"
@@ -27,110 +31,6 @@ static InputForm* new_input_form() {
     return input_form;
 }
 
-FILE* create_file(InputForm *form, int control) {
-    switch (control) {
-        case 0:
-            FILE *in_file = fopen(form->input_filename.data, "w+");
-            return in_file;
-            break;
-        case 1:
-            FILE *out_file = fopen(form->output_filename.data, "w+");
-            return out_file;
-            break;
-        default:
-            return NULL;
-    }
-}
-int set_filepath(InputForm *form, int source)
-
-{
-    const char *prefix;
-    const char *name;
-    size_t name_len;
-
-    switch (source) {
-        case OUTPUT_OPT:
-            prefix   = "./data/Output_Files/";
-            name     = form->output_filename.data;
-            name_len = form->output_filename.length;
-            break;
-
-        case INPUT_OPT:
-            prefix   = "./data/Input_Files";
-            name     = form->input_filename.data;
-            name_len = form->input_filename.length;
-            break;
-
-        default:
-            fprintf(stderr, "set_filepath: invalid source %d\n", source);
-            return -1;
-    }
-
-    if (name == NULL) {
-        fprintf(stderr, "set_filepath: filename is NULL\n");
-        return -1;
-    }
-
-    const size_t prefix_len = strlen(prefix);
-
-    if (prefix_len + name_len >= PATH_MAX) {
-        fprintf(stderr, "set_filepath: path too long (%zu + %zu >= %d)\n",
-                prefix_len, name_len, PATH_MAX);
-    }
-
-    char path[PATH_MAX];
-
-    memcpy(path, prefix, prefix_len);
-    memcpy(path + prefix_len, name, name_len);
-    path[prefix_len + name_len] = '\0';
-    switch (source) {
-        case OUTPUT_OPT:
-            in_append_string(form, path, prefix_len + name_len, 8);
-            return 1;
-            break;
-        case INPUT_OPT:
-            in_append_string(form, path, prefix_len + name_len, 9);
-            return 1;
-            break;
-        default:
-            return -1;
-            break;
-    }
-}
-
-static int get_filename(InputForm *form,int output, int opt) {
-    int set_filepath_return;
-    // NAME_MAX - 4 is to allow as much room as possible without stepping on the extension,
-    // with the longest possible extension being .nexc
-    static char unfinished_filename[NAME_MAX - 4];
-    size_t unfinished_size;
-    // +4 to get us back up to NAME_MAX
-    static char finished_filename[sizeof(unfinished_filename) + 4];
-    size_t finished_size = sizeof(finished_filename);
-    size_t filepath_size;
-    size_t filename_size;
-    printf("Enter file name, without extension: ");
-    scanf("%s", unfinished_filename);
-    // filename_size = sizeof(unfinished_filename);
-    char filepath[PATH_MAX + filename_size];
-    const char *extension = (output == NEX) ? ".nex" : ".nexc";
-    strcat(unfinished_filename, extension);
-    unfinished_size = sizeof(unfinished_filename);
-    strncat(finished_filename, unfinished_filename, finished_size);
-    finished_filename[sizeof(finished_filename) - 1] = '\0';
-    // sets output filename in form as finished_filename
-    in_append_string(form, finished_filename, sizeof(finished_filename) - 1, opt);
-    set_filepath_return = set_filepath(form, opt);
-    if (set_filepath_return > 0) {
-        return 1;
-    }
-    if (set_filepath_return < 0) {
-        return -1;
-    }
-
-}
-
-
 void terminal_to_nexfile(InputForm *form, int intype) {
     // OutType replaces nex_code_flag
     switch (outType) {
@@ -147,20 +47,6 @@ void terminal_to_nexfile(InputForm *form, int intype) {
 }
 
 
-static int read_choice(const char *prompt, int lo, int hi) {
-    int value;
-    for (;;) {
-        printf("%s", prompt);
-        if (scanf("%d", &value) == 1 && value >= lo && value <= hi) {
-            int c;
-            while ((c = getchar()) != '\n' && c != EOF) { }
-            return value;
-        }
-        fprintf(stderr, "Invalid input — enter %d or %d.\n", lo, hi);
-        int c;
-        while ((c = getchar()) != '\n' && c != EOF) { }
-    }
-}
 
 int run() {
     FILE *in_file;
@@ -174,7 +60,7 @@ int run() {
     InputForm *form = new_input_form();
     // Setting output filename
     get_filename_return = get_filename(form, output, OUTPUT_OPT);
-    export_file = create_file(form,1);
+    export_file = file_handler(form,1);
     // Needs cleanup
     ParserBuffers *pbuffers = pbuffers_init();
     switch (intype) {
@@ -183,8 +69,16 @@ int run() {
             terminal_to_nexfile(form, intype);
             break;
         case FILE_IN:
+            /* Cleanups for this path:
+             * in_file
+             * export_form
+             */
+            // setting input filename
             get_filename_return = get_filename(form, output, INPUT_OPT);
-            in_file = create_file(form,0);
+            // Here file_handler is scanning the given internal directory
+            // for the in_file and importing it
+            in_file = file_handler(form,0);
+            // This chains all the way to the cleanup function
             comp_from_file_append_bytes(form, pbuffers, in_file,export_file, output);
             break;
         default:

@@ -1275,5 +1275,19 @@ does their integration, but it was progress and, as I like to say, progress is p
 
 I'm going to be taking a lunch break and hopefully coming back to this later today.
 
+10/26/2026-
+
+I didn't end up coming back yesterday, I should really just accept that I'm not very good at that and stop expecting
+myself to do it. Anyway either way I'm here now!
+
+I actually did take a small break and come back today, irnoically.
+
+I think I'm "done" with infile -> nexc, with done meaning ready to be ran to see where to first crash is at.
+I wrote a specific cleanup function for that pathway, but I haven't created the general cleanup function yet.
+
+Progress is progress!
+
+
+
 
 

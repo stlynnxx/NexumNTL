@@ -714,7 +714,7 @@ void parse(Organizer *breakdown, Export *exp, Builder *builderr, ParserBuffers *
 // I need to redo cleanup after I'm done working in other parts, i'm sure there will be changes that need to be made
 void parser_cleanup_export(void) {
     if (parser_export) {
-        exp_free(parser_export);
+        export_form_free(parser_export);
         parser_export = NULL;
     }
 }

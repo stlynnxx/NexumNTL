@@ -6,12 +6,15 @@
 #include "Parser.h"
 #include "../SourceGenerator/SourceGenerator.h"
 
-int exp_free(Export *export) {
+int export_form_free(Export *export) {
     if (export) {
         free(export->memKey.data);
         free(export->association.data);
         free(export->associators.data);
         free(export->encodedMorpheme.data);
+        free(export->memoryKeyScratch.data);
+        free(export->associationScratch.data);
+        free(export->associatorScratch.data);
         free(export);
         export = NULL;
         return 0;

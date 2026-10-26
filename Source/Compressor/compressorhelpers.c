@@ -6,6 +6,7 @@
 #include "../Parser/parserhelpers.h"
 #include "../Parser/Parser.h"
 #include "../SourceGenerator/SGruninterface.h"
+#include "../mainhelpers.h"
 #include <stdio.h>
 #include <dirent.h>
 #include <stdlib.h>
@@ -210,8 +211,7 @@ int comp_open_file(InputForm *form,FILE* in_file,FILE* export_file,ParserBuffers
     export_form = match(export_form,form,export_file,output,pbuffers);
     // sending export and export file to the source generator
     send_to_generator(export_form,export_file);
-    // This should be an infile -> nexc specfic cleanup function
-    input_free(form);
+    in_file_to_nexc_cleanup(in_file,export_form,form);
 }
 
 int comp_from_file_append_bytes(InputForm *form,ParserBuffers *pbuffers, FILE* in_file, FILE* export_file,int output) {
