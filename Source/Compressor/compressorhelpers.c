@@ -140,6 +140,93 @@ void line_parse(Export *export,ParserBuffers *pbuffers, InputForm *form, FILE* e
         }
     }
 }
+void input_form_line_parse(InputForm *form, FILE* export_file) {
+    int control;
+    char *workingChar;
+    bool open_brace_check = false;
+    bool open_brace_check_two = false;
+    bool semicolon_check = false;
+    bool association_check = false;
+    int association_count = 0;
+    bool associator_check = false;
+    int associator_count = 0;
+    bool name_token_one_check = false;
+    bool name_token_two_check = false;
+    bool comma_check = false;
+    bool close_brace_check = false;
+
+    for (int i = 0; i < pbuffers->line.length; i++)
+    {
+        *workingChar = pbuffers->line.data[i];
+
+        switch (*workingChar) {
+            case OPENBRACE:
+                open_brace_check = false;
+                control = 0;
+                if (semicolon_check == true && open_brace_check == true) {
+                    open_brace_check_two = 1;
+                    control = 1;
+                }
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
+                break;
+            case NAMETOKEN:
+                if (name_token_one_check && name_token_two_check == false && open_brace_check == true) {
+                    name_token_one_check = true;
+                    control = 0;
+                }
+                if (name_token_one_check == true && name_token_two_check == false && open_brace_check == true) {
+                    name_token_two_check = true;
+                    control = 0;
+                }
+                if (name_token_one_check == true && name_token_two_check == true && semicolon_check == true) {
+                    name_token_two_check = false;
+                    control = 1;
+                }
+                if (comma_check == true && associator_check == true) {
+                    associator_check = false;
+                    control = 1;
+                }
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
+                break;
+            case ASSOCIATOR:
+                associator_check = true;
+                if (associator_check == true) {
+                    association_count++;
+                    control = 2;
+                }
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
+                break;
+            case SEMICOLON:
+                semicolon_check = true;
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
+                break;
+            case COMMA:
+                if (name_token_one_check && name_token_two_check == true && open_brace_check_two == true) {
+                    comma_check = true;
+                }
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
+                break;
+            case CLOSEBRACE:
+                close_brace_check = true;
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
+                break;
+                // default will handle alphanumerics
+            default:
+                while (isalnum(workingChar)) {
+                if (semicolon_check) {
+                    association_check = true;
+                    association_count++;
+                }
+                in_append_string(form,workingChar,sizeof(workingChar),control);
+            }
+                if (!isalnum(workingChar) && association_check == true) {
+                    name_token_two_check = true;
+                }
+                export->assocCount = form->assocCount + association_count;
+                break;
+        }
+    }
+}
 
 int pbuffer_line_clear(ParserBuffers *pbuffers) {
     if (!pbuffers->line.length || !pbuffers->line.data) {return -1;}

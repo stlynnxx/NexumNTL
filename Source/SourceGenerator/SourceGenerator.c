@@ -11,10 +11,10 @@
 #include "../SymbolTable/SymbolTable.h"
 #include "../Parser/Parser.h"
 #include "../Parser/parserhelpers.h"
-
+#include "../Compressor/compressorhelpers.h"
 
 // Input storage
-
+StructFlags struct_flags;
 
 
 int format_from_export(FILE *export_file, Export *export, int count, int mem_key_idx) {
@@ -45,24 +45,24 @@ int format_from_export(FILE *export_file, Export *export, int count, int mem_key
 
 
 // This is what is actually being appended to the file
-int format(FILE *fp, InputForm *form, int count, int mem_key_idx) {
-     fprintf(fp, "%s\n", "");
+int format(FILE *export_file, InputForm *form, int count, int mem_key_idx) {
+     fprintf(export_file, "%s\n", "");
      char memoryKeyPrefix[5] = "{'";
      char memoryKeySuffix[5] = "':{";
-     fprintf(fp, "%s", memoryKeyPrefix);
-     fprintf(fp,"%s", form->memoryKey.data[mem_key_idx]);
-     fprintf(fp, "%s", memoryKeySuffix);
+     fprintf(export_file, "%s", memoryKeyPrefix);
+     fprintf(export_file,"%s", form->memoryKey.data[mem_key_idx]);
+     fprintf(export_file, "%s", memoryKeySuffix);
      for (int i = 0; i < count; i++) {
-        fprintf(fp, "%s", "'");
-        fprintf(fp, "%s", form->associations.data[i]);
-        fprintf(fp, "%s", "'");
+        fprintf(export_file, "%s", "'");
+        fprintf(export_file, "%s", form->associations.data[i]);
+        fprintf(export_file, "%s", "'");
          if (i != form->assocCount - 1) {
-             fprintf(fp, "%c", COMMA);
+             fprintf(export_file, "%c", COMMA);
          }
 
     }
-     fprintf(fp, "%s", "};");
-    if (!fp) {
+     fprintf(export_file, "%s", "};");
+    if (!export_file) {
         return -1;
     }
     else {
@@ -72,7 +72,7 @@ int format(FILE *fp, InputForm *form, int count, int mem_key_idx) {
 }
 // Step Two of the append process, opens the created file
 // and collects input which gets placed into the input storage
-int terminal_input(FILE *fp, InputForm *form, int control) {
+int terminal_input(FILE* export_file, InputForm *form, int control) {
     int associator_chk = 0;
     // .nex
     if (control == 0) {
@@ -101,19 +101,17 @@ int terminal_input(FILE *fp, InputForm *form, int control) {
 
         }
 
-        format(fp, form, form->assocCount, 0);
+        format(export_file, form, form->assocCount, 0);
         return 0;
     }
     // .nexc
     if (control == 1) {
-        Export* export_file = export_form_init();
-        printf("Enter filename to be appended with .nexc (default is 'export', producing 'export.nexc'");
-        scanf("%s",form->output_filename.data);
         printf("Memory Key: \n");
         scanf("%s", form->memoryKeyBuffer.data);
-        // hand over to parser match
-        infile_to_nexc_exp_append_string(export_file, form->memoryKeyBuffer.data, form->memoryKeyBuffer.length, 4);
-        terminal_to_nexc_match(form,export_file, 4, export_file->memoryKeyScratch.data[0]);
+        // We need to encode the memoryKeyBuffer here and then write the encoded memorykey into
+        // the proper spot in inputform
+        // struct flag 4 is for the memkeybuffer
+        terminal_to_nexc_match(form,export_file, memKeyBuffer, form->memoryKeyBuffer.data[0]);
         printf("Assocation Count: \n");
         scanf("%d", form->assocCount);
         printf("Assocations (seperate with spaces, and be sure to match your association count correctly.): \n");
@@ -122,19 +120,16 @@ int terminal_input(FILE *fp, InputForm *form, int control) {
         {
             scanf("%s", &form->associationBuffer.data[i]);
             if (form->associationBuffer.data[i] == ASSOCIATOR) {
-                associator_chk = 1;
-            }
-            if (associator_chk == 1) {
+                //  SG_line_parse is questionable
 
                 SG_line_parse(form);
-
-                associator_chk = 0;
+                terminal_to_nexc_match(form,export_file,associators,form->associators.data[i]);
             }
             // 1 for @, 2 for assoc
             in_append_string(form, &form->associationBuffer.data[i], form->associationBuffer.length, 1);
             terminal_to_nexc_match(form,control,form->associationBuffer.data[i]);
         }
-        format(fp, form, form->assocCount, 0);
+        format(export_file, form, form->assocCount, 0);
         return 0;
     }
     else {

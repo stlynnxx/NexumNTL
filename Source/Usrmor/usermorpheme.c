@@ -212,7 +212,7 @@ void usrmor_match(InputForm *form, Export *export_form, FILE* export_file, Parse
             usrmor_commit(form,export_form,export_file,pbuffers,row,row_size,flag);
         }
         else {
-            terminal_to_nexc_encode(form, export_form,export_file,found_i, row_size, usrmor_idx);
+            nexc_encode(form,export_file,found_i, row_size, usrmor_idx);
         }
 }
 bool terminal_to_nexc_usrmor_add_p(InputForm *form, Export *export_form, FILE* export_file,int foundI, bool add_p_check) {

@@ -56,7 +56,7 @@ int pbuff_free(ParserBuffers *pbuffers) {
     }
 }
 
-int exp_ensure_capacity(Export *export, size_t extra, int control)
+int export_form_ensure_capacity(Export *export, size_t extra, int control)
 {
     size_t needed;
     size_t capacity;
@@ -303,7 +303,7 @@ ParserBuffers* pbuffers_init() {
 int infile_to_nexc_exp_append_bytes(Export *export, unsigned char *byte, size_t x, int control)
 {
 
-    if (exp_ensure_capacity(export, x, control) != 0) {
+    if (export_form_ensure_capacity(export, x, control) != 0) {
         return -1; // failure
     }
     switch (control) {

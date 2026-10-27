@@ -31,14 +31,14 @@ static InputForm* new_input_form() {
     return input_form;
 }
 
-void terminal_to_nexfile(InputForm *form, int intype) {
+void terminal_to_nexfile(InputForm *form, FILE* export_file,int intype) {
     // OutType replaces nex_code_flag
     switch (outType) {
         case NEX:
-            sgRun(form, outType, false, intype);
+            sgRun(form, export_file,outType, false, intype);
             break;
         case NEXC:
-            sgRun(form, outType, false, intype);
+            sgRun(form, export_file,outType, false, intype);
             break;
         default:
             perror("Invalid output type");
@@ -49,6 +49,12 @@ void terminal_to_nexfile(InputForm *form, int intype) {
 
 
 int run() {
+    /*
+     * Globals for cleanup:
+     * export_file
+     * form
+     * pbuffers
+     */
     FILE *in_file;
     FILE *export_file;
     int get_filename_return;
@@ -57,6 +63,7 @@ int run() {
     // output replaces nex_code_flag
     OutType output = (OutType)read_choice("Enter 0 or 1: ", 0, 1);
     Options options;
+    // Needs cleanup
     InputForm *form = new_input_form();
     // Setting output filename
     get_filename_return = get_filename(form, output, OUTPUT_OPT);
@@ -66,7 +73,7 @@ int run() {
     switch (intype) {
         case TERMINAL_IN:
             // This is where terminal -> nex and terminal -> nexc go
-            terminal_to_nexfile(form, intype);
+            terminal_to_nexfile(form,export_file, intype);
             break;
         case FILE_IN:
             /* Cleanups for this path:

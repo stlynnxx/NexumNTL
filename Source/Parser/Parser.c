@@ -3,7 +3,7 @@
 //
 #include "Parser.h"
 #include "../Usrmor/usermorpheme.h"
-#include "../SourceGenerator/SourceGenerator.h"
+// #include "../SourceGenerator/SourceGenerator.h"
 #include "../Compressor/compressorhelpers.h"
 #include <math.h>
 #include <wctype.h>
@@ -77,14 +77,12 @@ char row_translate(int row) {
 }
 
 
-void terminal_to_nexc_encode(InputForm *form, Export *export_form,FILE* export_file,int foundI, int row, int flag)
+void nexc_encode(InputForm *form,FILE* export_file,int foundI, int row, int flag)
 {
     int formatReturn;
     unsigned char trans_row;
     unsigned char encodedMemoryKey[2];
     unsigned char z = foundI + '0';
-    //FILE *export_file;
-    //export_file = init_export(form);
     trans_row = row_translate(row);
     encodedMemoryKey[0] = trans_row;
     encodedMemoryKey[1] = z;
@@ -106,29 +104,30 @@ Negative Value: The first differing byte in the first block has a lower value th
 Positive Value: The first differing byte in the first block has a higher value than the corresponding byte in the second block.
 */
 
-void terminal_to_nexc_verify(InputForm *form, Export *export_form, FILE* export_file, int rowSiZe, int row, int flag)
+void terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int row, int struct_flag)
 {
+    Export *export_form = export_form_init();
     bool add_p_check = false;
     int foundI;
     int foundRow;
     for (int i = 0; i <= rowSiZe; i++)
     {
         if (valuesMatrix[row][i] == NULL) perror("values matrix null"); exit(EXIT_FAILURE);
-            switch (flag) {
+            switch (struct_flag) {
                 case 0:
                     if (strncmp(form->memoryKey.data, valuesMatrix[row][i], form->memoryKey.length) == 0)
                     {
                         // match is found here
                         foundI = i;
                         foundRow = row;
-                        terminal_to_nexc_encode(form, export_form,export_file, foundI, foundRow, flag);
+                        nexc_encode(form,export_file, foundI, foundRow, struct_flag);
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
                         foundI = i;
                         add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, foundI, add_p_check);
                         if (add_p_check == true) {
-                            terminal_to_nexc_encode(form,export_form,export_file, foundI, row, flag);
+                            nexc_encode(form,export_file, foundI, row, struct_flag);
                         }
                     }
                     break;
@@ -137,7 +136,7 @@ void terminal_to_nexc_verify(InputForm *form, Export *export_form, FILE* export_
                     {
                         // match is found here
                         foundI = i;
-                        terminal_to_nexc_encode(form,export_form,export_file, foundI, row, flag);
+                        nexc_encode(form,export_form,export_file, foundI, row, struct_flag);
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
@@ -150,7 +149,7 @@ void terminal_to_nexc_verify(InputForm *form, Export *export_form, FILE* export_
                     {
                         // match is found here
                         foundI = i;
-                        terminal_to_nexc_encode(form, export_form, export_file,foundI, row, flag);
+                        nexc_encode(form, export_form, export_file,foundI, row, struct_flag);
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
@@ -163,7 +162,7 @@ void terminal_to_nexc_verify(InputForm *form, Export *export_form, FILE* export_
                     {
                         // match is found here
                         foundI = i;
-                        terminal_to_nexc_encode(form,export_form,export_file, foundI, row, flag);
+                        nexc_encode(form,export_form,export_file, foundI, row, struct_flag);
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
@@ -176,7 +175,7 @@ void terminal_to_nexc_verify(InputForm *form, Export *export_form, FILE* export_
                     {
                         // match is found here
                         foundI = i;
-                        terminal_to_nexc_encode(form, export_form,export_file,foundI, row, flag);
+                        nexc_encode(form, export_form,export_file,foundI, row, struct_flag);
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
@@ -189,7 +188,7 @@ void terminal_to_nexc_verify(InputForm *form, Export *export_form, FILE* export_
                     {
                         // match is found here
                         foundI = i;
-                        terminal_to_nexc_encode(form, export_form,export_file,foundI, row, flag);
+                        nexc_encode(form, export_form,export_file,foundI, row, struct_flag);
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
@@ -202,7 +201,7 @@ void terminal_to_nexc_verify(InputForm *form, Export *export_form, FILE* export_
                     {
                         // match is found here
                         foundI = i;
-                        terminal_to_nexc_encode(form, export_form,export_file,foundI, row, flag);
+                        nexc_encode(form, export_form,export_file,foundI, row, struct_flag);
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
@@ -221,114 +220,113 @@ void terminal_to_nexc_verify(InputForm *form, Export *export_form, FILE* export_
 
 
 
-void terminal_to_nexc_match(InputForm *form,FILE* export_file,int flag, char firstLetter)
+void terminal_to_nexc_match(InputForm *form, FILE* export_file,int struct_flag, char firstLetter)
 {
-    Export *export_form = export_form_init();
     size_t rowSize;
     switch (firstLetter) {
         case 'A':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
-                terminal_to_nexc_verify(form,export_form,export_file, rowSize, A,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, A,  struct_flag);
                 break;
             case 'B':
                 rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
-                terminal_to_nexc_verify(form, export_form,export_file, rowSize, B,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, B,  struct_flag);
                 break;
             case 'C':
                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
-                terminal_to_nexc_verify(form,export_form,export_file, rowSize, C,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, C,  struct_flag);
                 break;
             case 'D':
                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
-                terminal_to_nexc_verify(form,export_form,export_file, rowSize, D,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, D,  struct_flag);
                 break;
             case 'E':
                 rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
-                terminal_to_nexc_verify(form,export_form,export_file, rowSize, E,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, E,  struct_flag);
                 break;
             case 'F':
                 rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
-                terminal_to_nexc_verify(form,export_form,export_file, rowSize, F,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, F,  struct_flag);
                 break;
             case 'G':
                 rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
-                terminal_to_nexc_verify(form,export_form,export_file, rowSize, G,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, G,  struct_flag);
                 break;
             case 'H':
                 rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
-                terminal_to_nexc_verify(form,export_form,export_file, rowSize, H,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, H,  struct_flag);
                 break;
             case 'I':
                 rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
-                terminal_to_nexc_verify(form, export_form, export_file,rowSize, I,  flag);
+                terminal_to_nexc_verify(form, export_file,rowSize, I,  struct_flag);
                 break;
             case 'J':
                 rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
-                terminal_to_nexc_verify(form, export_form,export_file, rowSize, J,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, J,  struct_flag);
                 break;
             case 'K':
                 rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
-                terminal_to_nexc_verify(form,export_form,export_file, rowSize, K,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, K,  struct_flag);
                 break;
             case 'L':
                 rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
-                terminal_to_nexc_verify(form,export_form,export_file, rowSize, L,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, L,  struct_flag);
                 break;
             case 'M':
                 rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
-                terminal_to_nexc_verify(form, export_form,export_file,rowSize, M,  flag);
+                terminal_to_nexc_verify(form,export_file,rowSize, M,  struct_flag);
                 break;
             case 'N':
                 rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
-                terminal_to_nexc_verify(form, export_form, export_file,rowSize, N,  flag);
+                terminal_to_nexc_verify(form, export_file,rowSize, N,  struct_flag);
                 break;
             case 'O':
                 rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
-                terminal_to_nexc_verify(form, export_form,export_file,rowSize, O,  flag);
+                terminal_to_nexc_verify(form,export_file,rowSize, O,  struct_flag);
                 break;
             case 'P':
                 rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
-                terminal_to_nexc_verify(form, export_form,export_file, rowSize, P,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, P,  struct_flag);
                 break;
             case 'Q':
                 rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
-                terminal_to_nexc_verify(form, export_form, export_file, rowSize, Q,  flag);
+                terminal_to_nexc_verify(form, export_file, rowSize, Q,  struct_flag);
                 break;
             case 'R':
                 rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
-                terminal_to_nexc_verify(form, export_form, export_file, rowSize, R,  flag);
+                terminal_to_nexc_verify(form, export_file, rowSize, R,  struct_flag);
                 break;
             case 'S':
                 rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
-                terminal_to_nexc_verify(form, export_form, export_file, rowSize, S,  flag);
+                terminal_to_nexc_verify(form, export_file, rowSize, S,  struct_flag);
                 break;
             case 'T':
                 rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
-                terminal_to_nexc_verify(form, export_form,export_file, rowSize, T,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, T,  struct_flag);
                 break;
             case 'U':
                 rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
-                terminal_to_nexc_verify(form, export_form, export_file, rowSize, U,  flag);
+                terminal_to_nexc_verify(form, export_file, rowSize, U,  struct_flag);
                 break;
             case 'V':
                 rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
-                terminal_to_nexc_verify(form, export_form,export_file, rowSize, V,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, V,  struct_flag);
                 break;
             case 'W':
                 rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
-                terminal_to_nexc_verify(form, export_form,export_file, rowSize, W,  flag);
+                terminal_to_nexc_verify(form,export_file, rowSize, W,  struct_flag);
                 break;
             case 'X':
                 rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
-                terminal_to_nexc_verify(form, export_form, export_file, rowSize, X,  flag);
+                terminal_to_nexc_verify(form, export_file, rowSize, X,  struct_flag);
                 break;
             case 'Y':
                 rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
-                terminal_to_nexc_verify(form, export_form, export_file, rowSize, Y,  flag);
+                terminal_to_nexc_verify(form, export_file, rowSize, Y,  struct_flag);
                 break;
             case 'Z':
                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
-                terminal_to_nexc_verify(form, export_form, export_file, rowSize, Z,  flag);
+                terminal_to_nexc_verify(form, export_file, rowSize, Z,  struct_flag);
                 break;
             default:
                 perror("Terminal to .nexc match failure");

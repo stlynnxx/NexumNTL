@@ -1287,6 +1287,18 @@ I wrote a specific cleanup function for that pathway, but I haven't created the 
 
 Progress is progress!
 
+10/27/2026-
+
+I need to go back over the paths that I've gone over up until this point because during the infile -> nexc battle I
+made some structural changes that do end up touching those as well.
+
+So, i'll start there this morning.
+
+I've gotten terminal -> nex gone back over and now i'm in terminal -> nexc working out some mistakes
+in the input collection and encoding process. I renamed terminal_to_nexc_match (parser.c) to just nexc_match so I make it a bit
+more modular when needed.
+
+I'm working with calling line parse instead of SG line parse on the terminal -> nexc path
 
 
 
