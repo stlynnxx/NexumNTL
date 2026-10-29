@@ -1300,6 +1300,17 @@ more modular when needed.
 
 I'm working with calling line parse instead of SG line parse on the terminal -> nexc path
 
+10/28/2026-
+
+I got quite a bit done in fixing terminal -> nexc back up tonight, and i'm moving the nexc_encode call into the SourceGenerator
+loop. That's pretty much where I'm at for the night, i'm getting pretty tired, but I'm happy with the work I got done tonight!
+The source generator loop itself got some updates and handles things much more gracefully now, and I also moved found_i and
+found_row into the input form.
+
+Progress is progress!
+
+Time for ice cream and anime
+
 
 
 

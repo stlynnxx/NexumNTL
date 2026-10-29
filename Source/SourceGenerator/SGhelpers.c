@@ -20,11 +20,20 @@ InputForm* input_init() {
     form->memoryKeyBuffer.length = 0;
     form->memoryKeyBuffer.capacity = 0;
 
+    form->encoded_memoryKey.length = 0;
+    form->encoded_memoryKey.capacity = 0;
+
     form->associationBuffer.length = 0;
     form->associationBuffer.capacity = 0;
 
+    form->encoded_associations.length = 0;
+    form->encoded_associations.capacity = 0;
+
     form->associatorBuffer.length = 0;
     form->associatorBuffer.capacity = 0;
+
+    form->encoded_associators.length = 0;
+    form->encoded_associators.capacity = 0;
 
     form->output_filename.length = 0;
     form->output_filename.capacity = 0;
@@ -52,8 +61,11 @@ InputForm* input_init() {
     form->input_filepath.data = malloc(16);
     form->output_filepath.data = malloc(16);
     form->terminal_input.data = malloc(16);
+    form->encoded_memoryKey.data = malloc(16);
+    form->encoded_associations.data = malloc(16);
+    form->encoded_associators.data = malloc(16);
 
-    if (!form->associations.data || !form->associators.data || !form->memoryKey.data || !form->memoryKeyBuffer.data || !form->associationBuffer.data || !form->associatorBuffer) {
+    if (!form->associations.data || !form->associators.data || !form->memoryKey.data || !form->memoryKeyBuffer.data || !form->associationBuffer.data || !form->encoded_associations.data || !form->encoded_associators.data || !form->encoded_memoryKey.data) {
         perror("input_init failure");
         exit(-1);
     }
@@ -72,6 +84,9 @@ int input_free(InputForm* form) {
     free(form->output_filepath.data);
     free(form->input_filepath.data);
     free(form->terminal_input.data);
+    free(form->encoded_memoryKey.data);
+    free(form->encoded_associations.data);
+    free(form->encoded_associators.data);
     free(form);
     form = NULL;
     return 0;

@@ -45,12 +45,12 @@ int format_from_export(FILE *export_file, Export *export, int count, int mem_key
 
 
 // This is what is actually being appended to the file
-int format(FILE *export_file, InputForm *form, int count, int mem_key_idx) {
+int format(FILE *export_file, InputForm *form, int count) {
      fprintf(export_file, "%s\n", "");
      char memoryKeyPrefix[5] = "{'";
      char memoryKeySuffix[5] = "':{";
      fprintf(export_file, "%s", memoryKeyPrefix);
-     fprintf(export_file,"%s", form->memoryKey.data[mem_key_idx]);
+     fprintf(export_file,"%s", form->memoryKey.data);
      fprintf(export_file, "%s", memoryKeySuffix);
      for (int i = 0; i < count; i++) {
         fprintf(export_file, "%s", "'");
@@ -73,6 +73,7 @@ int format(FILE *export_file, InputForm *form, int count, int mem_key_idx) {
 // Step Two of the append process, opens the created file
 // and collects input which gets placed into the input storage
 int terminal_input(FILE* export_file, InputForm *form, int control) {
+    bool return_bool;
     int associator_chk = 0;
     // .nex
     if (control == 0) {
@@ -111,24 +112,34 @@ int terminal_input(FILE* export_file, InputForm *form, int control) {
         // We need to encode the memoryKeyBuffer here and then write the encoded memorykey into
         // the proper spot in inputform
         // struct flag 4 is for the memkeybuffer
-        terminal_to_nexc_match(form,export_file, memKeyBuffer, form->memoryKeyBuffer.data[0]);
+        in_append_string(form, form->memoryKeyBuffer.data, form->memoryKeyBuffer.length, memoryKey);
+        return_bool = terminal_to_nexc_match(form,export_file, memoryKey, form->memoryKey.data[0]);
+        if (return_bool == false) {
+            perror("Match return error");
+            exit(EXIT_FAILURE);
+        }
         printf("Assocation Count: \n");
         scanf("%d", form->assocCount);
-        printf("Assocations (seperate with spaces, and be sure to match your association count correctly.): \n");
-
         for (int i = 0; i < form->assocCount; i++ )
         {
-            scanf("%s", &form->associationBuffer.data[i]);
-            if (form->associationBuffer.data[i] == ASSOCIATOR) {
-                //  SG_line_parse is questionable
+            printf("Enter Associaton");
+            scanf("%s", form->associationBuffer.data);
+            if (form->associatorBuffer.data[i] == ASSOCIATOR) {
+                in_append_string(form, form->associatorBuffer.data, form->associatorBuffer.length, associators);
+                // clear form->associatorBuffer.data
+                return_bool = terminal_to_nexc_match(form,export_file,associators,form->associators.data);
+                // form->found_row + form->found_i is our encoded morpheme
+                // the encoded morpheme needs written to file via format
 
-                SG_line_parse(form);
-                terminal_to_nexc_match(form,export_file,associators,form->associators.data[i]);
+                if (return_bool == false) perror("Match return error!"); exit(EXIT_FAILURE);
             }
-            // 1 for @, 2 for assoc
-            in_append_string(form, &form->associationBuffer.data[i], form->associationBuffer.length, 1);
-            terminal_to_nexc_match(form,control,form->associationBuffer.data[i]);
+            // handling associations
+            in_append_string(form, &form->associationBuffer.data[i], form->associationBuffer.length, associations);
+            return_bool = terminal_to_nexc_match(form, export_file, associations, form->associations.data[i]);
+            if (return_bool == false) perror("Match return error!"); exit(EXIT_FAILURE);
+
         }
+
         format(export_file, form, form->assocCount, 0);
         return 0;
     }

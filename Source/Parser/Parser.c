@@ -77,13 +77,13 @@ char row_translate(int row) {
 }
 
 
-void nexc_encode(InputForm *form,FILE* export_file,int foundI, int row, int flag)
+void nexc_encode(InputForm *form,FILE* export_file, int flag)
 {
     int formatReturn;
     unsigned char trans_row;
     unsigned char encodedMemoryKey[2];
-    unsigned char z = foundI + '0';
-    trans_row = row_translate(row);
+    unsigned char z = form->found_i + '0';
+    trans_row = row_translate(form->found_row);
     encodedMemoryKey[0] = trans_row;
     encodedMemoryKey[1] = z;
     unsigned_char_in_append_string(form, encodedMemoryKey,sizeof(encodedMemoryKey),flag);
@@ -104,30 +104,32 @@ Negative Value: The first differing byte in the first block has a lower value th
 Positive Value: The first differing byte in the first block has a higher value than the corresponding byte in the second block.
 */
 
-void terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int row, int struct_flag)
+bool terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int row, int struct_flag, bool return_bool)
 {
     Export *export_form = export_form_init();
     bool add_p_check = false;
-    int foundI;
-    int foundRow;
+
     for (int i = 0; i <= rowSiZe; i++)
     {
-        if (valuesMatrix[row][i] == NULL) perror("values matrix null"); exit(EXIT_FAILURE);
+        if (valuesMatrix[row][i] == NULL) return_bool = false; return return_bool;
             switch (struct_flag) {
                 case 0:
                     if (strncmp(form->memoryKey.data, valuesMatrix[row][i], form->memoryKey.length) == 0)
                     {
                         // match is found here
-                        foundI = i;
-                        foundRow = row;
-                        nexc_encode(form,export_file, foundI, foundRow, struct_flag);
+                        form->found_i = i;
+                        form->found_row = row;
+                        return_bool = true;
+                        return return_bool;
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        foundI = i;
-                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, foundI, add_p_check);
+                        form->found_i = i;
+                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
                         if (add_p_check == true) {
-                            nexc_encode(form,export_file, foundI, row, struct_flag);
+                            // nexc_encode(form,export_file, foundI, row, struct_flag);
+                            return_bool = true;
+                            return return_bool;
                         }
                     }
                     break;
@@ -135,198 +137,240 @@ void terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int
                     if (strncmp(form->associations.data, valuesMatrix[row][i], strlen(form->associations.data)) == 0)
                     {
                         // match is found here
-                        foundI = i;
-                        nexc_encode(form,export_form,export_file, foundI, row, struct_flag);
+                        form->found_i = i;
+                        form->found_row = row;
+                        return_bool = true;
+                        return return_bool;
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form, export_form,export_file,foundI, add_p_check);
+                        form->found_i = i;
+                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
+                        if (add_p_check == true) {
+                            // nexc_encode(form,export_file, foundI, row, struct_flag);
+                            return_bool = true;
+                            return return_bool;
+                        }
                     }
                     break;
                 case 2:
                     if (strncmp(form->associators.data, valuesMatrix[row][i], strlen(form->associators.data)) == 0)
                     {
                         // match is found here
-                        foundI = i;
-                        nexc_encode(form, export_form, export_file,foundI, row, struct_flag);
+                        form->found_i = i;
+                        form->found_row = row;
+                        return_bool = true;
+                        return return_bool;
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form, export_form,export_file,foundI, add_p_check);
+                        form->found_i = i;
+                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
+                        if (add_p_check == true) {
+                            // nexc_encode(form,export_file, foundI, row, struct_flag);
+                            return_bool = true;
+                            return return_bool;
+                        }
                     }
                     break;
                 case 3:
                     if (strncmp(form->memoryKeyBuffer.data, valuesMatrix[row][i], strlen(form->memoryKeyBuffer.data)) == 0)
                     {
                         // match is found here
-                        foundI = i;
-                        nexc_encode(form,export_form,export_file, foundI, row, struct_flag);
+                        form->found_i = i;
+                        form->found_row = row;
+                        return_bool = true;
+                        return return_bool;
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form,export_form,export_file, foundI, add_p_check);
+                        form->found_i = i;
+                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
+                        if (add_p_check == true) {
+                            // nexc_encode(form,export_file, foundI, row, struct_flag);
+                            return_bool = true;
+                            return return_bool;
+                        }
                     }
                     break;
                 case 4:
                     if (strncmp(form->associationBuffer.data, valuesMatrix[row][i], strlen(form->associationBuffer.data)) == 0)
                     {
                         // match is found here
-                        foundI = i;
-                        nexc_encode(form, export_form,export_file,foundI, row, struct_flag);
+                        form->found_i = i;
+                        form->found_row = row;
+                        return_bool = true;
+                        return return_bool;
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form, export_form,export_file,foundI, add_p_check);
+                        form->found_i = i;
+                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
+                        if (add_p_check == true) {
+                            // nexc_encode(form,export_file, foundI, row, struct_flag);
+                            return_bool = true;
+                            return return_bool;
+                        }
                     }
                     break;
                 case 5:
                     if (strncmp(form->associatorBuffer.data, valuesMatrix[row][i], strlen(form->associatorBuffer.data)) == 0)
                     {
                         // match is found here
-                        foundI = i;
-                        nexc_encode(form, export_form,export_file,foundI, row, struct_flag);
+                        form->found_i = i;
+                        form->found_row = row;
+                        return_bool = true;
+                        return return_bool;
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form, export_form,export_file,foundI, add_p_check);
+                        form->found_i = i;
+                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
+                        if (add_p_check == true) {
+                            // nexc_encode(form,export_file, foundI, row, struct_flag);
+                            return_bool = true;
+                            return return_bool;
+                        }
                     }
                     break;
                 case 6:
                     if (strncmp(form->output_filename.data, valuesMatrix[row][i], strlen(form->output_filename.data)) == 0)
                     {
                         // match is found here
-                        foundI = i;
-                        nexc_encode(form, export_form,export_file,foundI, row, struct_flag);
+                        form->found_i = i;
+                        form->found_row = row;
+                        return_bool = true;
+                        return return_bool;
                     }
                     else {
                         // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        foundI = i;
-                        terminal_to_nexc_usrmor_add_p(form, export_form,export_file,foundI, add_p_check);
+                        form->found_i = i;
+                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_row, add_p_check);
+                        if (add_p_check == true) {
+                            // nexc_encode(form,export_file, foundI, row, struct_flag);
+                            return_bool = true;
+                            return return_bool;
+                        }
                     }
+                    break;
                 default:
-                    perror("terminal_to_nexc_verify failure");
-                    exit(EXIT_FAILURE);
+                    return_bool = false;
+                    return return_bool;
                     break;
             } // EOS
-
     }
 
 }
 
 
 
-void terminal_to_nexc_match(InputForm *form, FILE* export_file,int struct_flag, char firstLetter)
+bool terminal_to_nexc_match(InputForm *form, FILE* export_file,int struct_flag, char firstLetter, bool return_bool)
 {
     size_t rowSize;
     switch (firstLetter) {
         case 'A':
                 rowSize = sizeof(valuesMatrix[A])/sizeof(valuesMatrix[A][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, A,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, A,  struct_flag, return_bool);
                 break;
             case 'B':
                 rowSize = sizeof(valuesMatrix[B])/sizeof(valuesMatrix[B][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, B,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, B,  struct_flag,return_bool);
                 break;
             case 'C':
                 rowSize = sizeof(valuesMatrix[C])/sizeof(valuesMatrix[C][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, C,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, C,  struct_flag, return_bool);
                 break;
             case 'D':
                 rowSize = sizeof(valuesMatrix[D])/sizeof(valuesMatrix[D][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, D,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, D,  struct_flag, return_bool);
                 break;
             case 'E':
                 rowSize = sizeof(valuesMatrix[E])/sizeof(valuesMatrix[E][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, E,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, E,  struct_flag, return_bool);
                 break;
             case 'F':
                 rowSize = sizeof(valuesMatrix[F])/sizeof(valuesMatrix[F][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, F,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, F,  struct_flag, return_bool);
                 break;
             case 'G':
                 rowSize = sizeof(valuesMatrix[G])/sizeof(valuesMatrix[G][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, G,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, G,  struct_flag, return_bool);
                 break;
             case 'H':
                 rowSize = sizeof(valuesMatrix[H])/sizeof(valuesMatrix[H][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, H,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, H,  struct_flag, return_bool);
                 break;
             case 'I':
                 rowSize = sizeof(valuesMatrix[I])/sizeof(valuesMatrix[I][0]);
-                terminal_to_nexc_verify(form, export_file,rowSize, I,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form, export_file,rowSize, I,  struct_flag, return_bool);
                 break;
             case 'J':
                 rowSize = sizeof(valuesMatrix[J])/sizeof(valuesMatrix[J][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, J,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, J,  struct_flag, return_bool);
                 break;
             case 'K':
                 rowSize = sizeof(valuesMatrix[K])/sizeof(valuesMatrix[K][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, K,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, K,  struct_flag, return_bool);
                 break;
             case 'L':
                 rowSize = sizeof(valuesMatrix[L])/sizeof(valuesMatrix[L][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, L,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, L,  struct_flag,  return_bool);
                 break;
             case 'M':
                 rowSize = sizeof(valuesMatrix[M])/sizeof(valuesMatrix[M][0]);
-                terminal_to_nexc_verify(form,export_file,rowSize, M,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file,rowSize, M,  struct_flag, return_bool);
                 break;
             case 'N':
                 rowSize = sizeof(valuesMatrix[N])/sizeof(valuesMatrix[N][0]);
-                terminal_to_nexc_verify(form, export_file,rowSize, N,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form, export_file,rowSize, N,  struct_flag, return_bool);
                 break;
             case 'O':
                 rowSize = sizeof(valuesMatrix[O])/sizeof(valuesMatrix[O][0]);
-                terminal_to_nexc_verify(form,export_file,rowSize, O,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file,rowSize, O,  struct_flag,return_bool);
                 break;
             case 'P':
                 rowSize = sizeof(valuesMatrix[P])/sizeof(valuesMatrix[P][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, P,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, P,  struct_flag, return_bool);
                 break;
             case 'Q':
                 rowSize = sizeof(valuesMatrix[Q])/sizeof(valuesMatrix[Q][0]);
-                terminal_to_nexc_verify(form, export_file, rowSize, Q,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form, export_file, rowSize, Q,  struct_flag, return_bool);
                 break;
             case 'R':
                 rowSize = sizeof(valuesMatrix[R])/sizeof(valuesMatrix[R][0]);
-                terminal_to_nexc_verify(form, export_file, rowSize, R,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form, export_file, rowSize, R,  struct_flag, return_bool);
                 break;
             case 'S':
                 rowSize = sizeof(valuesMatrix[S])/sizeof(valuesMatrix[S][0]);
-                terminal_to_nexc_verify(form, export_file, rowSize, S,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form, export_file, rowSize, S,  struct_flag, return_bool);
                 break;
             case 'T':
                 rowSize = sizeof(valuesMatrix[T])/sizeof(valuesMatrix[T][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, T,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, T,  struct_flag, return_bool);
                 break;
             case 'U':
                 rowSize = sizeof(valuesMatrix[U])/sizeof(valuesMatrix[U][0]);
-                terminal_to_nexc_verify(form, export_file, rowSize, U,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form, export_file, rowSize, U,  struct_flag, return_bool);
                 break;
             case 'V':
                 rowSize = sizeof(valuesMatrix[V])/sizeof(valuesMatrix[V][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, V,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, V,  struct_flag, return_bool);
                 break;
             case 'W':
                 rowSize = sizeof(valuesMatrix[W])/sizeof(valuesMatrix[W][0]);
-                terminal_to_nexc_verify(form,export_file, rowSize, W,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form,export_file, rowSize, W,  struct_flag, return_bool);
                 break;
             case 'X':
                 rowSize = sizeof(valuesMatrix[X])/sizeof(valuesMatrix)[X][0];
-                terminal_to_nexc_verify(form, export_file, rowSize, X,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form, export_file, rowSize, X,  struct_flag, return_bool);
                 break;
             case 'Y':
                 rowSize = sizeof(valuesMatrix[Y])/sizeof(valuesMatrix[Y][0]);
-                terminal_to_nexc_verify(form, export_file, rowSize, Y,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form, export_file, rowSize, Y,  struct_flag, return_bool);
                 break;
             case 'Z':
                 rowSize = sizeof(valuesMatrix[Z])/sizeof(valuesMatrix[Z][0]);
-                terminal_to_nexc_verify(form, export_file, rowSize, Z,  struct_flag);
+                return_bool = terminal_to_nexc_verify(form, export_file, rowSize, Z,  struct_flag, return_bool);
                 break;
             default:
                 perror("Terminal to .nexc match failure");
@@ -334,6 +378,7 @@ void terminal_to_nexc_match(InputForm *form, FILE* export_file,int struct_flag, 
                 break;
 
     }
+    return return_bool;
 }
 
 Export* encode(Export *export, InputForm *form, int foundI, int row, int flag)

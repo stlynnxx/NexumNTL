@@ -9,10 +9,15 @@
 #include <stdbool.h>
 
 typedef struct {
-    DynamicBuffers memoryKey;
     int assocCount;
+    int found_i;
+    int found_row;
+    DynamicBuffers memoryKey;
+    DynamicBuffers encoded_memoryKey;
     DynamicBuffers associations;
+    DynamicBuffers encoded_associations;
     DynamicBuffers associators;
+    DynamicBuffers encoded_associators;
     DynamicBuffers memoryKeyBuffer;
     DynamicBuffers associationBuffer;
     DynamicBuffers associatorBuffer;
@@ -40,5 +45,5 @@ inline int format_from_export(FILE *export_file, Export *export, int count, int 
 inline int nexc(FILE *fp, InputForm *form, Export *exp);
 inline int terminal_input(FILE *export_file, InputForm *form, int control);
 inline int usrmor_input(FILE *fp, InputForm *form);
-inline int format(FILE *export_file, InputForm *form, int count, int mem_key_idx);
+inline int format(FILE *export_file, InputForm *form, int count);
 #endif //SOURCEGENERATOR_H
