@@ -77,25 +77,26 @@ char row_translate(int row) {
 }
 
 
-void nexc_encode(InputForm *form,FILE* export_file, int flag)
+void nexc_encode(InputForm *form,FILE* export_file, int struct_flag)
 {
-    int formatReturn;
+    //int formatReturn;
     unsigned char trans_row;
-    unsigned char encodedMemoryKey[2];
+    unsigned char encodedMorpheme[2];
     unsigned char z = form->found_i + '0';
     trans_row = row_translate(form->found_row);
-    encodedMemoryKey[0] = trans_row;
-    encodedMemoryKey[1] = z;
-    unsigned_char_in_append_string(form, encodedMemoryKey,sizeof(encodedMemoryKey),flag);
-    formatReturn = format(export_file, form, form->assocCount,0);
-    if (formatReturn == -1) {
+    encodedMorpheme[0] = trans_row;
+    encodedMorpheme[1] = z;
+    // This should append encodedMorpheme to appropriate encoded spot in InputFornm
+    unsigned_char_in_append_string(form, encodedMorpheme,sizeof(encodedMorpheme),struct_flag);
+    // formatReturn = format(export_file, form, form->assocCount);
+    /*if (formatReturn == -1) {
         perror("Encode failure");
         exit(EXIT_FAILURE);
     }
     if (formatReturn == 1) {
         input_free(form);
         fclose(export_file);
-    }
+    }*/
 }
 
 /* for  strncmp use-

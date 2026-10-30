@@ -3,8 +3,8 @@
 //
 
 #include "SourceGenerator.h"
-
 #include <stdio.h>
+#include <string.h>
 #include <stdbool.h>
 #include "SGhelpers.h"
 #include "../Lexer/Lexer.h"
@@ -43,36 +43,65 @@ int format_from_export(FILE *export_file, Export *export, int count, int mem_key
 
 }
 
+int extract_morpheme(const char *data, size_t data_len, size_t *position, Morpheme *morpheme) {
+    if (*position >= data_len) {
+        return 0;
+    }
+
+    size_t start = *position;
+    size_t end = start;
+
+    while (end < data_len && data[end] != ',' && data[end] != COMMA) {
+        end++;
+    }
+
+    morpheme->start = start;
+    morpheme->length = end - start;
+    *position = (end < data_len) ? end + 1 : end;
+
+    return 1;
+}
 
 // This is what is actually being appended to the file
 int format(FILE *export_file, InputForm *form, int count) {
-     fprintf(export_file, "%s\n", "");
-     char memoryKeyPrefix[5] = "{'";
-     char memoryKeySuffix[5] = "':{";
-     fprintf(export_file, "%s", memoryKeyPrefix);
-     fprintf(export_file,"%s", form->memoryKey.data);
-     fprintf(export_file, "%s", memoryKeySuffix);
-     for (int i = 0; i < count; i++) {
-        fprintf(export_file, "%s", "'");
-        fprintf(export_file, "%s", form->associations.data[i]);
-        fprintf(export_file, "%s", "'");
-         if (i != form->assocCount - 1) {
-             fprintf(export_file, "%c", COMMA);
-         }
-
-    }
-     fprintf(export_file, "%s", "};");
-    if (!export_file) {
+    if (!export_file || !form) {
         return -1;
     }
-    else {
-        return 1;
+
+    size_t pos = 0;
+    Morpheme current;
+
+    fprintf(export_file, "%s\n", "");
+
+    char memoryKeyPrefix[5] = "{'";
+    char memoryKeySuffix[5] = "':{";
+
+    fprintf(export_file, "%s", memoryKeyPrefix);
+    fprintf(export_file, "%s", form->memoryKey.data);
+    fprintf(export_file, "%s", memoryKeySuffix);
+
+    while (extract_morpheme(
+        form->associations.data,
+        form->associations.length,
+        &pos,
+        &current
+    )) {
+        for (size_t j = 0; j < current.length; j++) {
+            fputc(form->associations.data[current.start + j], export_file);
+        }
+
+        if (pos < form->associations.length) {
+            fputc(',', export_file);
+        }
     }
 
+    fprintf(export_file, "};");
+
+    return 1;
 }
 // Step Two of the append process, opens the created file
 // and collects input which gets placed into the input storage
-int terminal_input(FILE* export_file, InputForm *form, int control) {
+int terminal_inp(FILE* export_file, InputForm *form, int control) {
     bool return_bool;
     int associator_chk = 0;
     // .nex
@@ -113,7 +142,10 @@ int terminal_input(FILE* export_file, InputForm *form, int control) {
         // the proper spot in inputform
         // struct flag 4 is for the memkeybuffer
         in_append_string(form, form->memoryKeyBuffer.data, form->memoryKeyBuffer.length, memoryKey);
+        // form->found_i and form->found_row are reassigned with every match call
         return_bool = terminal_to_nexc_match(form,export_file, memoryKey, form->memoryKey.data[0]);
+        // We took encode out of match, and also format out of encode, so they will need handled individually.
+        nexc_encode(form, export_file, encodedMemoryKey);
         if (return_bool == false) {
             perror("Match return error");
             exit(EXIT_FAILURE);
@@ -125,22 +157,25 @@ int terminal_input(FILE* export_file, InputForm *form, int control) {
             printf("Enter Associaton");
             scanf("%s", form->associationBuffer.data);
             if (form->associatorBuffer.data[i] == ASSOCIATOR) {
-                in_append_string(form, form->associatorBuffer.data, form->associatorBuffer.length, associators);
-                // clear form->associatorBuffer.data
-                return_bool = terminal_to_nexc_match(form,export_file,associators,form->associators.data);
+                in_append_string(form, form->associatorBuffer.data, form->associatorBuffer.length, associations);
+                free(form->associationBuffer.data);
+                // form->found_i and form->found_row are reassigned with every match call
+                return_bool = terminal_to_nexc_match(form,export_file,associations,form->associations.data);
                 // form->found_row + form->found_i is our encoded morpheme
                 // the encoded morpheme needs written to file via format
-
                 if (return_bool == false) perror("Match return error!"); exit(EXIT_FAILURE);
             }
             // handling associations
-            in_append_string(form, &form->associationBuffer.data[i], form->associationBuffer.length, associations);
-            return_bool = terminal_to_nexc_match(form, export_file, associations, form->associations.data[i]);
+            in_append_string(form, form->associatorBuffer.data, form->associatorBuffer.length, associators);
+            free(form->associationBuffer.data);
+            // form->found_i and form->found_row are reassigned with every match call
+            return_bool = terminal_to_nexc_match(form,export_file,associators,form->associators.data);
+            // form->found_row + form->found_i is our encoded morpheme
+            // the encoded morpheme needs written to file via format
             if (return_bool == false) perror("Match return error!"); exit(EXIT_FAILURE);
-
         }
-
-        format(export_file, form, form->assocCount, 0);
+        // One format call for the entire line
+        format(export_file, form, form->assocCount);
         return 0;
     }
     else {

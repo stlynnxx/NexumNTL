@@ -19,7 +19,7 @@ int sg_routing(InputForm *form,FILE* export_file,int output, int in_type, int pa
             // terminal -> nex
             case 0:
                 // form will be freed as a result of the terminal_input call
-                term_return = terminal_input(export_file, form, output);
+                term_return = terminal_inp(export_file, form, output);
                 if (term_return == -1) {
                     printf("terminal input failure");
                     exit(-1);
@@ -54,7 +54,7 @@ int sg_routing(InputForm *form,FILE* export_file,int output, int in_type, int pa
             // terminal -> nexc
             case 0:
                 // form will be freed as a result of the terminal_input call
-                term_return = terminal_input(export_file, form, output);
+                term_return = terminal_inp(export_file, form, output);
                 if (term_return == -1) {
                     printf("terminal input failure");
                     exit(-1);

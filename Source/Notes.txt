@@ -1311,6 +1311,21 @@ Progress is progress!
 
 Time for ice cream and anime
 
+10/30/2026-
+
+We need to add the encoded input fields to unsigned_char_in_append_bytes and in_ensure_capacity
+
+Okay, we got through rebuilding format and adding the Morpheme struct along with extract_morpheme this morning, it's been
+good progress!
+
+I think this pathway is pretty much "done". I should check over the usrmor tangent first, and then terminal -> nex uses mostly
+the same logic with different flags, so, I will go over that next but it'll be a much smaller surface area.
+
+Good stuff! After those paths it's agentic input and engrams and then v0.0.1!
+
+
+
+
 
 
 

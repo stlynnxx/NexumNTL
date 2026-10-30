@@ -72,7 +72,7 @@ InputForm* input_init() {
     return form;
 }
 
-int input_free(InputForm* form) {
+int input_free(InputForm *form) {
     free(form->associators.data);
     free(form->associations.data);
     free(form->memoryKey.data);
@@ -285,6 +285,57 @@ int in_ensure_capacity(InputForm *form, size_t extra, int control) {
             form->terminal_input.capacity = capacity;
             return 0;
             break;
+        case 11:
+            needed = form->encoded_memoryKey.length + extra;
+            if (needed <= form->encoded_memoryKey.capacity) {
+                return 0;
+            }
+            capacity = form->encoded_memoryKey.capacity ? form->encoded_memoryKey.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            tmp = realloc(form->encoded_memoryKey.data, capacity);
+            if (!tmp)
+                return -1;
+
+            form->encoded_memoryKey.data = tmp;
+            form->encoded_memoryKey.capacity = capacity;
+            return 0;
+            break;
+        case 12:
+            needed = form->encoded_associations.length + extra;
+            if (needed <= form->encoded_associations.capacity) {
+                return 0;
+            }
+            capacity = form->encoded_associations.capacity ? form->encoded_associations.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            tmp = realloc(form->encoded_associations.data, capacity);
+            if (!tmp)
+                return -1;
+
+            form->encoded_associations.data = tmp;
+            form->encoded_associations.capacity = capacity;
+            return 0;
+            break;
+        case 13:
+            needed = form->encoded_associators.length + extra;
+            if (needed <= form->encoded_associators.capacity) {
+                return 0;
+            }
+            capacity = form->encoded_associators.capacity ? form->encoded_associators.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            tmp = realloc(form->encoded_associators.data, capacity);
+            if (!tmp)
+                return -1;
+
+            form->encoded_associators.data = tmp;
+            form->encoded_associators.capacity = capacity;
+            return 0;
+            break;
         default:
             return -1;
             break;
@@ -373,6 +424,27 @@ int unsigned_char_in_append_bytes(InputForm *form, unsigned char *encoded, size_
             memcpy(form->terminal_input.data + form->terminal_input.length, encoded, x);
             form->terminal_input.length += x;
             break;
+        case 11:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->encoded_memoryKey.data + form->encoded_memoryKey.length, encoded, x);
+            form->encoded_memoryKey.length += x;
+            break;
+        case 12:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->encoded_associations.data + form->encoded_associations.length, encoded, x);
+            form->encoded_associations.length += x;
+            break;
+        case 13:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->encoded_associators.data + form->encoded_associators.length, encoded, x);
+            form->encoded_associators.length += x;
+            break;
         default:
             return -1;
             break;
@@ -387,7 +459,7 @@ int in_append_bytes(InputForm *form, char *byte, size_t x, int control) {
             if (in_ensure_capacity(&*form, x, control) != 0) {
                 return -1;
             }
-            memcpy(form->memoryKey.data + form->memoryKey.length, byte, x);
+            memcpy(form->memoryKey.data + form->memoryKey.length, byte + COMMA, x);
             form->memoryKey.length += x;
             break;
 
@@ -395,70 +467,70 @@ int in_append_bytes(InputForm *form, char *byte, size_t x, int control) {
             if (in_ensure_capacity(&*form, x, control) != 0) {
                 return -1;
             }
-            memcpy(form->associations.data + form->associations.length, byte, x);
+            memcpy(form->associations.data + form->associations.length, byte + COMMA, x);
             form->associations.length += x;
             break;
         case 2:
             if (in_ensure_capacity(&*form, x, control) != 0) {
                 return -1;
             }
-            memcpy(form->associators.data + form->associators.length, byte, x);
+            memcpy(form->associators.data + form->associators.length, byte + COMMA, x);
             form->associators.length += x;
             break;
         case 3:
             if (in_ensure_capacity(&*form, x, control) != 0) {
                 return -1;
             }
-            memcpy(form->memoryKeyBuffer.data + form->memoryKey.length, byte, x);
+            memcpy(form->memoryKeyBuffer.data + form->memoryKey.length, byte + COMMA, x);
             form->memoryKeyBuffer.length += x;
             break;
         case 4:
             if (in_ensure_capacity(&*form, x, control) != 0) {
                 return -1;
             }
-            memcpy(form->associationBuffer.data + form->associationBuffer.length, byte, x);
+            memcpy(form->associationBuffer.data + form->associationBuffer.length, byte + COMMA, x);
             form->associationBuffer.length += x;
             break;
         case 5:
             if (in_ensure_capacity(&*form, x, control) != 0) {
                 return -1;
             }
-            memcpy(form->associatorBuffer.data + form->associatorBuffer.length, byte, x);
+            memcpy(form->associatorBuffer.data + form->associatorBuffer.length, byte + COMMA, x);
             form->associatorBuffer.length += x;
             break;
         case 6:
             if (in_ensure_capacity(&*form, x, control) != 0) {
                 return -1;
             }
-            memcpy(form->output_filename.data + form->output_filename.length, byte, x);
+            memcpy(form->output_filename.data + form->output_filename.length, byte + COMMA, x);
             form->output_filename.length += x;
             break;
        case 7:
            if (in_ensure_capacity(&*form, x, control) != 0) {
                return -1;
            }
-           memcpy(form->input_filename.data + form->input_filename.length, byte, x);
+           memcpy(form->input_filename.data + form->input_filename.length, byte + COMMA, x);
            form->input_filename.length += x;
            break;
        case 8:
            if (in_ensure_capacity(&*form, x, control) != 0) {
                return -1;
            }
-           memcpy(form->output_filepath.data + form->output_filepath.length, byte, x);
+           memcpy(form->output_filepath.data + form->output_filepath.length, byte + COMMA, x);
            form->output_filepath.length += x;
            break;
        case 9:
            if (in_ensure_capacity(&*form, x, control) != 0) {
                return -1;
            }
-           memcpy(form->input_filepath.data + form->input_filepath.length, byte, x);
+           memcpy(form->input_filepath.data + form->input_filepath.length, byte + COMMA, x);
            form->input_filepath.length += x;
            break;
        case 10:
            if (in_ensure_capacity(&*form, x, control) != 0) {
                return -1;
            }
-           memcpy(form->terminal_input.data + form->terminal_input.length, byte, x);
+           memcpy(form->terminal_input.data + form->terminal_input.length, byte + COMMA, x);
            form->terminal_input.length += x;
            break;
        default:

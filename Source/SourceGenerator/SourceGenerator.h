@@ -39,11 +39,22 @@ typedef enum {
     associationBuffer = 4,
     associatorBuffer = 5,
     output_filename = 6,
+    input_filename = 7,
+    output_filepath = 8,
+    input_filepath = 9,
+    terminal_input = 10,
+    encodedMemoryKey = 11,
+    encodedAssociations = 12,
+    encodedAssociators = 13,
 } StructFlags;
+
+typedef struct {
+    size_t start;
+    size_t length;
+} Morpheme;
 
 inline int format_from_export(FILE *export_file, Export *export, int count, int mem_key_idx);
 inline int nexc(FILE *fp, InputForm *form, Export *exp);
-inline int terminal_input(FILE *export_file, InputForm *form, int control);
-inline int usrmor_input(FILE *fp, InputForm *form);
+inline int terminal_inp(FILE* export_file, InputForm *form, int control);
 inline int format(FILE *export_file, InputForm *form, int count);
 #endif //SOURCEGENERATOR_H
