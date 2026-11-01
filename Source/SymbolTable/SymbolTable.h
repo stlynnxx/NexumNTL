@@ -25,6 +25,8 @@ typedef enum {
     ENDOFFILE = '0',
     COLON = ':',
     SPACE = ' ',
+    IMMUTABLE_MAX = 11,
+    MUTABLE_START = 12,
     A = 0,
     B = 1,
     C = 2,
@@ -98,4 +100,5 @@ char secondaries[80];
 inline void seed_table(Table *table);
 inline int row_init(Row *row);
 inline int row_set(Row *row, size_t col, const char *value);
+inline int values_append_string(DynamicBuffers *buf, const char *string);
 #endif // SymbolTable_H

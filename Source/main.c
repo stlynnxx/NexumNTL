@@ -97,13 +97,19 @@ int run() {
             break;
         case AGENT:
             // agent values matrix upload & append
-            // load values matrix
+            // loads user values matrix into in_file
             in_file = file_handler(form, 2);
-            // isolate mutable range
+            /* isolate mutable range
+             * - IMMUTABLE_MAX and MUTABLE_START are defined in symboltable.h
+             *
+             */
+            
+
 
             // append to runtime matrix
             // preform operations
             // clear mutable range (or persist with option to clear?)
+            break;
         default:
             break;
 

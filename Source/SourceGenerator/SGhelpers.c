@@ -50,6 +50,9 @@ InputForm* input_init() {
     form->terminal_input.length = 0;
     form->terminal_input.capacity = 0;
 
+    form->wC.length = 0;
+    form->wC.capacity = 0;
+
     form->associators.data = malloc(32);
     form->associations.data = malloc(32);
     form->memoryKey.data = malloc(32);
@@ -64,8 +67,10 @@ InputForm* input_init() {
     form->encoded_memoryKey.data = malloc(16);
     form->encoded_associations.data = malloc(16);
     form->encoded_associators.data = malloc(16);
+    form->wC.data = malloc(16);
 
-    if (!form->associations.data || !form->associators.data || !form->memoryKey.data || !form->memoryKeyBuffer.data || !form->associationBuffer.data || !form->encoded_associations.data || !form->encoded_associators.data || !form->encoded_memoryKey.data) {
+    if (!form->associations.data || !form->associators.data || !form->memoryKey.data || !form->memoryKeyBuffer.data || !form->associationBuffer.data || !form->encoded_associations.data || !form->encoded_associators.data || !form->encoded_memoryKey.data ||
+        !form->wC.data) {
         perror("input_init failure");
         exit(-1);
     }
@@ -87,6 +92,7 @@ int input_free(InputForm *form) {
     free(form->encoded_memoryKey.data);
     free(form->encoded_associations.data);
     free(form->encoded_associators.data);
+    free(form->wC.data);
     free(form);
     form = NULL;
     return 0;
@@ -336,6 +342,23 @@ int in_ensure_capacity(InputForm *form, size_t extra, int control) {
             form->encoded_associators.capacity = capacity;
             return 0;
             break;
+        case 14:
+            needed = form->wC.length + extra;
+            if (needed <= form->wC.capacity) {
+                return 0;
+            }
+            capacity = form->wC.capacity ? form->wC.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            tmp = realloc(form->wC.data, capacity);
+            if (!tmp)
+                return -1;
+
+            form->wC.data = tmp;
+            form->wC.capacity = capacity;
+            return 0;
+            break;
         default:
             return -1;
             break;
@@ -445,6 +468,13 @@ int unsigned_char_in_append_bytes(InputForm *form, unsigned char *encoded, size_
             memcpy(form->encoded_associators.data + form->encoded_associators.length, encoded, x);
             form->encoded_associators.length += x;
             break;
+        case 14:
+            if (in_ensure_capacity(&*form, x, control) != 0) {
+                return -1;
+            }
+            memcpy(form->wC.data + form->wC.length, encoded, x);
+            form->wC.length += x;
+            break;
         default:
             return -1;
             break;
@@ -532,6 +562,34 @@ int in_append_bytes(InputForm *form, char *byte, size_t x, int control) {
            }
            memcpy(form->terminal_input.data + form->terminal_input.length, byte + COMMA, x);
            form->terminal_input.length += x;
+           break;
+       case 11:
+           if (in_ensure_capacity(&*form, x, control) != 0) {
+               return -1;
+           }
+           memcpy(form->encoded_memoryKey.data + form->encoded_memoryKey.length, byte + COMMA, x);
+           form->encoded_memoryKey.length += x;
+           break;
+       case 12:
+           if (in_ensure_capacity(&*form, x, control) != 0) {
+               return -1;
+           }
+           memcpy(form->encoded_associations.data + form->encoded_associations.length, byte + COMMA, x);
+           form->encoded_associations.length += x;
+           break;
+       case 13:
+           if (in_ensure_capacity(&*form, x, control) != 0) {
+               return -1;
+           }
+           memcpy(form->encoded_associators.data + form->encoded_associators.length, byte + COMMA, x);
+           form->encoded_associators.length += x;
+           break;
+       case 14:
+           if (in_ensure_capacity(&*form, x, control) != 0) {
+               return -1;
+           }
+           memcpy(form->wC.data + form->wC.length, byte + COMMA, x);
+           form->wC.length += x;
            break;
        default:
             return -1;

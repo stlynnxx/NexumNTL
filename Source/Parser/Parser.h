@@ -42,6 +42,12 @@ typedef struct {
 
 } Export;
 
+typedef enum  {
+    UNSET = -1,
+    FALSE = 0,
+    TRUE = 1
+} LineParseFlags;
+
 extern Export *parser_export;
 
 typedef struct {

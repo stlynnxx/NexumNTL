@@ -12,6 +12,8 @@ typedef struct {
     int assocCount;
     int found_i;
     int found_row;
+
+    DynamicBuffers wC;
     DynamicBuffers memoryKey;
     DynamicBuffers encoded_memoryKey;
     DynamicBuffers associations;
@@ -46,6 +48,7 @@ typedef enum {
     encodedMemoryKey = 11,
     encodedAssociations = 12,
     encodedAssociators = 13,
+    wC_flag = 14
 } StructFlags;
 
 typedef struct {

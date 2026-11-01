@@ -5,9 +5,103 @@
 #include "../Usrmor/usermorpheme.h"
 // #include "../SourceGenerator/SourceGenerator.h"
 #include "../Compressor/compressorhelpers.h"
+#include "../SymbolTable/SymbolTable.h"
 #include <math.h>
 #include <wctype.h>
 #include "parserhelpers.h"
+
+Symbols symbols;
+LineParseFlags lineParseFlags;
+
+
+int row_parse (char key, Symbols *symbols) {
+    if (!symbols || key < 'A' || key > 'Z') {
+        return -1;
+    }
+    *symbols = (Symbols)(key - 'A');
+    return 1;
+
+}
+void matrix_parse(InputForm *form, FILE* in_file) {
+    bool open_brace_chk = UNSET;
+    bool open_brace_chk_two = UNSET;
+    bool name_token_chk = UNSET;
+    bool name_token_chk_two = UNSET;
+    bool memkey_chk = UNSET;
+    bool semicolon_chk = UNSET;
+    bool comma_chk = UNSET;
+    bool association_chk = UNSET;
+    bool associator_chk = UNSET;
+    bool close_brace_chk = UNSET;
+    size_t file_size = get_file_size(in_file);
+    for (int i = 0; i < file_size; i++)
+    {
+        int chk_one;
+        chk_one = in_append_string(form,form->memoryKey.data, 0,wC_flag);
+        switch (form->wC.data[i]) {
+            case OPENBRACE:
+                open_brace_chk = false;
+                if (semicolon_chk == TRUE && open_brace_chk == TRUE) {
+                    open_brace_chk_two = 1;
+
+                }
+                break;
+            case NAMETOKEN:
+                if (name_token_chk && name_token_chk_two == FALSE && open_brace_chk == FALSE) {
+                    name_token_chk = TRUE;
+                }
+                if (name_token_chk == TRUE && name_token_chk_two == TRUE && open_brace_chk == TRUE) {
+                    name_token_chk_two = TRUE;
+                }
+                if (name_token_chk == TRUE && name_token_chk_two == TRUE && semicolon_chk == TRUE) {
+                    name_token_chk_two = FALSE;
+                }
+                if (comma_chk == TRUE && associator_chk == TRUE) {
+                    associator_chk = FALSE;
+                }
+                break;
+            case ASSOCIATOR:
+                associator_chk = TRUE;
+                if (associator_chk == TRUE) {
+                    form->assocCount++;
+                }
+                break;
+            case SEMICOLON:
+                semicolon_chk = TRUE;
+                break;
+            case COMMA:
+                if (name_token_chk && name_token_chk_two == TRUE && open_brace_chk == TRUE) {
+                    comma_chk = TRUE;
+                }
+                break;
+            case CLOSEBRACE:
+                close_brace_chk = TRUE;
+                break;
+                // default will handle alphanumerics
+            default:
+                while (isalnum(form->wC.data[i])) {
+                if (memkey_chk == TRUE && !association_chk) {
+                    if (row_parse(form->wC.data[i], &symbols)) {}
+
+                }
+                if (semicolon_chk) {
+                    association_chk = TRUE;
+                    form->assocCount++;
+                    // The list of associations being appended to InputForm are going to be the morphemes needing appended
+                    // to the matrix per given row
+                    in_append_string(form, &form->wC.data[i], sizeof(form->wC.data[i]), associations);
+                }
+
+            }
+                if (!isalnum(form->wC.data[i]) && association_chk == TRUE) {
+                    name_token_chk_two = TRUE;
+                }
+                break;
+        }
+    } // EOF
+    values_append_string(*form, form->memoryKey.data);
+}
+
 
 // This will be for checking if a given search term is within the values matrix
 const char *valuesSearch(const char *searchTerm)

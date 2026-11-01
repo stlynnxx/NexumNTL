@@ -1347,3 +1347,14 @@ That means it's time to start moving forwards towards agentic input.
 I made some progress starting on loading an agent's value matrix; I added a subdir within Data/ and a branch to file_handler
 to load a values matrix written in .nex to be loaded for runtime use.
 
+11/01/2026-
+
+I've been working on loading the agent matrix for use this morning, making a serperater function out of line_parse and
+then appending to the InputForm from there and then appending the InputForm contents to the matrix.
+
+I need to update the original line_parse to use the new LineParserFlags
+
+I went ahead and updated the old line_parse.
+
+We still need to go through matrix_parse and make sure InputForm is appended to and then append InputForm to the matrix.
+But I think I might take a small break soon.
