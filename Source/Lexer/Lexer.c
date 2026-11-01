@@ -45,7 +45,7 @@ void wCCheck(char wC, char location[30]) {
 char setr(MemoryFileLoad *load, char wC, int index) {
     wC = load->mainArray.data[index];
     /*append_char(&load->mainArray, wC);
-    free(load->mainArray.data);*/
+    free(load->mainArray.Data);*/
     return wC;
 }
 // The associatons loop

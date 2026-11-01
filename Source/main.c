@@ -23,6 +23,11 @@
  *
  *  Agentic Inputs
  *  - Agentic Values Matrix Loading
+ *      - This is loading a given user modified values matrix to be used in place of the default values matrix
+ *      - Since we have an immutable range and mutable range, I think we can do it by taking it loaded in via
+ *      file and taking everything in the mutable range and appending it into the mutable range for the C side
+ *      matrix for that given run only.
+ *
  *  - Morpheme compressing and appending to agentic valuesMatrix
  */
 
@@ -46,7 +51,9 @@ void terminal_to_nexfile(InputForm *form, FILE* export_file,int intype) {
     }
 }
 
-
+int load_values_matrix() {
+    return 0;
+}
 
 int run() {
     /*
@@ -88,6 +95,15 @@ int run() {
             // This chains all the way to the cleanup function
             comp_from_file_append_bytes(form, pbuffers, in_file,export_file, output);
             break;
+        case AGENT:
+            // agent values matrix upload & append
+            // load values matrix
+            in_file = file_handler(form, 2);
+            // isolate mutable range
+
+            // append to runtime matrix
+            // preform operations
+            // clear mutable range (or persist with option to clear?)
         default:
             break;
 

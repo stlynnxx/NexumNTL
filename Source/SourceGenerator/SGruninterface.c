@@ -8,7 +8,7 @@
 int sg_routing(InputForm *form,FILE* export_file,int output, int in_type, int parser_check) {
     int usr_return;
     int term_return;
-    // FILE *output_file = fopen(form->output_filename.data, "a");
+    // FILE *output_file = fopen(form->output_filename.Data, "a");
     if (export_file == NULL)
         return 1;
     // output 0 is nex, 1 is nexc

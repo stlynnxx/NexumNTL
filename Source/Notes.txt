@@ -1337,6 +1337,13 @@ of the program. But, I don't think it'll be too crazy, either.
 
 Why don't I use format instead of the lexer for this application? I should at least think it over a bit.
 
+I had to go run an errand and thought it over and looked over the code a bit once I was back and I defintely don't
+need to be calling the lexer there, I can handle everything by handing an InputForm populated with unencoded morphemes to
+the same format function used in terminal -> nexc with no changes and accomplish what we need to accomplish. That's much
+better than running through the entire lexer.
 
+That means it's time to start moving forwards towards agentic input.
 
+I made some progress starting on loading an agent's value matrix; I added a subdir within Data/ and a branch to file_handler
+to load a values matrix written in .nex to be loaded for runtime use.
 

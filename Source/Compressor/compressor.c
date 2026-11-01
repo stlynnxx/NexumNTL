@@ -14,7 +14,7 @@ void input_collect(Input *input) {
     // and then append it into the input buff
 }
 
-// FILE *inFile = fopen("../data/usrmor_upload/", "r");
+// FILE *inFile = fopen("../Data/usrmor_upload/", "r");
 Unencoded* unc_export(void) {
     return unc_exp;
 }
@@ -32,9 +32,9 @@ void compressor_collect(InputForm *form,int intype, int output) {
             printf("Enter output filename, press enter to reuse input filename: ");
             scanf("%s", form->output_filename.data);
             pbuff_append_string(pbuffers, form->output_filename.data, form->output_filename.length, 6);
-            if (explore_dir("data/Export", ".nex", &files, &count) > 0) {
+            if (explore_dir("Data/Export", ".nex", &files, &count) > 0) {
                 for (int i = 0; i < count; i++) {
-                    snprintf(in_filepath, sizeof(in_filepath), "data/%s", files[i]);
+                    snprintf(in_filepath, sizeof(in_filepath), "Data/%s", files[i]);
                     inFile = fopen(in_filepath, "r");
                     free(files[i]);
                 }
@@ -49,10 +49,10 @@ void compressor_collect(InputForm *form,int intype, int output) {
             printf("Enter output filename: ");
             scanf("%s", form->output_filepath.data);
             pbuff_append_string(pbuffers, form->output_filepath.data, form->output_filepath.length, 6);
-            if (explore_dir("data/Export", ".nexc", &files, &count) > 0) {
+            if (explore_dir("Data/Export", ".nexc", &files, &count) > 0) {
                 for (int i = 0; i < count; i++) {
                     char filepath[4096];
-                    snprintf(filepath, sizeof(filepath), "data/%s", files[i]);
+                    snprintf(filepath, sizeof(filepath), "Data/%s", files[i]);
                     inFile = fopen(filepath, "r");
                     free(files[i]);
                 }

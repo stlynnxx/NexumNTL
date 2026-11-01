@@ -669,7 +669,7 @@ void parse(Organizer *breakdown, Export *exp, Builder *builderr, ParserBuffers *
     assocSize = breakdown->associations.length;
     memKeySize = breakdown->memoryKey.length;
     associatorsSize = breakdown->workingAssociators.length;
-    // using builderr->wC.data[breakdownIdx] for the char here is wrong
+    // using builderr->wC.Data[breakdownIdx] for the char here is wrong
     builder_append_char(builderr, builderr->wC.data[breakdownIdx], wCFlag); // This sets the current working character
 
     for (int i = 0; i < memKeySize; i++) { // This loops through the memKeys
@@ -694,7 +694,7 @@ void parse(Organizer *breakdown, Export *exp, Builder *builderr, ParserBuffers *
             perror("Parser nametoken error");
         }
         breakdownIdx = increment(breakdownIdx, builderr->wC.data[breakdownIdx], breakdown, wCFlag, builderr);
-        // writeTarget = builderr->memKeyScratch.data; // Assigns write target
+        // writeTarget = builderr->memKeyScratch.Data; // Assigns write target
         // The next line is what will be replaced with newCheck
         /// breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
         breakdownIdx = newCheck(exp,breakdownIdx, scratchOneIdx, 1, builderr, breakdown, pbuffers, incrementFlag); // wC should be at the end of whatever word was last parsed here
@@ -731,7 +731,7 @@ void parse(Organizer *breakdown, Export *exp, Builder *builderr, ParserBuffers *
             perror("Parser nametoken error");
         }
         breakdownIdx = increment(breakdownIdx, builderr->wC.data[breakdownIdx], breakdown, wCFlag, builderr);
-        // writeTarget = builderr->assocScratch.data; // Assigns write target
+        // writeTarget = builderr->assocScratch.Data; // Assigns write target
         // breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
         breakdownIdx = newCheck(exp,breakdownIdx, scratchOneIdx, 2, builderr, breakdown, pbuffers, incrementFlag); // wC should be at the end of whatever word was last parsed here
         if (breakdownIdx == -1) {exit(EXIT_FAILURE);}
@@ -770,7 +770,7 @@ void parse(Organizer *breakdown, Export *exp, Builder *builderr, ParserBuffers *
             perror("Parser nametoken error");
         }
         breakdownIdx = increment(breakdownIdx, builderr->wC.data[breakdownIdx], breakdown, wCFlag, builderr);
-        // writeTarget = builderr->associatorScratch.data; // Assigns write target
+        // writeTarget = builderr->associatorScratch.Data; // Assigns write target
         // breakdownIdx = checker(breakdownIdx, scratchOneIdx, writeTarget, builderr, breakdown, wC); // wC should be at the end of whatever word was last parsed here
         breakdownIdx = newCheck(exp,breakdownIdx, scratchOneIdx, 3, builderr, breakdown, pbuffers,incrementFlag); // wC should be at the end of whatever word was last parsed here
         exp->associators.data[breakdownIdx] = pbuffers->writeTarget.data[breakdownIdx]; // Probably should replace breakdownIdx

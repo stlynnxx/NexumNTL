@@ -19,9 +19,9 @@
     in->buffer.length = 0;
     in->terminalInput.length = 0;
     in->terminalInput.capacity = 0;
-    in->buffer.data = malloc(32);
-    in->terminalInput.data = malloc(32);
-    if (!in->buffer.capacity || !in->buffer.data || !in->buffer.length || !in->terminalInput.capacity || !in->terminalInput.data || !in->terminalInput.length) {
+    in->buffer.Data = malloc(32);
+    in->terminalInput.Data = malloc(32);
+    if (!in->buffer.capacity || !in->buffer.Data || !in->buffer.length || !in->terminalInput.capacity || !in->terminalInput.Data || !in->terminalInput.length) {
         perror("in_init error");
         exit(-1);
     }

@@ -11,7 +11,7 @@
 #include "main.h"
 #include "Parser/parserhelpers.h"
 #include "SourceGenerator/SourceGenerator.h"
-
+// I should formalize this control variable at some point
 FILE* file_handler(InputForm *form, int control) {
     switch (control) {
         case 0: {  // INPUT - Scan and open first matching .nexc file
@@ -19,14 +19,14 @@ FILE* file_handler(InputForm *form, int control) {
             DIR *dir = NULL;
             int found_any = 0;
             // Scan directory for .nexc files
-            int scan_result = scan_directory("./data/Export", ".nexc", &files);
+            int scan_result = scan_directory("./Data/Export", ".nexc", &files);
 
             if (scan_result == -1) {
                 fprintf(stderr, "[create_file] Failed to scan input directory\n");
                 return NULL;
             }
             if (scan_result == 0) {
-                fprintf(stderr, "[create_file] No .nexc files found in ./data/Export\n");
+                fprintf(stderr, "[create_file] No .nexc files found in ./Data/Export\n");
                 return NULL;
             }
             found_any = 1;
@@ -34,7 +34,7 @@ FILE* file_handler(InputForm *form, int control) {
             FILE *in_file = NULL;
             char filepath[PATH_MAX];
             for (int i = 0; i < files.count && in_file == NULL; i++) {
-                snprintf(filepath, sizeof(filepath), "./data/Export/%s",
+                snprintf(filepath, sizeof(filepath), "./Data/Export/%s",
                         files.entries[i]);
                 in_file = fopen(filepath, "r");
                 if (in_file == NULL) {
@@ -54,10 +54,51 @@ FILE* file_handler(InputForm *form, int control) {
             // Caller owns the returned FILE* - caller must fclose() it
             return in_file;
         }
+
         case 1:
             FILE *out_file = fopen(form->output_filename.data, "w+");
             return out_file;
             break;
+        case 2:
+            // INPUT - Scan and open first matching .nex file in /Matrix
+            FileList files = {NULL, 0};
+            DIR *dir = NULL;
+            int found_any = 0;
+            // Scan directory for .nexc files
+            int scan_result = scan_directory("./Data/Matrix", ".nex", &files);
+
+            if (scan_result == -1) {
+                fprintf(stderr, "[create_file] Failed to scan input directory\n");
+                return NULL;
+            }
+            if (scan_result == 0) {
+                fprintf(stderr, "[create_file] No .nexc files found in ./Data/Export\n");
+                return NULL;
+            }
+            found_any = 1;
+            // Try opening each candidate until one succeeds
+            FILE *in_file = NULL;
+            char filepath[PATH_MAX];
+            for (int i = 0; i < files.count && in_file == NULL; i++) {
+                snprintf(filepath, sizeof(filepath), "./Data/Export/%s",
+                        files.entries[i]);
+                in_file = fopen(filepath, "r");
+                if (in_file == NULL) {
+                    fprintf(stderr, "[create_file] Failed to open: %s\n", filepath);
+                    // Continue to next candidate
+                } else {
+                    fprintf(stdout, "[create_file] Opened: %s\n", filepath);
+                }
+            }
+
+            // Cleanup file list (but NOT the FILE*)
+            free_file_list(&files);
+            if (in_file == NULL) {
+                fprintf(stderr, "[create_file] All candidate files failed to open\n");
+                return NULL;
+            }
+            // Caller owns the returned FILE* - caller must fclose() it
+            return in_file;
         default:
             return NULL;
     }
@@ -164,13 +205,13 @@ int set_filepath(InputForm *form, int source)
 
     switch (source) {
         case OUTPUT_OPT:
-            prefix   = "./data/Output_Files/";
+            prefix   = "./Data/Output_Files/";
             name     = form->output_filename.data;
             name_len = form->output_filename.length;
             break;
 
         case INPUT_OPT:
-            prefix   = "./data/Input_Files";
+            prefix   = "./Data/Input_Files";
             name     = form->input_filename.data;
             name_len = form->input_filename.length;
             break;

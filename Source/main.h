@@ -18,7 +18,8 @@ typedef enum {
 extern OutType outType;
 typedef enum {
     TERMINAL_IN = 0,
-    FILE_IN = 1
+    FILE_IN = 1,
+    AGENT = 2
 } InType;
 
 #endif //MAIN_H

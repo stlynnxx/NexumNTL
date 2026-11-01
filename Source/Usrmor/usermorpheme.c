@@ -9,7 +9,7 @@
 #include "../Parser/Parser.h"
 #include "../SourceGenerator/SourceGenerator.h"
 #include "../SourceGenerator/SGruninterface.h"
-#define USRMOR_PATH "../data/usrmor.nex"
+#define USRMOR_PATH "../Data/usrmor.nex"
 #define TERMINAL_SOURCE_FLAG 0
 #define FILE_SOURCE_FLAG 1
 

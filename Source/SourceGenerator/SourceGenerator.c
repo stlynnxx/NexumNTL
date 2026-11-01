@@ -109,7 +109,7 @@ int terminal_inp(FILE* export_file, InputForm *form, int control) {
         printf("Memory Key: \n");
         scanf("%s", form->memoryKeyBuffer.data);
         in_append_string(form, form->memoryKeyBuffer.data, form->memoryKeyBuffer.length, memoryKey);
-        // call lexer here
+
 
         printf("Assocation Count: \n");
         scanf("%d", form->assocCount);
@@ -121,15 +121,11 @@ int terminal_inp(FILE* export_file, InputForm *form, int control) {
                 in_append_string(form, form->associatorBuffer.data, form->associatorBuffer.length, associations);
                 free(form->associationBuffer.data);
                 // form->found_i and form->found_row are reassigned with every match call
-                return_bool = terminal_to_nexc_match(form,export_file,associations,form->associations.data);
-                if (return_bool == false) perror("Match return error!"); exit(EXIT_FAILURE);
             }
             // handling associations
             in_append_string(form, form->associatorBuffer.data, form->associatorBuffer.length, associators);
             free(form->associationBuffer.data);
             // form->found_i and form->found_row are reassigned with every match call
-            return_bool = terminal_to_nexc_match(form,export_file,associators,form->associators.data);
-            if (return_bool == false) perror("Match return error!"); exit(EXIT_FAILURE);
         }
         // One format call for the entire line
         format(export_file, form, form->assocCount);
