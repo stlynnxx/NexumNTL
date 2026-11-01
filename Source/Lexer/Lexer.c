@@ -1,9 +1,10 @@
 //
 // Created by steviexx on 2/28/26.
 //
-
+#include "../main.h"
 #include "Lexer.h"
 #include "lexerhelpers.h"
+#include "../Parser/Parser.h"
 #include <ctype.h>
 
 #include "../SymbolTable/SymbolTable.h"
@@ -157,7 +158,19 @@ void associator(char wC, MemoryFileLoad *load, Organizer *organizer, int increme
         }
     }
 }
+void crawl(InputForm *form, int intype) {
+    Builder builder;
+    switch (intype) {
+        case TERMINAL_IN:
 
+            break;
+        case FILE_IN:
+            break;
+        default:
+            break;
+    }
+
+}
 void crawler(FILE *fp) {
     // These inits need changed to return a pointer to a struct
     MemoryFileLoad *memoryFileLoad;
@@ -177,6 +190,7 @@ void crawler(FILE *fp) {
         perror("loadNexFile error");
         exit(EXIT_FAILURE);
     }
+
     // Here begins the crawling process.
     printf("Crawler Start Reached\n");
     printf("For Loop 01 executed\n");
@@ -342,13 +356,8 @@ void crawler(FILE *fp) {
 
     }
 
-
-void lRun()
-    {
-        printf("Catalyst Reached\n");
-        FILE *fp = fopen("Testing2.nex", "r");
-        crawler(fp);
-        fclose(fp);
-    }
+void lexer_run_interface(InputForm *form, int intype) {
+    crawl(form,intype);
+}
 
 

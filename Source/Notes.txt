@@ -1324,7 +1324,18 @@ the same logic with different flags, so, I will go over that next but it'll be a
 Good stuff! After those paths it's agentic input and engrams and then v0.0.1!
 
 
+10/31/2026-
 
+Happy Halloween!
+
+I'm calling terminal -> nexc!
+
+I'm gonna be looping back around to terminal -> nex as it needs some more work after the battle of
+terminal -> nexc and as does the lexer. I think the lexer is going to need more actual work than the rest
+of the paths; crawler is still operating around some older design choices that need updated to fit the rest
+of the program. But, I don't think it'll be too crazy, either.
+
+Why don't I use format instead of the lexer for this application? I should at least think it over a bit.
 
 
 

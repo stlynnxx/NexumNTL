@@ -22,7 +22,7 @@ typedef struct {
     int tracker;
 } Organizer;
 
-inline void lRun();
+inline void lexer_run_interface();
 
 
 

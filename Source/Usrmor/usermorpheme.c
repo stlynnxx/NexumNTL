@@ -219,7 +219,7 @@ bool terminal_to_nexc_usrmor_add_p(InputForm *form, Export *export_form, FILE* e
     add_p_check = true;
     Unencoded *unencoded = unencoded_init();
     terminalToNexcUsrAppendString(unencoded, form);
-    input_free(form);
+    // input_free(form);
     char firstLetter = unencoded->morpheme.data[0];
     usrmor_match(form, export_form, export_file,unencoded, firstLetter, foundI, add_p_check);
     return add_p_check;

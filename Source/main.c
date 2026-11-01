@@ -105,7 +105,7 @@ int run() {
      * existing code as possible for this.
      */
     // This initiates the Lexer
-    lRun();
+    lexer_run_interface();
     prun();
 
 

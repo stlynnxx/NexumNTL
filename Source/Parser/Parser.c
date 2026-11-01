@@ -79,36 +79,23 @@ char row_translate(int row) {
 
 void nexc_encode(InputForm *form,FILE* export_file, int struct_flag)
 {
-    //int formatReturn;
     unsigned char trans_row;
     unsigned char encodedMorpheme[2];
     unsigned char z = form->found_i + '0';
     trans_row = row_translate(form->found_row);
     encodedMorpheme[0] = trans_row;
     encodedMorpheme[1] = z;
-    // This should append encodedMorpheme to appropriate encoded spot in InputFornm
+    // This should append encodedMorpheme to appropriate encoded spot in InputForm
     unsigned_char_in_append_string(form, encodedMorpheme,sizeof(encodedMorpheme),struct_flag);
-    // formatReturn = format(export_file, form, form->assocCount);
-    /*if (formatReturn == -1) {
-        perror("Encode failure");
-        exit(EXIT_FAILURE);
-    }
-    if (formatReturn == 1) {
-        input_free(form);
-        fclose(export_file);
-    }*/
 }
 
-/* for  strncmp use-
-* Zero: The two memory blocks are equal up to the specified number of bytes.
-Negative Value: The first differing byte in the first block has a lower value than the corresponding byte in the second block.
-Positive Value: The first differing byte in the first block has a higher value than the corresponding byte in the second block.
-*/
 
 bool terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int row, int struct_flag, bool return_bool)
 {
     Export *export_form = export_form_init();
     bool add_p_check = false;
+    bool row_exhaustion = false;
+    int extended_i;
 
     for (int i = 0; i <= rowSiZe; i++)
     {
@@ -124,18 +111,24 @@ bool terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int
                         return return_bool;
                     }
                     else {
-                        // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        form->found_i = i;
-                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
-                        if (add_p_check == true) {
-                            // nexc_encode(form,export_file, foundI, row, struct_flag);
-                            return_bool = true;
-                            return return_bool;
+                        if (i == rowSiZe) {
+                            row_exhaustion = true;
+                        }
+                        if (row_exhaustion == true) {
+                            extended_i = i + 1;
+                            // We need to catch the unverified morpheme here and then hand it over to usrmor
+                            form->found_i = extended_i;
+                            add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
+                            if (add_p_check == true) {
+                                terminal_to_nexc_verify(form, export_file, rowSiZe,row, struct_flag, return_bool);
+                                return_bool = true;
+                                return return_bool;
+                            }
                         }
                     }
                     break;
                 case 1:
-                    if (strncmp(form->associations.data, valuesMatrix[row][i], strlen(form->associations.data)) == 0)
+                    if (strncmp(form->associations.data, valuesMatrix[row][i], form->associations.length) == 0)
                     {
                         // match is found here
                         form->found_i = i;
@@ -144,18 +137,24 @@ bool terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int
                         return return_bool;
                     }
                     else {
-                        // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        form->found_i = i;
-                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
-                        if (add_p_check == true) {
-                            // nexc_encode(form,export_file, foundI, row, struct_flag);
-                            return_bool = true;
-                            return return_bool;
+                        if (i == rowSiZe) {
+                            row_exhaustion = true;
+                        }
+                        if (row_exhaustion == true) {
+                            extended_i = i + 1;
+                            // We need to catch the unverified morpheme here and then hand it over to usrmor
+                            form->found_i = extended_i;
+                            add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
+                            if (add_p_check == true) {
+                                terminal_to_nexc_verify(form, export_file, rowSiZe,row, struct_flag, return_bool);
+                                return_bool = true;
+                                return return_bool;
+                            }
                         }
                     }
                     break;
                 case 2:
-                    if (strncmp(form->associators.data, valuesMatrix[row][i], strlen(form->associators.data)) == 0)
+                    if (strncmp(form->associators.data, valuesMatrix[row][i], form->associators.length) == 0)
                     {
                         // match is found here
                         form->found_i = i;
@@ -164,18 +163,24 @@ bool terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int
                         return return_bool;
                     }
                     else {
-                        // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        form->found_i = i;
-                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
-                        if (add_p_check == true) {
-                            // nexc_encode(form,export_file, foundI, row, struct_flag);
-                            return_bool = true;
-                            return return_bool;
+                        if (i == rowSiZe) {
+                            row_exhaustion = true;
+                        }
+                        if (row_exhaustion == true) {
+                            extended_i = i + 1;
+                            // We need to catch the unverified morpheme here and then hand it over to usrmor
+                            form->found_i = extended_i;
+                            add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
+                            if (add_p_check == true) {
+                                terminal_to_nexc_verify(form, export_file, rowSiZe,row, struct_flag, return_bool);
+                                return_bool = true;
+                                return return_bool;
+                            }
                         }
                     }
                     break;
                 case 3:
-                    if (strncmp(form->memoryKeyBuffer.data, valuesMatrix[row][i], strlen(form->memoryKeyBuffer.data)) == 0)
+                    if (strncmp(form->memoryKeyBuffer.data, valuesMatrix[row][i], form->memoryKeyBuffer.length) == 0)
                     {
                         // match is found here
                         form->found_i = i;
@@ -184,18 +189,24 @@ bool terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int
                         return return_bool;
                     }
                     else {
-                        // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        form->found_i = i;
-                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
-                        if (add_p_check == true) {
-                            // nexc_encode(form,export_file, foundI, row, struct_flag);
-                            return_bool = true;
-                            return return_bool;
+                        if (i == rowSiZe) {
+                            row_exhaustion = true;
+                        }
+                        if (row_exhaustion == true) {
+                            extended_i = i + 1;
+                            // We need to catch the unverified morpheme here and then hand it over to usrmor
+                            form->found_i = extended_i;
+                            add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
+                            if (add_p_check == true) {
+                                terminal_to_nexc_verify(form, export_file, rowSiZe,row, struct_flag, return_bool);
+                                return_bool = true;
+                                return return_bool;
+                            }
                         }
                     }
                     break;
                 case 4:
-                    if (strncmp(form->associationBuffer.data, valuesMatrix[row][i], strlen(form->associationBuffer.data)) == 0)
+                    if (strncmp(form->associationBuffer.data, valuesMatrix[row][i], form->associationBuffer.length) == 0)
                     {
                         // match is found here
                         form->found_i = i;
@@ -204,18 +215,24 @@ bool terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int
                         return return_bool;
                     }
                     else {
-                        // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        form->found_i = i;
-                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
-                        if (add_p_check == true) {
-                            // nexc_encode(form,export_file, foundI, row, struct_flag);
-                            return_bool = true;
-                            return return_bool;
+                        if (i == rowSiZe) {
+                            row_exhaustion = true;
+                        }
+                        if (row_exhaustion == true) {
+                            extended_i = i + 1;
+                            // We need to catch the unverified morpheme here and then hand it over to usrmor
+                            form->found_i = extended_i;
+                            add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
+                            if (add_p_check == true) {
+                                terminal_to_nexc_verify(form, export_file, rowSiZe,row, struct_flag, return_bool);
+                                return_bool = true;
+                                return return_bool;
+                            }
                         }
                     }
                     break;
                 case 5:
-                    if (strncmp(form->associatorBuffer.data, valuesMatrix[row][i], strlen(form->associatorBuffer.data)) == 0)
+                    if (strncmp(form->associatorBuffer.data, valuesMatrix[row][i], form->associatorBuffer.length) == 0)
                     {
                         // match is found here
                         form->found_i = i;
@@ -224,18 +241,24 @@ bool terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int
                         return return_bool;
                     }
                     else {
-                        // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        form->found_i = i;
-                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
-                        if (add_p_check == true) {
-                            // nexc_encode(form,export_file, foundI, row, struct_flag);
-                            return_bool = true;
-                            return return_bool;
+                        if (i == rowSiZe) {
+                            row_exhaustion = true;
+                        }
+                        if (row_exhaustion == true) {
+                            extended_i = i + 1;
+                            // We need to catch the unverified morpheme here and then hand it over to usrmor
+                            form->found_i = extended_i;
+                            add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
+                            if (add_p_check == true) {
+                                terminal_to_nexc_verify(form, export_file, rowSiZe,row, struct_flag, return_bool);
+                                return_bool = true;
+                                return return_bool;
+                            }
                         }
                     }
                     break;
                 case 6:
-                    if (strncmp(form->output_filename.data, valuesMatrix[row][i], strlen(form->output_filename.data)) == 0)
+                    if (strncmp(form->output_filename.data, valuesMatrix[row][i], form->output_filename.length) == 0)
                     {
                         // match is found here
                         form->found_i = i;
@@ -244,13 +267,19 @@ bool terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int
                         return return_bool;
                     }
                     else {
-                        // We need to catch the unverified morpheme here and then hand it over to usrmor
-                        form->found_i = i;
-                        add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_row, add_p_check);
-                        if (add_p_check == true) {
-                            // nexc_encode(form,export_file, foundI, row, struct_flag);
-                            return_bool = true;
-                            return return_bool;
+                        if (i == rowSiZe) {
+                            row_exhaustion = true;
+                        }
+                        if (row_exhaustion == true) {
+                            extended_i = i + 1;
+                            // We need to catch the unverified morpheme here and then hand it over to usrmor
+                            form->found_i = extended_i;
+                            add_p_check = terminal_to_nexc_usrmor_add_p(form,export_form,export_file, form->found_i, add_p_check);
+                            if (add_p_check == true) {
+                                terminal_to_nexc_verify(form, export_file, rowSiZe,row, struct_flag, return_bool);
+                                return_bool = true;
+                                return return_bool;
+                            }
                         }
                     }
                     break;
@@ -260,6 +289,7 @@ bool terminal_to_nexc_verify(InputForm *form, FILE* export_file,int rowSiZe, int
                     break;
             } // EOS
     }
+    return -1;
 
 }
 
