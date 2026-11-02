@@ -1362,3 +1362,8 @@ But I think I might take a small break soon.
 I got through matrix_parse, and next I need to keep working down the agentic path from main. We will need to be able
 to take a "snapshot" of a given matrix to be exported, and also be able to perform operations on a given agent matrix.
 
+11/02/2026-
+
+Today I've been working on rewriting run in main a bit so that it can be called by either a human or an agent. A human will
+need to pass a few null arguments as it is, but I'm more interested in moving forward than I am in polishing it right at
+the moment. The switches in run are kind of a mess, so when we get back we should start back at cleaning those up a bit.

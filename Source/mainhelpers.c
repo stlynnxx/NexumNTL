@@ -205,7 +205,7 @@ int set_filepath(InputForm *form, int source)
 
     switch (source) {
         case OUTPUT_OPT:
-            prefix   = "./Data/Output_Files/";
+            prefix   = "./Data/Export/";
             name     = form->output_filename.data;
             name_len = form->output_filename.length;
             break;

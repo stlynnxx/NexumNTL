@@ -51,11 +51,10 @@ void terminal_to_nexfile(InputForm *form, FILE* export_file,int intype) {
     }
 }
 
-int load_values_matrix() {
-    return 0;
-}
 
-int run() {
+
+int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morpheme_opt, int agent_output_opt)
+{
     /*
      * Globals for cleanup:
      * export_file
@@ -65,65 +64,94 @@ int run() {
     FILE *in_file;
     FILE *export_file;
     int get_filename_return;
-    // Input collection is a placeholder; this will eventually likely be moved to python
-    InType intype = (InType)read_choice("Enter 0 or 1: ", 0, 1);
-    // output replaces nex_code_flag
-    OutType output = (OutType)read_choice("Enter 0 or 1: ", 0, 1);
+    int matrix_parse_return;
     Options options;
     // Needs cleanup
     InputForm *form = new_input_form();
-    // Setting output filename
-    get_filename_return = get_filename(form, output, OUTPUT_OPT);
-    export_file = file_handler(form,1);
     // Needs cleanup
     ParserBuffers *pbuffers = pbuffers_init();
-    switch (intype) {
-        case TERMINAL_IN:
-            // This is where terminal -> nex and terminal -> nexc go
-            terminal_to_nexfile(form,export_file, intype);
-            break;
-        case FILE_IN:
-            /* Cleanups for this path:
-             * in_file
-             * export_form
-             */
-            // setting input filename
-            get_filename_return = get_filename(form, output, INPUT_OPT);
-            // Here file_handler is scanning the given internal directory
-            // for the in_file and importing it
-            in_file = file_handler(form,0);
-            // This chains all the way to the cleanup function
-            comp_from_file_append_bytes(form, pbuffers, in_file,export_file, output);
-            break;
-        case AGENT:
-            // agent values matrix upload & append
-            // loads user values matrix into in_file
-            in_file = file_handler(form, 2);
-            // append to runtime matrix
-            matrix_parse(form, in_file);
-            // preform operations
-            // clear mutable range (or persist with option to clear?)
+    InType intype;
+    OutType output;
+    switch (agency_opt) {
+        case AGENT: {
+            switch (agent_morpheme_opt) {
+            case RAW_MORP: {
+                    if (!morpheme || !encoded_value) {
+                        return -1;
+                    }
+                    // agent values matrix upload & append
+                    // loads user values matrix into in_file
+                    in_file = file_handler(form, 2);
+                    // append to runtime matrix
+                    matrix_parse_return = matrix_parse(form, in_file);
+                    if (matrix_parse_return != 0) {
+                        perror("Matrix parsing error");
+                        exit(-1);
+                    }
+                    // preform operations
+                    // clear mutable range (or persist with option to clear?)
+                }
+                break;
+            }
+            case AGENT_FILE: {
+                if (agent_output_opt == NEX) {
+                    output = NEX;
+                }
+                if (agent_morpheme_opt == NEXC) {
+                    output = NEXC;
+                }
+                /* Cleanups for this path:
+                         * in_file
+                         * export_form
+                         */
+                // setting input filename
+                get_filename_return = get_filename(form, output, INPUT_OPT);
+                // Here file_handler is scanning the given internal directory
+                // for the in_file and importing it
+                in_file = fopen("Data/Input_Files/Agent_Input", "r");
+                export_file = fopen("Data/Output_Files/Agent_Output", "w");
+                // This chains all the way to the cleanup function
+                comp_from_file_append_bytes(form, pbuffers, in_file,export_file, output);
+                fclose(in_file);
+                fclose(export_file);
+                break; // AGENT FILE BREAK
+            }
+
+            break; // AGENT BREAK
+        }
+        case HUMAN_OPT:
+            // Input collection is a placeholder; this will eventually likely be moved to python
+            intype = (InType)read_choice("Enter 0 or 1: ", 0, 1);
+            // output replaces nex_code_flag
+            output = (OutType)read_choice("Enter 0 or 1: ", 0, 1);
+            // Setting output filename
+            get_filename_return = get_filename(form, output, OUTPUT_OPT);
+            export_file = file_handler(form,1);
+            switch (intype) {
+                case TERMINAL_IN:
+                    // This is where terminal -> nex and terminal -> nexc go
+                    terminal_to_nexfile(form,export_file, intype);
+                    break;
+                case FILE_IN:
+                    /* Cleanups for this path:
+                     * in_file
+                     * export_form
+                     */
+                    // setting input filename
+                    get_filename_return = get_filename(form, output, INPUT_OPT);
+                    // Here file_handler is scanning the given internal directory
+                    // for the in_file and importing it
+                    in_file = file_handler(form,0);
+                    // This chains all the way to the cleanup function
+                    comp_from_file_append_bytes(form, pbuffers, in_file,export_file, output);
+                    break;
+                default:
+                    break;
+
+            }
             break;
         default:
             break;
-
     }
-    // Terminal to Nexfile/Nexcfile
-    // OutType Nex, Control 0
-    terminal_to_nexfile(form, intype);
-    // Terminal -> usrmor
-    compressor_collect(form, intype, output);
-    // inFile -> .nexc
-    compressor_collect(form,intype,output);
-    /* Nexfile parsing- append to matrix
-     * This should look like loading the file, parsing line by line, and as we go
-     * checking for matches and adding unmatched morphemes- let's try reusing as much
-     * existing code as possible for this.
-     */
-    // This initiates the Lexer
-    lexer_run_interface();
-    prun();
-
-
   return 0;
- }
+}

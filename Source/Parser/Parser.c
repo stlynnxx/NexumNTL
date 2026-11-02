@@ -44,7 +44,7 @@ int append_to_matrix(InputForm *form, Symbols row, int col_idx) {
     return 0;
 }
 
-void matrix_parse(InputForm *form, FILE* in_file) {
+int matrix_parse(InputForm *form, FILE* in_file) {
     bool open_brace_chk = UNSET;
     bool open_brace_chk_two = UNSET;
     bool name_token_chk = UNSET;
@@ -135,6 +135,7 @@ void matrix_parse(InputForm *form, FILE* in_file) {
                 break;
         }
     } // EOF
+    return 0;
 }
 
 
