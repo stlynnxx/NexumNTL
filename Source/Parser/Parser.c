@@ -10,18 +10,40 @@
 #include <wctype.h>
 #include "parserhelpers.h"
 
-Symbols symbols;
+Symbols row;
 LineParseFlags lineParseFlags;
 
-
+int set_wc(InputForm *form, char *wC) {
+    int append_return = in_append_bytes(form, wC, sizeof(wC), wC_flag);
+    if (append_return == -1) {
+        perror("set_wc error");
+        exit(-1);
+    }
+    if (append_return == 0) {
+        return 0;
+    }
+}
 int row_parse (char key, Symbols *symbols) {
     if (!symbols || key < 'A' || key > 'Z') {
         return -1;
     }
     *symbols = (Symbols)(key - 'A');
     return 1;
-
 }
+
+int append_to_matrix(InputForm *form, Symbols row, int col_idx) {
+    size_t memkey_len = form->memoryKey.length;
+    size_t association_len = form->associations.length;
+    char *new_value = malloc(association_len + 1);
+    if (!new_value) {
+        return -1;
+    }
+    memcpy(new_value, form->associations.data, association_len);
+    new_value[association_len] = '\0';
+    valuesMatrix[row][col_idx] = new_value;
+    return 0;
+}
+
 void matrix_parse(InputForm *form, FILE* in_file) {
     bool open_brace_chk = UNSET;
     bool open_brace_chk_two = UNSET;
@@ -34,16 +56,19 @@ void matrix_parse(InputForm *form, FILE* in_file) {
     bool associator_chk = UNSET;
     bool close_brace_chk = UNSET;
     size_t file_size = get_file_size(in_file);
-    for (int i = 0; i < file_size; i++)
-    {
-        int chk_one;
-        chk_one = in_append_string(form,form->memoryKey.data, 0,wC_flag);
+    int ch;
+    int append_return;
+    while ((ch = fgetc(in_file)) != ENDOFFILE) {
+        // we should add something to handle end of file
+        char c = (char)ch;
+        in_append_char(form, c, wC_flag);
+    }
+    for (int i = 0; i < file_size; i++) {
         switch (form->wC.data[i]) {
             case OPENBRACE:
                 open_brace_chk = false;
                 if (semicolon_chk == TRUE && open_brace_chk == TRUE) {
                     open_brace_chk_two = 1;
-
                 }
                 break;
             case NAMETOKEN:
@@ -79,27 +104,37 @@ void matrix_parse(InputForm *form, FILE* in_file) {
                 break;
                 // default will handle alphanumerics
             default:
-                while (isalnum(form->wC.data[i])) {
-                if (memkey_chk == TRUE && !association_chk) {
-                    if (row_parse(form->wC.data[i], &symbols)) {}
-
+                while (isalnum(form->wC.data[i]))
+                {
+                    if (memkey_chk == TRUE && !association_chk) {
+                        if (row_parse(form->wC.data[i], &row)) {
+                            in_append_char(form, form->wC.data[i], memoryKey);
+                        }
+                    }
+                    if (associator_chk == true) {
+                        if (row_parse(form->wC.data[i], &row)) {
+                            in_append_char(form, form->wC.data[i], associators);
+                        }
+                    }
+                    if (semicolon_chk) {
+                        association_chk = TRUE;
+                        form->assocCount++;
+                        // The list of associations being appended to InputForm are going to be the morphemes needing appended
+                        // to the matrix per given row
+                        in_append_string(form, &form->wC.data[i], sizeof(form->wC.data[i]), associations);
+                    }
                 }
-                if (semicolon_chk) {
-                    association_chk = TRUE;
-                    form->assocCount++;
-                    // The list of associations being appended to InputForm are going to be the morphemes needing appended
-                    // to the matrix per given row
-                    in_append_string(form, &form->wC.data[i], sizeof(form->wC.data[i]), associations);
+                append_return = append_to_matrix(form,row,MUTABLE_START);
+                if (append_return == -1) {
+                    perror("matrix append error");
+                    exit(-1);
                 }
-
-            }
                 if (!isalnum(form->wC.data[i]) && association_chk == TRUE) {
                     name_token_chk_two = TRUE;
                 }
                 break;
         }
     } // EOF
-    values_append_string(*form, form->memoryKey.data);
 }
 
 

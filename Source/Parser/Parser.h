@@ -65,4 +65,5 @@ inline int infile_to_nexc_exp_append_bytes(Export *export, unsigned char *byte, 
 inline int infile_to_nexc_exp_append_string(Export *export,unsigned char *string, size_t x, int control);
 Export* verify(Export *export, InputForm *form, FILE* export_file,ParserBuffers *pbuffers, int rowSiZe, int row, int flag);
 inline bool terminal_to_nexc_match(InputForm *form, FILE* export_file,int struct_flag, char firstLetter, bool return_bool);
+void matrix_parse(InputForm *form, FILE* in_file);
 #endif //PARSER_H
