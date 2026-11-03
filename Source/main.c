@@ -65,6 +65,9 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
     FILE *export_file;
     int get_filename_return;
     int matrix_parse_return;
+    bool matrix_chk = false;
+    char letter;
+    Symbols row;
     Options options;
     // Needs cleanup
     InputForm *form = new_input_form();
@@ -72,10 +75,39 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
     ParserBuffers *pbuffers = pbuffers_init();
     InType intype;
     OutType output;
-    switch (agency_opt) {
-        case AGENT: {
-            switch (agent_morpheme_opt) {
-            case RAW_MORP: {
+    switch (agency_opt)
+    {
+        case AGENT:
+        {
+            switch (agent_morpheme_opt)
+            {
+                case RAW_MORP: {
+                    if  (!morpheme || !encoded_value) {
+                        return -1;
+                    }
+                    if (matrix_chk == false) {
+                        // agent values matrix upload & append
+                        // loads user values matrix into in_file
+                        in_file = file_handler(form, 2);
+                        // append to runtime matrix
+                        matrix_parse_return = matrix_parse(form, in_file);
+                        if (matrix_parse_return != 0) {
+                            perror("Matrix parsing error");
+                            exit(-1);
+                        }
+                        matrix_chk = true;
+                        // preform operations
+                        // clear mutable range (or persist with option to clear?)
+                    }
+                    // Places the raw morpheme into form->wC
+                    in_append_string(form, morpheme, strlen(morpheme), wC_flag);
+                    letter = form->wC.data[0];
+                    row_parse(letter, &row);
+
+
+                    break;
+                }
+                case MATRIX_OPT: {
                     if (!morpheme || !encoded_value) {
                         return -1;
                     }
@@ -88,38 +120,42 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
                         perror("Matrix parsing error");
                         exit(-1);
                     }
+                    matrix_chk = true;
                     // preform operations
                     // clear mutable range (or persist with option to clear?)
+                    break;
                 }
-                break;
-            }
-            case AGENT_FILE: {
-                if (agent_output_opt == NEX) {
-                    output = NEX;
+                case AGENT_FILE: {
+                    if (agent_output_opt == NEX) {
+                        output = NEX;
+                    }
+                    if (agent_morpheme_opt == NEXC) {
+                        output = NEXC;
+                    }
+                    /* Cleanups for this path:
+                             * in_file
+                             * export_form
+                             */
+                    // setting input filename
+                    get_filename_return = get_filename(form, output, INPUT_OPT);
+                    // Here file_handler is scanning the given internal directory
+                    // for the in_file and importing it
+                    in_file = fopen("Data/Input_Files/Agent_Input", "r");
+                    export_file = fopen("Data/Output_Files/Agent_Output", "w");
+                    // This chains all the way to the cleanup function
+                    comp_from_file_append_bytes(form, pbuffers, in_file,export_file, output);
+                    fclose(in_file);
+                    fclose(export_file);
+                    break; // AGENT FILE BREAK
                 }
-                if (agent_morpheme_opt == NEXC) {
-                    output = NEXC;
-                }
-                /* Cleanups for this path:
-                         * in_file
-                         * export_form
-                         */
-                // setting input filename
-                get_filename_return = get_filename(form, output, INPUT_OPT);
-                // Here file_handler is scanning the given internal directory
-                // for the in_file and importing it
-                in_file = fopen("Data/Input_Files/Agent_Input", "r");
-                export_file = fopen("Data/Output_Files/Agent_Output", "w");
-                // This chains all the way to the cleanup function
-                comp_from_file_append_bytes(form, pbuffers, in_file,export_file, output);
-                fclose(in_file);
-                fclose(export_file);
-                break; // AGENT FILE BREAK
+                default:
+                    break;
             }
 
             break; // AGENT BREAK
         }
         case HUMAN_OPT:
+        {
             // Input collection is a placeholder; this will eventually likely be moved to python
             intype = (InType)read_choice("Enter 0 or 1: ", 0, 1);
             // output replaces nex_code_flag
@@ -127,7 +163,8 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
             // Setting output filename
             get_filename_return = get_filename(form, output, OUTPUT_OPT);
             export_file = file_handler(form,1);
-            switch (intype) {
+            switch (intype)
+            {
                 case TERMINAL_IN:
                     // This is where terminal -> nex and terminal -> nexc go
                     terminal_to_nexfile(form,export_file, intype);
@@ -150,6 +187,7 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
 
             }
             break;
+        }
         default:
             break;
     }
