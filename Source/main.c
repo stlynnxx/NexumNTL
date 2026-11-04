@@ -67,6 +67,11 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
     int matrix_parse_return;
     bool matrix_chk = false;
     char letter;
+    size_t mutableCount;
+    int append_idx = MUTABLE_START + (int)mutableCount;
+    char *export_morpheme = malloc(2);
+
+
     Symbols row;
     Options options;
     // Needs cleanup
@@ -100,11 +105,39 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
                         // clear mutable range (or persist with option to clear?)
                     }
                     // Places the raw morpheme into form->wC
-                    in_append_string(form, morpheme, strlen(morpheme), wC_flag);
-                    letter = form->wC.data[0];
-                    row_parse(letter, &row);
-
-
+                    // in_append_string(form, morpheme, strlen(morpheme), wC_flag);
+                    letter = (char)toupper((unsigned char)morpheme[0]);
+                    if (row_parse(letter, &row) != 1) {
+                        return -1;
+                    }
+                    size_t rowCapacity = sizeof(valuesMatrix[row]) / sizeof(valuesMatrix[row][0]);
+                    for (size_t i = MUTABLE_START; i < rowCapacity; i++) {
+                        if (valuesMatrix[row][i] != NULL) {
+                            mutableCount++;
+                        }
+                    }
+                    if (append_idx >= rowCapacity) {
+                        return -1;
+                    }
+                    char *copy = strdup(morpheme);
+                    if (copy == NULL) {
+                        return -1;
+                    }
+                    // raw morph lookup and append
+                    //
+                    // this is for if the morpheme is already present within the mutable range
+                    if (valuesMatrix[row][append_idx] == copy) {
+                        size_t export_morph_size = sizeof(copy);
+                        // setting export_morpheme so that the encoded morpheme can be handed back to the python
+                        if (export_morph_size > sizeof(export_morpheme)) {
+                            export_morpheme = realloc(export_morpheme, export_morph_size);
+                            export_morpheme = valuesMatrix[row][append_idx];
+                        }
+                    }
+                    // appending to mutable range
+                    if (valuesMatrix[row][append_idx] != copy) {
+                        valuesMatrix[row][append_idx] = copy;
+                    }
                     break;
                 }
                 case MATRIX_OPT: {

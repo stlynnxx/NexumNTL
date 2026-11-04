@@ -1370,3 +1370,10 @@ the moment. The switches in run are kind of a mess, so when we get back we shoul
 
 11/03/2026-
 
+11/04/2026-
+
+I did do some work yesterday but I got distracted by personal stuff early on and didn't get much done and pushed without
+journaling. But i'm in here today!
+
+We've been working in the agent raw morpheme lookup and appending today. We've made some good progress and gotten it
+mostly fleshed out, and next I need to come back and smooth it all over.
