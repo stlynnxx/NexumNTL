@@ -52,8 +52,8 @@ void terminal_to_nexfile(InputForm *form, FILE* export_file,int intype) {
 }
 
 
-
-int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morpheme_opt, int agent_output_opt)
+int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morpheme_opt, int agent_output_opt, char *output,
+    size_t output_capacity)
 {
     /*
      * Globals for cleanup:
@@ -67,10 +67,9 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
     int matrix_parse_return;
     bool matrix_chk = false;
     char letter;
-    size_t mutableCount;
-    int append_idx = MUTABLE_START + (int)mutableCount;
-    char *export_morpheme = malloc(2);
-
+    size_t mutable_count = 0;
+    size_t export_capacity = 2;
+    char *export_morpheme = malloc(export_capacity);
 
     Symbols row;
     Options options;
@@ -79,7 +78,7 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
     // Needs cleanup
     ParserBuffers *pbuffers = pbuffers_init();
     InType intype;
-    OutType output;
+    OutType outtype;
     switch (agency_opt)
     {
         case AGENT:
@@ -87,7 +86,7 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
             switch (agent_morpheme_opt)
             {
                 case RAW_MORP: {
-                    if  (!morpheme || !encoded_value) {
+                    if (!morpheme || !morpheme[0]) {
                         return -1;
                     }
                     if (matrix_chk == false) {
@@ -113,31 +112,47 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
                     size_t rowCapacity = sizeof(valuesMatrix[row]) / sizeof(valuesMatrix[row][0]);
                     for (size_t i = MUTABLE_START; i < rowCapacity; i++) {
                         if (valuesMatrix[row][i] != NULL) {
-                            mutableCount++;
+                            mutable_count++;
                         }
                     }
-                    if (append_idx >= rowCapacity) {
-                        return -1;
-                    }
+                    size_t append_idx = MUTABLE_START + mutable_count;
                     char *copy = strdup(morpheme);
                     if (copy == NULL) {
                         return -1;
                     }
                     // raw morph lookup and append
-                    //
                     // this is for if the morpheme is already present within the mutable range
-                    if (valuesMatrix[row][append_idx] == copy) {
-                        size_t export_morph_size = sizeof(copy);
-                        // setting export_morpheme so that the encoded morpheme can be handed back to the python
-                        if (export_morph_size > sizeof(export_morpheme)) {
-                            export_morpheme = realloc(export_morpheme, export_morph_size);
-                            export_morpheme = valuesMatrix[row][append_idx];
+                    bool found = false;
+                    size_t found_idx = 0;
+                    for (size_t i = MUTABLE_START; i < append_idx; i++) {
+                        if (strcmp(valuesMatrix[row][i], morpheme) == 0) {
+                            found = true;
+                            found_idx = i;
+                            break;
                         }
                     }
-                    // appending to mutable range
-                    if (valuesMatrix[row][append_idx] != copy) {
-                        valuesMatrix[row][append_idx] = copy;
+                    size_t needed = strlen(copy) + 1;
+                    // write to memory for python access
+                    if (!output || needed > output_capacity) {
+                        if (found) {
+                            free(copy);
+                        }
+                        return -1;
                     }
+                    // appending to mutable range
+                    if (!found) {
+                        if (append_idx >= rowCapacity) {
+                            free(copy);
+                            return -1;
+                        }
+                        valuesMatrix[row][append_idx] = copy;
+                        found_idx = append_idx;
+                    }
+                    memcpy(output, copy, needed);
+                    if (found) {
+                        free(copy);
+                    }
+                    return 0;
                     break;
                 }
                 case MATRIX_OPT: {
@@ -160,23 +175,23 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
                 }
                 case AGENT_FILE: {
                     if (agent_output_opt == NEX) {
-                        output = NEX;
+                        outtype = NEX;
                     }
                     if (agent_morpheme_opt == NEXC) {
-                        output = NEXC;
+                        outtype = NEXC;
                     }
                     /* Cleanups for this path:
                              * in_file
                              * export_form
                              */
                     // setting input filename
-                    get_filename_return = get_filename(form, output, INPUT_OPT);
+                    get_filename_return = get_filename(form, outtype, INPUT_OPT);
                     // Here file_handler is scanning the given internal directory
                     // for the in_file and importing it
                     in_file = fopen("Data/Input_Files/Agent_Input", "r");
                     export_file = fopen("Data/Output_Files/Agent_Output", "w");
                     // This chains all the way to the cleanup function
-                    comp_from_file_append_bytes(form, pbuffers, in_file,export_file, output);
+                    comp_from_file_append_bytes(form, pbuffers, in_file,export_file, outtype);
                     fclose(in_file);
                     fclose(export_file);
                     break; // AGENT FILE BREAK
@@ -192,9 +207,9 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
             // Input collection is a placeholder; this will eventually likely be moved to python
             intype = (InType)read_choice("Enter 0 or 1: ", 0, 1);
             // output replaces nex_code_flag
-            output = (OutType)read_choice("Enter 0 or 1: ", 0, 1);
+            outtype = (OutType)read_choice("Enter 0 or 1: ", 0, 1);
             // Setting output filename
-            get_filename_return = get_filename(form, output, OUTPUT_OPT);
+            get_filename_return = get_filename(form, outtype, OUTPUT_OPT);
             export_file = file_handler(form,1);
             switch (intype)
             {
@@ -208,12 +223,12 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
                      * export_form
                      */
                     // setting input filename
-                    get_filename_return = get_filename(form, output, INPUT_OPT);
+                    get_filename_return = get_filename(form, outtype, INPUT_OPT);
                     // Here file_handler is scanning the given internal directory
                     // for the in_file and importing it
                     in_file = file_handler(form,0);
                     // This chains all the way to the cleanup function
-                    comp_from_file_append_bytes(form, pbuffers, in_file,export_file, output);
+                    comp_from_file_append_bytes(form, pbuffers, in_file,export_file, outtype);
                     break;
                 default:
                     break;

@@ -76,9 +76,7 @@ typedef struct {
 typedef struct {
     MemoryKey key;
     MemoryKey *associationBank;
-    Associator.MemoryKey *associationBank;
-    Associator.MemoryKey.key
-
+    Associator *associator;
 } Engram;
 
 // These structs are the buffer for the matrix; only columns need to be expanded.

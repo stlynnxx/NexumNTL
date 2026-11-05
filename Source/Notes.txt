@@ -1377,3 +1377,15 @@ journaling. But i'm in here today!
 
 We've been working in the agent raw morpheme lookup and appending today. We've made some good progress and gotten it
 mostly fleshed out, and next I need to come back and smooth it all over.
+
+11/05/2026-
+
+I think we've got basically a rough draft of the agent -> raw morph stuff. It's a little different than the others paths
+so that's a little awkward to say, but, it works for the most part.
+
+I guess that leaves some engram logic and then we can move into the cleanup phase. Crazy!
+
+I got the Engram structure cleaned up, and now I just need to do some operational stuff with it,
+and then we're onto cleanup!
+
+Super exciting!
