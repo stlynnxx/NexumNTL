@@ -4,6 +4,9 @@
 
 #ifndef MAIN_H
 #define MAIN_H
+
+#define VOCAB_DIR "~/CLionProjects/NexumNTL-C/Vocab/nex"
+
 // replacement for nex_code_flag
 typedef enum {
     AGENT_OPT = 0,
@@ -11,6 +14,7 @@ typedef enum {
     RAW_MORP = 2,
     MATRIX_OPT = 3,
     AGENT_FILE = 4,
+    ENGRAM_CREATE = 5,
     OUTPUT_OPT = 6,
     INPUT_OPT = 7,
 } Options;

@@ -1389,3 +1389,14 @@ I got the Engram structure cleaned up, and now I just need to do some operationa
 and then we're onto cleanup!
 
 Super exciting!
+
+11/06/2026-
+
+And so today marks the beginning of the battle of the engram operations.
+
+I made some progress, getting through setting up a dir for vocab files and loading a vocab file. Right now it's only
+supporting a single file which will need expanded in the future, but that's okay for now.
+
+Next i'll need to work on parsing the vocab file. We're almost there!
+
+Progress is progress.

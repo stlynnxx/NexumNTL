@@ -50,11 +50,17 @@ void terminal_to_nexfile(InputForm *form, FILE* export_file,int intype) {
             break;
     }
 }
-
+FILE* load_vocab_file(char vocab_path) {
+    FILE* vocab_fp = fopen(&vocab_path, "w");
+    return vocab_fp;
+}
 
 int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morpheme_opt, int agent_output_opt, char *output,
-    size_t output_capacity)
+    size_t output_capacity, char vocab_file_name[256])
 {
+
+
+
     /*
      * Globals for cleanup:
      * export_file
@@ -70,7 +76,6 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
     size_t mutable_count = 0;
     size_t export_capacity = 2;
     char *export_morpheme = malloc(export_capacity);
-
     Symbols row;
     Options options;
     // Needs cleanup
@@ -79,10 +84,32 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
     ParserBuffers *pbuffers = pbuffers_init();
     InType intype;
     OutType outtype;
+    FILE* vocab_fp;
+    size_t length = strnlen(vocab_file_name, 256);
+    int result = 0;
+    char vocab_path[512];
+
+    if (length >= 256) {
+       perror("Vocab filename size error");
+        return 0;
+    }
+    if (length <= 256) {
+        result = snprintf(vocab_path, sizeof(vocab_path),
+                      "%s/%s", VOCAB_DIR, vocab_file_name);
+    }
+    if (result < 0) {
+        fprintf(stderr, "Path formatting error\n");
+    }
+    else if ((size_t)result >= sizeof(vocab_path)) {
+        fprintf(stderr, "Vocabulary path too long\n");
+    }
+    else {
+        printf("Path: %s\n", vocab_path);
+    }
+
     switch (agency_opt)
     {
-        case AGENT:
-        {
+        case AGENT: {
             switch (agent_morpheme_opt)
             {
                 case RAW_MORP: {
@@ -200,6 +227,23 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
                     break;
             }
 
+
+
+            case ENGRAM_CREATE: {
+                Engram *engram = calloc(1, sizeof(Engram));
+                if (engram == NULL) {
+                    perror("Engram allocation error");
+                }
+                if (!morpheme) {
+                    perror("Empty Morpheme error");
+                }
+                vocab_fp = load_vocab_file(*vocab_path);
+                // Parse vocab file
+                // Append to something like input
+                // Build parent engram
+                // build branch for each associator
+                break;
+            }
             break; // AGENT BREAK
         }
         case HUMAN_OPT:
