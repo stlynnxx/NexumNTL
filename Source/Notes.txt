@@ -1400,3 +1400,8 @@ supporting a single file which will need expanded in the future, but that's okay
 Next i'll need to work on parsing the vocab file. We're almost there!
 
 Progress is progress.
+
+11/07/2026-
+
+I've been working on the vocab file parsing function today! I made a vocab form struct and created init, free and append
+methods for it and now i'm working on what to do in end stage of the vocab file parsing loop.

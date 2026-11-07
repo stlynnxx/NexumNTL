@@ -239,6 +239,7 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
                 }
                 vocab_fp = load_vocab_file(*vocab_path);
                 // Parse vocab file
+                vocab_file_parse(vocab_fp, engram);
                 // Append to something like input
                 // Build parent engram
                 // build branch for each associator

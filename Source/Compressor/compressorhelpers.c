@@ -53,6 +53,121 @@ long get_file_size(FILE *in_file) {
     return size;
 }
 
+
+
+
+void vocab_file_parse(FILE* vocab_file, Engram *engram) {
+    Row *row;
+    row_init(row);
+    VocabForm *vocab_form;
+    size_t vocab_filesize = get_file_size(vocab_file);
+    int control;
+    char *workingChar;
+    bool open_brace_check_one = UNSET;
+    bool open_brace_check_two = UNSET;
+    bool semicolon_check = UNSET;
+    bool memkey_check = UNSET;
+    bool association_check = UNSET;
+    int associator_count = 0;
+    int association_count = 0;
+    bool associator_check = UNSET;
+    bool name_token_check_one = UNSET;
+    bool name_token_check_two = UNSET;
+    bool comma_check = UNSET;
+    bool close_brace_check = UNSET;
+
+    for (int i = 0; i < vocab_filesize; i++)
+    {
+        *workingChar = fgetc(vocab_file);
+
+        switch (*workingChar) {
+            case OPENBRACE:
+                open_brace_check_one = TRUE;
+                control = 0;
+                if (semicolon_check == TRUE) {
+                    open_brace_check_two = TRUE;
+                    control = 1;
+                }
+                // in_append_bytes(form, workingChar, sizeof(*workingChar), control);
+                break;
+            case NAMETOKEN:
+                if (open_brace_check_one == true) {
+                    name_token_check_one = TRUE;
+                }
+                if (open_brace_check_two && name_token_check_one == TRUE) {
+                    memkey_check = TRUE;
+                }
+                if (memkey_check == TRUE) {
+                    name_token_check_two = TRUE;
+                }
+                if (open_brace_check_two == TRUE) {
+                    association_check = TRUE;
+                }
+                // in_append_bytes(form, workingChar, sizeof(*workingChar), control);
+                break;
+            case ASSOCIATOR:
+                associator_check = TRUE;
+                if (associator_check == TRUE) {
+                    associator_count++;
+                    control = 2;
+                }
+                // in_append_bytes(form, workingChar, sizeof(*workingChar), control);
+                break;
+            case SEMICOLON:
+                semicolon_check = TRUE;
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
+                break;
+            case COMMA:
+                if (name_token_check_one && name_token_check_two == TRUE && open_brace_check_two == TRUE) {
+                    comma_check = TRUE;
+                }
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
+                break;
+            case CLOSEBRACE:
+                close_brace_check = TRUE;
+                in_append_bytes(form, workingChar, sizeof(*workingChar), control);
+                break;
+                // default will handle alphanumerics
+            default:
+                while (isalnum(workingChar)) {
+                    if (memkey_check == TRUE) {
+                        // This will be our parent morpheme
+                        vocab_append_string(vocab_form, workingChar,0);
+                    }
+                    if (association_check) {
+                        // Dead-end associations
+                        vocab_append_string(vocab_form, workingChar, 1);
+                    }
+                    if (associator_check) {
+                        // Associators to be used as child memkeys
+                        vocab_append_string(vocab_form, workingChar, 2);
+                    }
+
+                }
+                if (!isalnum(workingChar)) {
+                    if (memkey_check == TRUE) {
+                        vocab_append_string(vocab_form, ",",0);
+                    }
+                    if (association_check == TRUE) {
+                        // we need to find a way to use COMMA
+                        vocab_append_string(vocab_form, ",", 1);
+                    }
+                    if (associator_check == TRUE) {
+                        vocab_append_string(vocab_form, ",", 2);
+                    }
+                }
+                break;
+        } // End of switch
+        // associators need to be set aside for another parsing round, memkey is associated with dead-end associations
+        for (int i = 0; i < association_count; i++) {
+            // this isnt exactly correct
+            // should I grab the length of associations based on space between commas and work with that?
+            engram->key.associationBank->associations.data[i] = vocab_form->association.data[i];
+        }
+    }
+}
+
+
 void line_parse(Export *export,ParserBuffers *pbuffers, InputForm *form, FILE* export_file) {
     int control;
     char *workingChar;
@@ -313,7 +428,7 @@ int comp_from_file_append_bytes(InputForm *form,ParserBuffers *pbuffers, FILE* i
 // append_bytes is for appending raw bytes from the given input
 int comp_append_bytes(Unencoded *unencoded, Input *in) {
     size_t x = in->terminalInput.length;
-    if (comp_ensure_capacity(in, x) != 0) {
+    if (vocab_ensure_capacity(in, x) != 0) {
         return -1; // failure
     }
     memcpy(unencoded->morpheme.data+ unencoded->morpheme.length, in->terminalInput.data, x);
@@ -367,4 +482,106 @@ int explore_dir(const char* dir_path, const char* extension,
 
     closedir(dir);
     return *count;
+}
+
+
+int vocab_form_free(VocabForm *vocab_form) {
+    free(vocab_form->parent_morpheme.data);
+    free(vocab_form->association.data);
+    free(vocab_form->associator.data);
+    free(vocab_form);
+    return 0;
+}
+
+VocabForm vocab_form_init() {
+    VocabForm *vocab_form = malloc(sizeof(VocabForm));
+
+    vocab_form->parent_morpheme.length = 0;
+    vocab_form->parent_morpheme.capacity = 0;
+    vocab_form->parent_morpheme.data = malloc(8);
+
+    vocab_form->association.length = 0;
+    vocab_form->association.capacity = 0;
+    vocab_form->association.data = malloc(8);
+
+    vocab_form->associator.length = 0;
+    vocab_form->associator.capacity = 0;
+    vocab_form->associator.data = malloc(8);
+
+    return *vocab_form;
+}
+
+
+int vocab_ensure_capacity(VocabForm *vocab_form, size_t extra, int control_flag) {
+    switch (control_flag) {
+        case 0: {
+            size_t needed = vocab_form->parent_morpheme.length + extra;
+            if (needed <= vocab_form->parent_morpheme.capacity) {
+                return 0;
+            }
+            size_t capacity = vocab_form->parent_morpheme.capacity ? vocab_form->parent_morpheme.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(vocab_form->parent_morpheme.data, capacity);
+            if (!tmp)
+                return -1;
+
+            vocab_form->parent_morpheme.data = tmp;
+            vocab_form->parent_morpheme.capacity = capacity;
+            return 0;
+        }
+        case 1: {
+            size_t needed = vocab_form->association.length + extra;
+            if (needed <= vocab_form->association.capacity) {
+                return 0;
+            }
+            size_t capacity = vocab_form->association.capacity ? vocab_form->association.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(vocab_form->association.data, capacity);
+            if (!tmp)
+                return -1;
+
+            vocab_form->association.data = tmp;
+            vocab_form->association.capacity = capacity;
+            return 0;
+
+        }
+        case 2: {
+            size_t needed = vocab_form->associator.length + extra;
+            if (needed <= vocab_form->associator.capacity) {
+                return 0;
+            }
+            size_t capacity = vocab_form->associator.capacity ? vocab_form->associator.capacity : 16;
+            while (needed > capacity) {
+                capacity *= 2;
+            }
+            char *tmp = realloc(vocab_form->associator.data, capacity);
+            if (!tmp)
+                return -1;
+
+            vocab_form->associator.data = tmp;
+            vocab_form->associator.capacity = capacity;
+            return 0;
+        }
+        default: {
+            return 1;
+        }
+    }
+}
+
+int vocab_append_bytes(VocabForm *vocab_form, char *bytes, int control_flag) {
+    size_t x = vocab_form->parent_morpheme.length;
+    if (vocab_ensure_capacity(vocab_form, x, control_flag) != 0) {
+        return 1; // failure
+    }
+    memcpy(vocab_form->parent_morpheme.data + vocab_form->parent_morpheme.length, bytes, x);
+    vocab_form->parent_morpheme.length += x;
+    return 0;
+}
+
+int vocab_append_string(VocabForm *vocab_form, char *string, int control_flag) {
+    return (vocab_append_bytes(vocab_form, string, control_flag));
 }

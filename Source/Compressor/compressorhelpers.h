@@ -9,7 +9,15 @@
 #include "../Parser/Parser.h"
 #include "../Usrmor/usermorpheme.h"
 
+typedef struct {
+    DynamicBuffers parent_morpheme;
+    DynamicBuffers associator;
+    DynamicBuffers association;
+} VocabForm;
 
+inline void vocab_file_parse(FILE* vocab_file, Engram *engram);
+inline int vocab_append_bytes(VocabForm *vocab_form, char *bytes, int control_flag);
+inline int vocab_append_string(VocabForm *vocab_form, char *string, int control_flag);
 inline int explore_dir(const char* dir_path, const char* extension,
                       char*** results, int* count);
 inline InputForm* in_init();
