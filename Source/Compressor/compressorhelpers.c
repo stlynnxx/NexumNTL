@@ -56,7 +56,7 @@ long get_file_size(FILE *in_file) {
 
 
 
-void vocab_file_parse(FILE* vocab_file, Engram *engram) {
+void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) {
     Row *row;
     row_init(row);
     VocabForm *vocab_form;
@@ -146,13 +146,16 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram) {
                 }
                 if (!isalnum(workingChar)) {
                     if (memkey_check == TRUE) {
+                        engram_append_flag = Engram_Memkey;
                         vocab_append_string(vocab_form, ",",0);
                     }
                     if (association_check == TRUE) {
+                        engram_append_flag = Engram_Association;
                         // we need to find a way to use COMMA
                         vocab_append_string(vocab_form, ",", 1);
                     }
                     if (associator_check == TRUE) {
+                        engram_append_flag = Engram_Associator;
                         vocab_append_string(vocab_form, ",", 2);
                     }
                 }
@@ -160,6 +163,7 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram) {
         } // End of switch
         // associators need to be set aside for another parsing round, memkey is associated with dead-end associations
         for (int i = 0; i < vocab_form->association.length; i++) {
+            engram_append()
             engram->key.associationBank->associations.data[i] = vocab_form->association.data[i];
         }
     }

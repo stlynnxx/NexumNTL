@@ -230,10 +230,13 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
 
 
             case ENGRAM_CREATE: {
-                engram_init();
-                if (engram == NULL) {
-                    perror("Engram allocation error");
+                EngramAppendFlag engram_append_flag;
+                // init engram_store
+                EngramStore *store = engram_store_init();
+                if (store == NULL) {
+                    return EXIT_FAILURE;
                 }
+                Engram *engram = engram_helpers(store);
                 if (!morpheme) {
                     perror("Empty Morpheme error");
                 }

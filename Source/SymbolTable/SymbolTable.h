@@ -2,6 +2,7 @@
 #define SymbolTable_H
 
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -73,11 +74,21 @@ typedef struct {
     MemoryKey *associationBank;
 } Associator;
 
+typedef uint64_t EngramID;
+
 typedef struct {
+    EngramID id;
     MemoryKey key;
     MemoryKey *associationBank;
     Associator *associator;
 } Engram;
+
+typedef struct {
+    Engram *engrams;
+    size_t count;
+    size_t capacity;
+    EngramID next_id;
+} EngramStore;
 
 // These structs are the buffer for the matrix; only columns need to be expanded.
 typedef struct {

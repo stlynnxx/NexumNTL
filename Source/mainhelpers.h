@@ -11,8 +11,18 @@ typedef struct {
     int count;
 } FileList;
 
+typedef enum {
+    Engram_Memkey = 0,
+    Engram_Associator = 1,
+    Engram_Association = 2
+} EngramAppendFlag;
 
-inline Engram* engram_init();
+inline Engram* engram_helpers(EngramStore *store);
+inline void engram_append(const char *string, Engram *engram, int engram_append_flag);
+inline EngramID engram_create(EngramStore *store);
+inline Engram *engram_get(EngramStore *store, EngramID id);
+inline void engram_store_free(EngramStore *store);
+inline EngramStore *engram_store_init(void);
 inline int scan_directory(const char *dir_path, const char *extension, FileList *list);
 inline void free_file_list(FileList *list);
 static int get_filename(InputForm *form,int output, int opt);

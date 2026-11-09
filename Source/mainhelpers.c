@@ -309,11 +309,166 @@ void in_file_to_nexc_cleanup(FILE* in_file, Export *export_form, InputForm *form
     export_form_free(export_form);
 }
 
-Engram* engram_init() {
-    AssociationBank bank = {0};
-    MemoryKey memory = {0};
-    Associator associator = {0};
-    Engram *engram = {0};
+EngramStore *engram_store_init(void) {
+    EngramStore *store = calloc(1, sizeof *store);
+
+    if (store == NULL) {
+        return NULL;
+    }
+
+    store->capacity = 1000;
+    store->next_id = 1;
+
+    store->engrams = calloc(
+        store->capacity,
+        sizeof *store->engrams
+    );
+
+    if (store->engrams == NULL) {
+        free(store);
+        return NULL;
+    }
+
+    return store;
+}
+EngramID engram_create(EngramStore *store) {
+    if (store == NULL ||
+        store->count >= store->capacity ||
+        store->next_id == UINT64_MAX) {
+        return 0;
+        }
+
+    size_t index = store->count;
+
+    Engram *engram = &store->engrams[index];
+
+    *engram = (Engram){0};
+    engram->id = store->next_id;
+
+    store->next_id++;
+    store->count++;
+
+    return engram->id;
+}
+
+Engram *engram_get(EngramStore *store, EngramID id) {
+    if (store == NULL || id == 0 || id > store->count) {
+        return NULL;
+    }
+
+    return &store->engrams[id - 1];
+}
+
+void engram_store_free(EngramStore *store) {
+    if (store == NULL) {
+        return;
+    }
+
+    free(store->engrams);
+    free(store);
+}
+void engram_append(const char *string, Engram *engram, int engram_append_flag) {
+    if (string == NULL || engram == NULL) {
+        fprintf(stderr, "engram_append: NULL argument\n");
+        return;
+    }
+
+    switch (engram_append_flag) {
+        case Engram_Memkey: {
+            DynamicBuffers *buffer = &engram->key.key;
+
+            size_t length = strlen(string);
+
+            if (length > SIZE_MAX - buffer->length - 1) {
+                fprintf(stderr, "engram_append: size overflow\n");
+                return;
+            }
+
+            size_t new_length = buffer->length + length;
+            size_t new_capacity = new_length + 1;
+
+            char *data = realloc(buffer->data, new_capacity);
+
+            if (data == NULL) {
+                perror("realloc error");
+                return;
+            }
+
+            memcpy(data + buffer->length, string, length + 1);
+
+            buffer->data = data;
+            buffer->length = new_length;
+            buffer->capacity = new_capacity;
+            break;
+        }
+
+        case Engram_Association: {
+            if (engram->key.associationBank == NULL) {
+                engram->key.associationBank =
+                    calloc(1, sizeof *engram->key.associationBank);
+
+                if (engram->key.associationBank == NULL) {
+                    perror("calloc error");
+                    return;
+                }
+            }
+
+            DynamicBuffers *buffer =
+                &engram->key.associationBank->associations;
+
+            size_t length = strlen(string);
+
+            if (length > SIZE_MAX - buffer->length - 1) {
+                fprintf(stderr, "engram_append: size overflow\n");
+                return;
+            }
+
+            size_t new_length = buffer->length + length;
+            size_t new_capacity = new_length + 1;
+
+            char *data = realloc(buffer->data, new_capacity);
+
+            if (data == NULL) {
+                perror("realloc error");
+                return;
+            }
+
+            memcpy(data + buffer->length, string, length + 1);
+
+            buffer->data = data;
+            buffer->length = new_length;
+            buffer->capacity = new_capacity;
+            break;
+        }
+
+        case Engram_Associator: {
+            // Still need to establish the destination
+            // within the Associator structure.
+            fprintf(stderr, "engram_append: associator not implemented\n");
+            return;
+        }
+
+        default:
+            fprintf(stderr, "engram_append: invalid flag\n");
+            return;
+    }
+}
+
+Engram* engram_helpers(EngramStore *store) {
+    // Generating Engram and Engram ID
+    EngramID id = engram_create(store);
+
+    if (id == 0) {
+        engram_store_free(store);
+        perror("ID failure");
+    }
+    // Fetching generated engram from the store
+    Engram *engram = engram_get(store, id);
+
+    if (engram == NULL) {
+        engram_store_free(store);
+        perror("engram ");
+    }
     return engram;
 }
 
