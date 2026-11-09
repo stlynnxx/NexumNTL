@@ -11,6 +11,8 @@ typedef struct {
     int count;
 } FileList;
 
+
+inline Engram* engram_init();
 inline int scan_directory(const char *dir_path, const char *extension, FileList *list);
 inline void free_file_list(FileList *list);
 static int get_filename(InputForm *form,int output, int opt);

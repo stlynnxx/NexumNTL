@@ -1405,3 +1405,11 @@ Progress is progress.
 
 I've been working on the vocab file parsing function today! I made a vocab form struct and created init, free and append
 methods for it and now i'm working on what to do in end stage of the vocab file parsing loop.
+
+11/08/2026-
+
+I made a itsy bit more progress on engram creation tonight, but i'm too tired to really focus
+from doing personal stuff all day.
+
+At least I showed up.
+

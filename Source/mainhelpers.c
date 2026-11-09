@@ -309,4 +309,12 @@ void in_file_to_nexc_cleanup(FILE* in_file, Export *export_form, InputForm *form
     export_form_free(export_form);
 }
 
-void main_general_cleanup()
+Engram* engram_init() {
+    AssociationBank bank = {0};
+    MemoryKey memory = {0};
+    Associator associator = {0};
+    Engram *engram = {0};
+    return engram;
+}
+
+void main_general_cleanup();

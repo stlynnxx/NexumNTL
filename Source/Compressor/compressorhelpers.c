@@ -159,9 +159,7 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram) {
                 break;
         } // End of switch
         // associators need to be set aside for another parsing round, memkey is associated with dead-end associations
-        for (int i = 0; i < association_count; i++) {
-            // this isnt exactly correct
-            // should I grab the length of associations based on space between commas and work with that?
+        for (int i = 0; i < vocab_form->association.length; i++) {
             engram->key.associationBank->associations.data[i] = vocab_form->association.data[i];
         }
     }

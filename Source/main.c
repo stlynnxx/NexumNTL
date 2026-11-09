@@ -230,7 +230,7 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
 
 
             case ENGRAM_CREATE: {
-                Engram *engram = calloc(1, sizeof(Engram));
+                engram_init();
                 if (engram == NULL) {
                     perror("Engram allocation error");
                 }
