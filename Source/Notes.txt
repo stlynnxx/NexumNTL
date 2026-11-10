@@ -1417,4 +1417,13 @@ At least I showed up.
 
 I've been back in here this morning, working withn engram logic, setting up helpers for
 init'ing the different aspects of the engrams, getting through engram append and working on calling engram append
-within the lexing process. That's where I should pick up at next time!
+within the parsing process. That's where I should pick up at next time!
+
+11/10/2026-
+
+I'vw been working in vocab_file_parse this morning, and that's where I'll need to pick back up at. I think after
+some of the changes that I'm making I'll need to go back to line_parse and implement some similar changes that make
+sense for that application.
+
+But for now I think I need to go to another project, maybe more later!
+

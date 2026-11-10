@@ -15,7 +15,7 @@ typedef struct {
     DynamicBuffers association;
 } VocabForm;
 
-inline void vocab_file_parse(FILE* vocab_file, Engram *engram);
+inline void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag);
 inline int vocab_append_bytes(VocabForm *vocab_form, char *bytes, int control_flag);
 inline int vocab_append_string(VocabForm *vocab_form, char *string, int control_flag);
 inline int explore_dir(const char* dir_path, const char* extension,
