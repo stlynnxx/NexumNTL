@@ -71,10 +71,16 @@ long get_file_size(FILE *in_file) {
 }
 
 
-void carryover_associator(VocabForm *vocab_form, const char associator) {
-    free(vocab_form->parent_morpheme.data);
-    vocab_append_string(vocab_form, associator, Engram_Memkey);
-}
+void carryover_associator(VocabForm *vocab_form, const char *associator) {
+        free(vocab_form->parent_morpheme.data);
+
+        vocab_form->parent_morpheme.data = NULL;
+        vocab_form->parent_morpheme.length = 0;
+        vocab_form->parent_morpheme.capacity = 0;
+
+        vocab_append_string(vocab_form, associator, Engram_Memkey);
+    }
+
 
 void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) {
     Row row = {0};
@@ -125,10 +131,18 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) 
                 }
                 break;
             case SEMICOLON:
-                semicolon_check = TRUE;
+                if (close_brace_check == TRUE) {
+                    semicolon_check = TRUE;
+                }
                 break;
             case COMMA:
                 comma_check = TRUE;
+                if (association_check == TRUE) {
+                    vocab_append_string(vocab_form, ",", Engram_Association);
+                    if (associator_check == UNSET || associator_check == FALSE) {
+                        association_check = FALSE;
+                    }
+                }
                 break;
             case CLOSEBRACE:
                 close_brace_check = TRUE;
@@ -137,19 +151,18 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) 
             default:
                 if (isalnum(workingChar))
                 {
-                    if (name_token_check_one == TRUE) {
-                        memkey_check = TRUE;
-                        engram_append_flag = Engram_Memkey;
-                        vocab_append_string(vocab_form, ",",0);
-                    }
-                    if (association_check == TRUE) {
-                        engram_append_flag = Engram_Association;
-                        // we need to find a way to use COMMA
-                        vocab_append_string(vocab_form, ",", 1);
-                    }
-                    if (associator_check == TRUE) {
+                    if (memkey_check == TRUE && associator_check == TRUE) {
                         engram_append_flag = Engram_Associator;
                         vocab_append_string(vocab_form, ",", 2);
+                    }
+                    else if (memkey_check == TRUE && association_check == TRUE) {
+                        engram_append_flag = Engram_Association;
+                        char character[2] = {(char)workingChar, '\0'};
+                        vocab_append_string(vocab_form, character, Engram_Association);
+                    }
+                    else if (name_token_check_one == TRUE) {
+                        memkey_check = TRUE;
+                        engram_append_flag = Engram_Memkey;
                     }
                     switch (engram_append_flag) {
                         case Engram_Memkey: {
@@ -175,6 +188,24 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) 
                 break;
         } // End of switch
 
+
+    } // end of while
+    if (workingChar == EOF) {
+        // state resetting
+        open_brace_check_one = UNSET;
+        open_brace_check_two = UNSET;
+        semicolon_check = UNSET;
+        memkey_check = UNSET;
+        colon_check = UNSET;
+        association_check = UNSET;
+        bank_enter_check = UNSET;
+        associator_count = 0;
+        association_count = 0;
+        associator_check = UNSET;
+        name_token_check_one = UNSET;
+        name_token_check_two = UNSET;
+        comma_check = UNSET;
+        close_brace_check = UNSET;
     }
 }
 
