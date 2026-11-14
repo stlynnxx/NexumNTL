@@ -23,4 +23,6 @@ efficient, compressed forms to form words from compressed morphemes.
 
 The encoding itself takes a multi faceted approach.
 
-First, I researched the statistically most common English morphemes. 
+First, I researched the statistically most common English morphemes. Then, I considered the overall decimal values associated with these morphemes given
+the ascii standard. I began encoding the lowercase versions of the most common morphemes first, as those are the highest decimal value entries. 
+ 
