@@ -1429,3 +1429,30 @@ But for now I think I need to go to another project, maybe more later!
 
 11/11/2026-
 
+11/13/2026-
+
+Things got a little off track here, but I'm back now. I did do ome work on the 11th but I was interuppted and didn't
+get to do any journaling about it. I was too busy with other stuff yesterday to spend any time in here. But here I am
+today!
+
+I've gotten vocab line parse straightened out pretty well, now I need to start building the system for the
+associator banks and building the child engrams out of them. I have been toying with some design ideas and I think I'm
+about ready to turn it all into code!
+
+Essentially, the first line will be parsed. Any associators encountered will be set aside in a bank. The current memkey
+for that pass will have an engram built around it and it's dead end associations and associators. Conceptually,
+associators are embedded memory keys and are treated as such within the logic. The parse loop will repeat, iterating
+through the associator bank, given one was created. The parent morpheme will have a numeric ID; each generation carries
+the ID of the previous generation and grows in length. The first parent morpheme will have an ID of 001. Each generation
+within the engram trie has a three digit identifier appended to the IDs it inherites, so the first child of the first
+parent will have an ID of 001001, the the first child of that child, or grandchild, will be 001001001, and so forth.
+This is how children will remain tied to their parents, and show associatve relationships in a quick and compressed
+manner. It will parse the first association within a bank, generate the ID, and then parse through any grandchildren
+and repeat this process until the end of the "bloodline", or a given associative stream. I think it will be best to
+eventually work through associator banks concurrently, within a given cap. While working through the bloodline for
+associatorA, the first generation of the next associatior could be parsed and wait for the first to finish and repeat
+onwards, or something similar.
+
+11/14/2026-
+
+Late night thoughts: I think we should take what we'd mapped to ascii before and just put it in the values matrix

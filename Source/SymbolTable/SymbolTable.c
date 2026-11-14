@@ -58,6 +58,14 @@ char *encodedMatrix[26][14] = {
     {"NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL", "NULL"} // Z
 
 };
+
+/* Morphemes encoded in hex
+ * able
+ * al
+ * as
+ * at
+ *
+ */
 int hexMatrix[40][40] = {
     {0x15},
 

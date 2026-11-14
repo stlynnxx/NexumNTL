@@ -100,7 +100,7 @@ typedef struct {
 typedef struct {
     Row row[26];
 } Table;
-char *valuesMatrix[26][14];
+char *valuesMatrix[26][15];
 char *encodedMatrix[26][14];
 int hexMatrix[40][40];
 int countsMatrix[26][14];

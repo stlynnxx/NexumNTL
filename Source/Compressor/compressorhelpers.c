@@ -72,14 +72,29 @@ long get_file_size(FILE *in_file) {
 
 
 void carryover_associator(VocabForm *vocab_form, const char *associator) {
-        free(vocab_form->parent_morpheme.data);
-
-        vocab_form->parent_morpheme.data = NULL;
-        vocab_form->parent_morpheme.length = 0;
-        vocab_form->parent_morpheme.capacity = 0;
-
-        vocab_append_string(vocab_form, associator, Engram_Memkey);
+    if (vocab_form == NULL || associator == NULL) {
+        return;
     }
+
+    size_t length = strlen(associator);
+
+    char *copy = malloc(length + 1);
+    if (copy == NULL) {
+        return;
+    }
+
+    memcpy(copy, associator, length + 1);
+
+    free(vocab_form->parent_morpheme.data);
+
+    vocab_form->parent_morpheme.data = NULL;
+    vocab_form->parent_morpheme.length = 0;
+    vocab_form->parent_morpheme.capacity = 0;
+
+    vocab_append_string(vocab_form, copy, Engram_Memkey);
+
+    free(copy);
+}
 
 
 void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) {
@@ -100,6 +115,7 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) 
     bool name_token_check_two = UNSET;
     bool comma_check = UNSET;
     bool close_brace_check = UNSET;
+    bool line_complpete = UNSET;
     int workingChar;
     while ((workingChar = fgetc(vocab_file)) != EOF)
     {
@@ -116,6 +132,7 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) 
                 }
                 if (memkey_check == TRUE) {
                     name_token_check_two = TRUE;
+                    vocab_append_string(vocab_form, ",", Engram_Memkey);
                 }
                 if (comma_check == TRUE || open_brace_check_two == TRUE) {
                     association_check = TRUE;
@@ -146,6 +163,16 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) 
                 break;
             case CLOSEBRACE:
                 close_brace_check = TRUE;
+
+                if (open_brace_check_two == TRUE) {
+                    engram_append(
+                        vocab_form->association.data,
+                        engram,
+                        Engram_Association
+                    );
+
+                    open_brace_check_two = FALSE;
+                }
                 break;
                 // default will handle alphanumerics
             default:
@@ -156,27 +183,27 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) 
                         vocab_append_string(vocab_form, ",", 2);
                     }
                     else if (memkey_check == TRUE && association_check == TRUE) {
-                        engram_append_flag = Engram_Association;
                         char character[2] = {(char)workingChar, '\0'};
                         vocab_append_string(vocab_form, character, Engram_Association);
                     }
                     else if (name_token_check_one == TRUE) {
+                        char character[2] = {(char)workingChar, '\0'};
                         memkey_check = TRUE;
-                        engram_append_flag = Engram_Memkey;
+                        vocab_append_string(vocab_form, character, Engram_Memkey);
                     }
                     switch (engram_append_flag) {
-                        case Engram_Memkey: {
-                            engram_append(vocab_form->parent_morpheme.data,engram,engram_append_flag);
-                            break;
-                        }
-                        case Engram_Association: {
-                            for (int i = 0; i < vocab_form->association.length; i++) {
-                                engram_append(vocab_form->association.data,engram,engram_append_flag);
-                            }
-                            break;
-                        }
                         case Engram_Associator: {
-                            carryover_associator(vocab_form, workingChar);
+                            if (memkey_check == TRUE && associator_check == TRUE) {
+                                engram_append_flag = Engram_Associator;
+
+                                char character[2] = {(char)workingChar, '\0'};
+
+                                vocab_append_string(
+                                    vocab_form,
+                                    character,
+                                    Engram_Associator
+                                );
+                            }
                             break;
                         }
                         default: {
@@ -597,13 +624,36 @@ int vocab_ensure_capacity(VocabForm *vocab_form, size_t extra, int control_flag)
 }
 
 int vocab_append_bytes(VocabForm *vocab_form, char *bytes, int control_flag) {
-    size_t x = vocab_form->parent_morpheme.length;
-    if (vocab_ensure_capacity(vocab_form, x, control_flag) != 0) {
-        return 1; // failure
+    switch (control_flag) {
+        case Engram_Memkey: {
+            size_t x = vocab_form->parent_morpheme.length;
+            if (vocab_ensure_capacity(vocab_form, x, control_flag) != 0) {
+                return 1; // failure
+            }
+            memcpy(vocab_form->parent_morpheme.data + vocab_form->parent_morpheme.length, bytes, x);
+            vocab_form->parent_morpheme.length += x;
+            return 0;
+        }
+        case Engram_Associator: {
+            size_t x = vocab_form->associator.length;
+            if (vocab_ensure_capacity(vocab_form, x, control_flag) != 0) {
+                return 1; // failure
+            }
+            memcpy(vocab_form->associator.data + vocab_form->associator.length, bytes, x);
+            vocab_form->associator.length += x;
+            return 0;
+        }
+        case Engram_Association: {
+            size_t x = vocab_form->association.length;
+            if (vocab_ensure_capacity(vocab_form, x, control_flag) != 0) {
+                return 1; // failure
+            }
+            memcpy(vocab_form->association.data + vocab_form->association.length, bytes, x);
+            vocab_form->association.length += x;
+            return 0;
+        }
+
     }
-    memcpy(vocab_form->parent_morpheme.data + vocab_form->parent_morpheme.length, bytes, x);
-    vocab_form->parent_morpheme.length += x;
-    return 0;
 }
 
 int vocab_append_string(VocabForm *vocab_form, char *string, int control_flag) {
