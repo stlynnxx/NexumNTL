@@ -1455,4 +1455,12 @@ onwards, or something similar.
 
 11/14/2026-
 
-Late night thoughts: I think we should take what we'd mapped to ascii before and just put it in the values matrix
+Late night thoughts: I think we should take what we'd mapped to ascii before and just put it in the values matrix.
+
+11/17/2026-
+
+I'm getting back after a personally rough few days. I always have to work to get back where I was whenever I miss multiple
+days, so we'll see what I'm actually able to get done today.
+
+So far i've rolled those hex morphemes into the valuesMatrix, which means that the encodedMatrix will now need updating
+alongside it before we go much farther.

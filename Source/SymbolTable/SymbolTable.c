@@ -1,16 +1,16 @@
 #include "SymbolTable.h"
 
-char *valuesMatrix[26][14] = {
-    {"Able", "Al", "As", "At", "Ance", "ance", "And", "Ante", "ante", "Anti", "anti", NULL,NULL,NULL}, // A, 0
+char *valuesMatrix[26][15] = {
+    {"Able","able", "Al","al", "As", "as","At", "at", "Ance", "ance", "And", "and", "Ante", "ante", "Anti", "anti"}, // A, 0
 {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,NULL,NULL}, // B, 1
 {"Cede", "cede", "Cess", "cess", "Circum", "circum", "Clude", "clude", NULL, NULL, NULL, NULL,NULL,NULL}, // C, 2
-{"Dict", NULL, NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}, // D ,3
+{"Dict", "dict", NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}, // D ,3
 {"Ed", "ed", "Er", "er", "En", "en", NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}, // E, 4
 {"For_", "Form", "form", NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}, // F,
 {"Gress", "gress", NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}, // G
 {"He", "he", NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}, // H
 {"In", "in", "Ing", "ing", "Is", "is", "Inter", "inter", "Intra", "intra", NULL,NULL,NULL,NULL}, // I
-{NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}, // J
+{"Ject","ject",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}, // J
 {NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}, // K
 {"Less", "less", "Ly", "ly",NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL}, // L
 {"Magni", "magni", "Mark", "mark", "Ment", "ment", "Micro", "micro", "Milli", "milli", "Multi", "multi",NULL,NULL}, // M
