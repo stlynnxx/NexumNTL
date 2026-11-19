@@ -230,7 +230,7 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
 
 
             case ENGRAM_CREATE: {
-                EngramAppendFlag engram_append_flag;
+                // EngramAppendFlag engram_append_flag;
                 // init engram_store
                 EngramStore *store = engram_store_init();
                 if (store == NULL) {

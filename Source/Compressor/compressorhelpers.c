@@ -70,7 +70,6 @@ long get_file_size(FILE *in_file) {
     return size;
 }
 
-
 void carryover_associator(VocabForm *vocab_form, const char *associator) {
     if (vocab_form == NULL || associator == NULL) {
         return;
@@ -97,26 +96,27 @@ void carryover_associator(VocabForm *vocab_form, const char *associator) {
 }
 
 
-void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) {
+void vocab_file_parse(FILE* vocab_file, Engram *engram) {
     Row row = {0};
     row_init(&row);
     VocabForm *vocab_form = vocab_form_init();
-    bool open_brace_check_one = UNSET;
-    bool open_brace_check_two = UNSET;
-    bool semicolon_check = UNSET;
-    bool memkey_check = UNSET;
-    bool colon_check = UNSET;
-    bool association_check = UNSET;
-    bool bank_enter_check = UNSET;
+    int open_brace_check_one = FALSE;
+    int open_brace_check_two = FALSE;
+    int semicolon_check = FALSE;
+    int memkey_check = FALSE;
+    int colon_check = FALSE;
+    int association_check = FALSE;
+    int bank_enter_check = FALSE;
     int associator_count = 0;
     int association_count = 0;
-    bool associator_check = UNSET;
-    bool name_token_check_one = UNSET;
-    bool name_token_check_two = UNSET;
-    bool comma_check = UNSET;
-    bool close_brace_check = UNSET;
-    bool line_complpete = UNSET;
+    int associator_check = FALSE;
+    int name_token_check_one = FALSE;
+    int name_token_check_two = FALSE;
+    int comma_check = FALSE;
+    int close_brace_check = FALSE;
+    int line_complpete = FALSE;
     int workingChar;
+
     while ((workingChar = fgetc(vocab_file)) != EOF)
     {
         switch (workingChar) {
@@ -124,6 +124,7 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) 
                 open_brace_check_one = TRUE;
                 if (colon_check == TRUE) {
                     open_brace_check_two = TRUE;
+                    colon_check = UNSET;
                 }
                 break;
             case NAMETOKEN:
@@ -132,7 +133,11 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) 
                 }
                 if (memkey_check == TRUE) {
                     name_token_check_two = TRUE;
+                    name_token_check_one = UNSET;
                     vocab_append_string(vocab_form, ",", Engram_Memkey);
+                    memkey_check = UNSET;
+                    open_brace_check_one = UNSET;
+
                 }
                 if (comma_check == TRUE || open_brace_check_two == TRUE) {
                     association_check = TRUE;
@@ -160,6 +165,8 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) 
                         association_check = FALSE;
                     }
                 }
+                association_check = UNSET;
+                associator_check = UNSET;
                 break;
             case CLOSEBRACE:
                 close_brace_check = TRUE;
@@ -173,45 +180,51 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram, int engram_append_flag) 
 
                     open_brace_check_two = FALSE;
                 }
+                comma_check = UNSET;
                 break;
                 // default will handle alphanumerics
             default:
-                if (isalnum(workingChar))
-                {
-                    if (memkey_check == TRUE && associator_check == TRUE) {
-                        engram_append_flag = Engram_Associator;
-                        vocab_append_string(vocab_form, ",", 2);
+                if (isalnum((unsigned char)workingChar)) {
+                    if (name_token_check_one == TRUE && (name_token_check_two == UNSET || name_token_check_two == FALSE)) {
+                        memkey_check = TRUE;
                     }
-                    else if (memkey_check == TRUE && association_check == TRUE) {
-                        char character[2] = {(char)workingChar, '\0'};
-                        vocab_append_string(vocab_form, character, Engram_Association);
+
+                    char character[2] = {
+                        (char)workingChar,
+                        '\0'
+                    };
+
+                    if (associator_check == TRUE) {
+
+
+
+                        vocab_append_string(
+                            vocab_form,
+                            character,
+                            Engram_Associator
+                        );
+
+                    }
+                    else if (association_check == TRUE) {
+
+                        vocab_append_string(
+                            vocab_form,
+                            character,
+                            Engram_Association
+                        );
+
                     }
                     else if (name_token_check_one == TRUE) {
-                        char character[2] = {(char)workingChar, '\0'};
-                        memkey_check = TRUE;
-                        vocab_append_string(vocab_form, character, Engram_Memkey);
-                    }
-                    switch (engram_append_flag) {
-                        case Engram_Associator: {
-                            if (memkey_check == TRUE && associator_check == TRUE) {
-                                engram_append_flag = Engram_Associator;
 
-                                char character[2] = {(char)workingChar, '\0'};
+                        vocab_append_string(
+                            vocab_form,
+                            character,
+                            Engram_Memkey
+                        );
 
-                                vocab_append_string(
-                                    vocab_form,
-                                    character,
-                                    Engram_Associator
-                                );
-                            }
-                            break;
-                        }
-                        default: {
-                            perror("Engram append error");
-                            break;
-                        }
-                    }
-                } // end of isalnum
+
+                             }
+                }
                 break;
         } // End of switch
 

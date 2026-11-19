@@ -1464,3 +1464,12 @@ days, so we'll see what I'm actually able to get done today.
 
 So far i've rolled those hex morphemes into the valuesMatrix, which means that the encodedMatrix will now need updating
 alongside it before we go much farther.
+
+11/19/2026-
+
+I've gotten pretty close to finishing vocab_file_parse this morning, I think. It's been a litle difficult to find time
+to be in here the last few days with personal stuff that's been going on but I've spent a good hour in here this morning!
+I fixed up some flag resetting and other logic flow issues, and changed the variable types within the parse function over
+to ints.
+
+Progress is progress!

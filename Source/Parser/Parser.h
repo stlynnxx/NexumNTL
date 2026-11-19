@@ -42,7 +42,7 @@ typedef struct {
 
 } Export;
 
-typedef enum  {
+typedef enum {
     UNSET = -1,
     FALSE = 0,
     TRUE = 1
