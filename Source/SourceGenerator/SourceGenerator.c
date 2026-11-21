@@ -109,8 +109,6 @@ int terminal_inp(FILE* export_file, InputForm *form, int control) {
         printf("Memory Key: \n");
         scanf("%s", form->memoryKeyBuffer.data);
         in_append_string(form, form->memoryKeyBuffer.data, form->memoryKeyBuffer.length, memoryKey);
-
-
         printf("Assocation Count: \n");
         scanf("%d", form->assocCount);
         for (int i = 0; i < form->assocCount; i++ )

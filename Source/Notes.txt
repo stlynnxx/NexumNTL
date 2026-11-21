@@ -1467,9 +1467,20 @@ alongside it before we go much farther.
 
 11/19/2026-
 
-I've gotten pretty close to finishing vocab_file_parse this morning, I think. It's been a litle difficult to find time
+I've gotten pretty close to finishing vocab_file_parse this morning, I think. It's been a little difficult to find time
 to be in here the last few days with personal stuff that's been going on but I've spent a good hour in here this morning!
 I fixed up some flag resetting and other logic flow issues, and changed the variable types within the parse function over
 to ints.
 
 Progress is progress!
+
+11/21/2026-
+
+I made it farther this morning, and now i'm at the stage of generating engram IDs. I need to adapt/build logic for the
+values matrix lookup coming from the engram path.. I think it would be best to adapt something at this point.
+
+I'm going to try to come back later and working on doing just that, but for now I have other work to do and then wood to
+split, so, that's probably all for now.
+
+I'm starting to wish I had some help with all of this.
+

@@ -1,6 +1,6 @@
 #include "SymbolTable.h"
 
-char *valuesMatrix[26][15] = {
+char *valuesMatrix[26][16] = {
     {"Able","able", "Al","al", "As", "as","At", "at", "Ance", "ance", "And", "and", "Ante", "ante", "Anti", "anti"}, // A, 0
 {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,NULL,NULL}, // B, 1
 {"Cede", "cede", "Cess", "cess", "Circum", "circum", "Clude", "clude", NULL, NULL, NULL, NULL,NULL,NULL}, // C, 2
@@ -66,36 +66,12 @@ char *encodedMatrix[26][14] = {
  * at
  *
  */
-int hexMatrix[40][40] = {
-    {0x15},
 
-};
-
-int countsMatrix[26][14] = {
-    {4,2,2,2,4,4,3,4,4,4,4,0},
-    {0,0,0,0,0,0,0,0,0,0,0,0},
-    {4,4,4,4,6,6,5,5,0,0,0,0},
-    {4,0,0,0,0,0,0,0,0,0,0,0},
-    {2,2,2,2,2,2,0,0,0,0,0,0},
-    {4,4,4,0,0,0,0,0,0,0,0,0},
-    {5,5,0,0,0,0,0,0,0,0,0,0},
-    {2,2,0,0,0,0,0,0,0,0,0,0},
-    {2,2,3,3,2,2,5,5,5,5,0,0},
-    {4,4,2,2,0,0,0,0,0,0,0,0},
-    {5,5,4,4,4,4,5,5,5,5,5,5},
-    {4,4,2,2,0,0,0,0,0,0,0,0},
-    {2,2,2,2,2,2,0,0,0,0,0,0},
-    {2,2,5,5,0,0,0,0,0,0,0,0},
-    {5,5,0,0,0,0,0,0,0,0,0,0},
-    {2,2,4,4,3,3,4,4,2,2,0,0},
-    {2,2,5,5,0,0,0,0,0,0,0,0},
-    {4,4,0,0,0,0,0,0,0,0,0,0},
-    {4,4,0,0,0,0,0,0,0,0,0,0}
-};
 char firsts[40] = {'t','i','a','o','e','r','l','m','f','n', 'u'};
 char secondaries[80] = {
     'b', 'c', 'd', 'g', 'h', 'j', 'k', 'p', 'q', 's', 'u', 'v', 'w', 'x', 'y', 'z'
 };
+
 static int lex_ensure_capacity(DynamicBuffers *buf, size_t extra) {
     size_t needed = buf->length + extra;
     if (needed <= buf->capacity) {
@@ -140,6 +116,68 @@ void seed_table(Table *table) {
             row_set(&table->row[r], c, v);
         }
     }
+}
+
+int memkey_store_ensure_capacity(MemoryKeyStore *memory_key_store, size_t extra) {
+    size_t needed;
+    size_t capacity;
+    needed = memory_key_store->memoryKeys.length + extra;
+    if (needed <= memory_key_store->memoryKeys.capacity) {
+        return 0;
+    }
+    capacity = memory_key_store->memoryKeys.capacity ? memory_key_store->memoryKeys.capacity : 16;
+    while (needed > capacity) {
+        capacity *= 2;
+    }
+    char *tmp = realloc(memory_key_store->memoryKeys.data, capacity);
+    if (!tmp) {
+        return -1;
+    }
+    memory_key_store->memoryKeys.data = tmp;
+    memory_key_store->memoryKeys.capacity = capacity;
+    return 0;
+}
+
+int memkey_store_append_bytes(MemoryKeyStore *memory_key_store, const char *byte, size_t x) {
+    if (memkey_store_ensure_capacity(memory_key_store, x) != 0) {
+        return -1; // failure
+    }
+    memcpy(
+        memory_key_store->memoryKeys.data + memory_key_store->memoryKeys.length,
+        byte,
+        x
+    );
+    memory_key_store->memoryKeys.length += x;
+    memory_key_store->memoryKeys.data[memory_key_store->memoryKeys.length] = '\0';
+    return 0;
+}
+
+
+
+int memkey_store_free(MemoryKeyStore *memoryKeyStore) {
+    free(memoryKeyStore->memoryKeys.data);
+    free(memoryKeyStore);
+    return 0;
+}
+
+// This is an interface for passing a string to append bytes
+int memkey_store_append_string(MemoryKeyStore *memory_key_store, char *string, size_t x, int control) {
+    return (memkey_store_append_bytes(memory_key_store, string, strlen(string)));
+}
+// This is an interface for passing chars to append_bytes
+int memkey_store_append_char(MemoryKeyStore *memory_key_store, char c, int control) {
+    return (memkey_store_append_bytes(memory_key_store, &c,sizeof(&c)));
+}
+
+MemoryKeyStore* memory_key_store_init() {
+    MemoryKeyStore *memory_key_store = malloc(sizeof(MemoryKeyStore));
+    if (!memory_key_store) {
+        return 0;
+    }
+    memory_key_store->memoryKeys.length = 0;
+    memory_key_store->memoryKeys.capacity = 0;
+    memory_key_store->memoryKeys.data = malloc(16);
+    return memory_key_store;
 }
 
 int row_init(Row *row)

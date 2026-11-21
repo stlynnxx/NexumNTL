@@ -57,11 +57,7 @@ FILE* load_vocab_file(char vocab_path) {
 
 int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morpheme_opt, int agent_output_opt, char *output,
     size_t output_capacity, char vocab_file_name[256])
-{
-
-
-
-    /*
+{     /*
      * Globals for cleanup:
      * export_file
      * form
@@ -243,7 +239,7 @@ int run(int agency_opt, const char *morpheme, int *encoded_value, int agent_morp
                 vocab_fp = load_vocab_file(*vocab_path);
                 // Parse vocab file
                 vocab_file_parse(vocab_fp, engram);
-                // Append to something like input
+
                 // Build parent engram
                 // build branch for each associator
                 break;

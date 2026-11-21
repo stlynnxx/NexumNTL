@@ -206,7 +206,11 @@ char row_translate(int row) {
     return export;
 }
 
+void engram_nexc_encode(MemoryKeyStore *memory_key_store, int struct_flag) {
+    unsigned char trans_row;
+    unsigned char encodedMorpheme[2];
 
+}
 void nexc_encode(InputForm *form,FILE* export_file, int struct_flag)
 {
     unsigned char trans_row;

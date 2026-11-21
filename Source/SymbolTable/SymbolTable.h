@@ -89,7 +89,9 @@ typedef struct {
     size_t capacity;
     EngramID next_id;
 } EngramStore;
-
+typedef struct {
+    DynamicBuffers memoryKeys;
+} MemoryKeyStore;
 // These structs are the buffer for the matrix; only columns need to be expanded.
 typedef struct {
     DynamicBuffers *cols;
@@ -100,7 +102,7 @@ typedef struct {
 typedef struct {
     Row row[26];
 } Table;
-char *valuesMatrix[26][15];
+char *valuesMatrix[26][16];
 char *encodedMatrix[26][14];
 int hexMatrix[40][40];
 int countsMatrix[26][14];
