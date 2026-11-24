@@ -1484,3 +1484,14 @@ split, so, that's probably all for now.
 
 I'm starting to wish I had some help with all of this.
 
+11/24/2026-
+I've been working on generating the engram ID today; I so far have been able to call existing functions from within
+the generate_ID function instead of building new ones for the values matrix lookup like I had hoped I'd be able to do.
+Things are going well, I'm still in the generate_ID switch as of now.
+I am pressed for time due to personal matters, but, at least I made it in today and made some progress.
+
+I think we need to give valuesSearch a way to handle a morpheme that is not matched next.
+
+Okay I got all of that done and have generate_ID called from vocab__file_parse; on our next episode I will find
+somewhere for the return val from generate_ID to live!
+

@@ -140,22 +140,48 @@ int matrix_parse(InputForm *form, FILE* in_file) {
 
 
 // This will be for checking if a given search term is within the values matrix
+
 const char *valuesSearch(const char *searchTerm)
 {
+    if (!searchTerm || !searchTerm[0])
+        return NULL;
+
+    int cols = sizeof(valuesMatrix[0]) / sizeof(valuesMatrix[0][0]);
+
     for (int i = 0; i < 26; i++)
     {
-        int cols = sizeof(valuesMatrix[0]) / sizeof(valuesMatrix[0][0]);
         for (int j = 0; j < cols; j++)
         {
             const char *v = valuesMatrix[i][j];
-            if (!v || strcmp(v, "NULL") == 0) {
+            if (!v || strcmp(v, "NULL") == 0)
                 continue;
-            }
-            if (strcmp(v, searchTerm) == 0) {
+            if (strcmp(v, searchTerm) == 0)
                 return v;
-            }
         }
     }
+
+    // No match
+
+    int row = toupper((unsigned char)searchTerm[0]) - 'A';
+    if (row < 0 || row >= 26)
+        return NULL;
+
+    for (int j = 0; j < cols; j++)
+    {
+        if (!valuesMatrix[row][j] ||
+            strcmp(valuesMatrix[row][j], "NULL") == 0)
+        {
+            size_t length = strlen(searchTerm) + 1;
+            char *newValue = malloc(length);
+            if (!newValue) {
+                return NULL;
+            }
+            memcpy(newValue, searchTerm, length);
+            valuesMatrix[row][j] = newValue;
+            return valuesMatrix[row][j];
+        }
+    }
+
     return NULL;
 }
 

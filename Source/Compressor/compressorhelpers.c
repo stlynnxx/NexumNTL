@@ -103,6 +103,45 @@ int carryover_associator(
     return 0;
 }
 
+char generate_ID(VocabForm *vocab_form, int control) {
+    InputForm *engram_input_form = input_init();
+    size_t val_length = 0;
+    switch (control) {
+        case Engram_Association: {
+            const char *value = valuesSearch(vocab_form->association.data);
+            if (value != NULL)
+            {
+                val_length = strlen(value);
+            }
+            return *value;
+            break;
+        }
+        case Engram_Associator: {
+            const char *value = valuesSearch(vocab_form->associator.data);
+            if (value != NULL)
+            {
+                val_length = strlen(value);
+            }
+            return *value;
+            break;
+        }
+        case Engram_Memkey: {
+            const char *value = valuesSearch(vocab_form->parent_morpheme.data);
+            if (value != NULL)
+            {
+                val_length = strlen(value);
+            }
+            return *value;
+            break;
+        }
+        default: {
+            break;
+        }
+
+    }
+
+}
+
 
 void vocab_file_parse(FILE* vocab_file, Engram *engram) {
     if (vocab_file == NULL || engram == NULL) {
@@ -226,34 +265,38 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram) {
                         '\0'
                     };
                     if (associator_check == TRUE) {
-                        // Generate ID
+
                         if (vocab_append_string(
                             vocab_form,
                             character,
-                            Engram_Association
+                            Engram_Associator
                             ) != 0) {
-                            fprintf(stderr, "Failed to append association.\n");
+                            fprintf(stderr, "Failed to append associator.\n");
                        }
+                        // This is generating the ID; we still need somewhere to save it to
+                        generate_ID(vocab_form, Engram_Associator);
                     }
                     else if (association_check == TRUE) {
-                        // Generate ID
                         if (vocab_append_string(
                             vocab_form,
                             character,
                             Engram_Association) != 0) {
                             fprintf(stderr, "Failed to append association.\n");
                        }
+                        // This is generating the ID; we still need somewhere to save it to
+                        generate_ID(vocab_form, Engram_Association);
 
                     }
                     // Memkey
                     else if (name_token_check_one == TRUE) {
-                        // Generate ID
                         if (vocab_append_string(
                             vocab_form,
                             character,
-                       Engram_Association) != 0) {
+                       Engram_Memkey) != 0) {
                             fprintf(stderr, "Failed to append association.\n");
                        }
+                        // This is generating the ID; we still need somewhere to save it to
+                        generate_ID(vocab_form, Engram_Memkey);
                     }
                 }
                 break;
@@ -263,7 +306,6 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram) {
     } // end of while
 
 }
-
 
 void line_parse(Export *export,ParserBuffers *pbuffers, InputForm *form, FILE* export_file) {
     int control;
