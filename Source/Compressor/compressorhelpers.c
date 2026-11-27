@@ -43,8 +43,21 @@ VocabForm* vocab_form_init() {
     vocab_form->associator.capacity = 0;
     vocab_form->associator.data = malloc(8);
 
+    vocab_form->memkey_ID.length = 0;
+    vocab_form->memkey_ID.capacity = 0;
+    vocab_form->memkey_ID.data = malloc(8);
+
+    vocab_form->association_ID.length = 0;
+    vocab_form->association_ID.capacity = 0;
+    vocab_form->association_ID.data = malloc(8);
+
+    vocab_form->associator_ID.length = 0;
+    vocab_form->associator_ID.capacity = 0;
+    vocab_form->associator_ID.data = malloc(8);
+
     return vocab_form;
 }
+
 int comp_ensure_capacity(InputForm *form, size_t extra) {
     size_t needed = form->terminalInput.length + extra;
     if (needed <= form->terminalInput.capacity) {
@@ -144,9 +157,14 @@ char generate_ID(VocabForm *vocab_form, int control) {
 
 
 void vocab_file_parse(FILE* vocab_file, Engram *engram) {
-    if (vocab_file == NULL || engram == NULL) {
-        return;
+    // This needs freed
+    char *id_buffer = (char *)calloc(50, sizeof(char));
+    if (id_buffer == NULL) {
+        // needs proper handling
+        perror("Engram ID allocation failure");
     }
+
+
 
     Row row = {0};
     row_init(&row);
@@ -273,8 +291,25 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram) {
                             ) != 0) {
                             fprintf(stderr, "Failed to append associator.\n");
                        }
-                        // This is generating the ID; we still need somewhere to save it to
-                        generate_ID(vocab_form, Engram_Associator);
+                        // Generating ID and appending it to the buffer
+                        size_t buffer_length = strlen(id_buffer);
+                        size_t remaining = 50 - buffer_length;
+                        int result = snprintf(id_buffer + buffer_length,remaining,"%c%d",  generate_ID(vocab_form, Engram_Associator));
+                        if (result < 0)
+                        {
+                            printf("Formatting failed.\n");
+                        }
+                        else if ((size_t)result >= remaining)
+                        {
+                            printf("Buffer capacity exceeded.\n");
+                        }
+                        else
+                        {
+                            printf("Successfully appended: %s\n", id_buffer);
+                        }
+                        // append id_buffer to vocab_form
+                        vocab_append_string(vocab_form,id_buffer,Engram_associatorID);
+
                     }
                     else if (association_check == TRUE) {
                         if (vocab_append_string(
@@ -283,8 +318,24 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram) {
                             Engram_Association) != 0) {
                             fprintf(stderr, "Failed to append association.\n");
                        }
-                        // This is generating the ID; we still need somewhere to save it to
-                        generate_ID(vocab_form, Engram_Association);
+                        // Generating ID and appending it to the buffer
+                        size_t buffer_length = strlen(id_buffer);
+                        size_t remaining = 50 - buffer_length;
+                        int result = snprintf(id_buffer + buffer_length,remaining,"%c%d",  generate_ID(vocab_form, Engram_Association));
+                        if (result < 0)
+                        {
+                            printf("Formatting failed.\n");
+                        }
+                        else if ((size_t)result >= remaining)
+                        {
+                            printf("Buffer capacity exceeded.\n");
+                        }
+                        else
+                        {
+                            printf("Successfully appended: %s\n", id_buffer);
+                        }
+                        // append id_buffer to vocab_form
+                        vocab_append_string(vocab_form,id_buffer,Engram_associationID);
 
                     }
                     // Memkey
@@ -295,16 +346,29 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram) {
                        Engram_Memkey) != 0) {
                             fprintf(stderr, "Failed to append association.\n");
                        }
-                        // This is generating the ID; we still need somewhere to save it to
-                        generate_ID(vocab_form, Engram_Memkey);
+                        // Generating ID and appending it to the buffer
+                        size_t buffer_length = strlen(id_buffer);
+                        size_t remaining = 50 - buffer_length;
+                        int result = snprintf(id_buffer + buffer_length,remaining,"%c%d",  generate_ID(vocab_form, Engram_Memkey));
+                        if (result < 0)
+                        {
+                            printf("Formatting failed.\n");
+                        }
+                        else if ((size_t)result >= remaining)
+                        {
+                            printf("Buffer capacity exceeded.\n");
+                        }
+                        else
+                        {
+                            printf("Successfully appended: %s\n", id_buffer);
+                        }
+                        // append id_buffer to vocab_form
+                        vocab_append_string(vocab_form,id_buffer,Engram_memkeyID);
                     }
                 }
                 break;
         } // End of switch
-
-
     } // end of while
-
 }
 
 void line_parse(Export *export,ParserBuffers *pbuffers, InputForm *form, FILE* export_file) {
@@ -632,11 +696,8 @@ int vocab_form_free(VocabForm *vocab_form) {
     return 0;
 }
 
-int vocab_ensure_capacity(
-    VocabForm *vocab_form,
-    size_t extra,
-    int control_flag
-) {
+int vocab_ensure_capacity(VocabForm *vocab_form,size_t extra, int control_flag) {
+
     if (vocab_form == NULL) {
         return -1;
     }
@@ -644,18 +705,32 @@ int vocab_ensure_capacity(
     DynamicBuffers *buffer = NULL;
 
     switch (control_flag) {
-        case Engram_Memkey:
+        case Engram_Memkey: {
             buffer = &vocab_form->parent_morpheme;
             break;
+        }
 
-        case Engram_Association:
+        case Engram_Association: {
             buffer = &vocab_form->association;
             break;
+        }
 
-        case Engram_Associator:
+        case Engram_Associator: {
             buffer = &vocab_form->associator;
             break;
-
+        }
+        case Engram_memkeyID: {
+            buffer = &vocab_form->memkey_ID;
+            break;
+        }
+        case Engram_associatorID: {
+            buffer = &vocab_form->associator_ID;
+            break;
+        }
+        case Engram_associationID: {
+            buffer = &vocab_form->association_ID;
+            break;
+        }
         default:
             return -1;
     }
@@ -696,12 +771,7 @@ int vocab_ensure_capacity(
     return 0;
 }
 
-int vocab_append_bytes(
-    VocabForm *vocab_form,
-    const void *bytes,
-    size_t length,
-    int control_flag
-) {
+int vocab_append_bytes(VocabForm *vocab_form, const void *bytes, size_t length, int control_flag) {
     if (vocab_form == NULL || (bytes == NULL && length > 0)) {
         return -1;
     }
@@ -709,18 +779,32 @@ int vocab_append_bytes(
     DynamicBuffers *buffer = NULL;
 
     switch (control_flag) {
-        case Engram_Memkey:
+        case Engram_Memkey: {
             buffer = &vocab_form->parent_morpheme;
             break;
+        }
 
-        case Engram_Association:
+        case Engram_Association: {
             buffer = &vocab_form->association;
             break;
+        }
 
-        case Engram_Associator:
+        case Engram_Associator: {
             buffer = &vocab_form->associator;
             break;
-
+        }
+        case Engram_memkeyID: {
+            buffer = &vocab_form->memkey_ID;
+            break;
+        }
+        case Engram_associatorID: {
+            buffer = &vocab_form->associator_ID;
+            break;
+        }
+        case Engram_associationID: {
+            buffer = &vocab_form->association_ID;
+            break;
+        }
         default:
             return -1;
     }
@@ -742,5 +826,5 @@ int vocab_append_bytes(
 }
 
 int vocab_append_string(VocabForm *vocab_form, char *string, int control_flag) {
-    return (vocab_append_bytes(vocab_form, string, control_flag));
+    return (vocab_append_bytes(vocab_form, string, strlen(string), control_flag));
 }

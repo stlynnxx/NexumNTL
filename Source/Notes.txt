@@ -1495,3 +1495,12 @@ I think we need to give valuesSearch a way to handle a morpheme that is not matc
 Okay I got all of that done and have generate_ID called from vocab__file_parse; on our next episode I will find
 somewhere for the return val from generate_ID to live!
 
+11/27/2026-
+
+I've been gone on a little thanksgiving break, but i'm back now and ready to get back to work!
+
+I've  been chasing the goal of having this running again by the end of the year, and I think it's still possible
+if I really lock in. So, it's time to do it!
+
+So far this morning I've added a field for the memkey, association and associator IDs in the VocabForm struct,
+ set up the corresponding init stuff, and gotten the generated ID appended to the vocab form.

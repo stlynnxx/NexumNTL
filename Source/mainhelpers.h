@@ -14,7 +14,10 @@ typedef struct {
 typedef enum {
     Engram_Memkey = 0,
     Engram_Associator = 1,
-    Engram_Association = 2
+    Engram_Association = 2,
+    Engram_memkeyID = 3,
+    Engram_associatorID = 4,
+    Engram_associationID = 5
 } EngramAppendFlag;
 
 inline Engram* engram_helpers(EngramStore *store);

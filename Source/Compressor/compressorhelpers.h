@@ -13,13 +13,17 @@ typedef struct {
     DynamicBuffers parent_morpheme;
     DynamicBuffers associator;
     DynamicBuffers association;
+    DynamicBuffers memkey_ID;
+    DynamicBuffers associator_ID;
+    DynamicBuffers association_ID;
+
 } VocabForm;
 
 inline void vocab_file_parse(FILE* vocab_file, Engram *engram);
-inline int vocab_append_bytes(VocabForm *vocab_form, char *bytes, int control_flag);
+
+inline int vocab_append_bytes(VocabForm *vocab_form,const void *bytes,size_t length,int control_flag);
 inline int vocab_append_string(VocabForm *vocab_form, char *string, int control_flag);
-inline int explore_dir(const char* dir_path, const char* extension,
-                      char*** results, int* count);
+inline int explore_dir(const char* dir_path, const char* extension, char*** results, int* count);
 inline InputForm* in_init();
 inline int comp_append_bytes(Unencoded *unencoded, InputForm *in);
 inline int comp_from_file_append_bytes(InputForm *form,ParserBuffers *pbuffers, FILE* in_file, FILE* export_file,int output);
