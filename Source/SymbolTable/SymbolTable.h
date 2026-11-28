@@ -83,15 +83,21 @@ typedef struct {
     Associator *associator;
 } Engram;
 
+
+
 typedef struct {
+    DynamicBuffers store_id;
     Engram *engrams;
     size_t count;
     size_t capacity;
     EngramID next_id;
 } EngramStore;
+
 typedef struct {
     DynamicBuffers memoryKeys;
 } MemoryKeyStore;
+
+
 // These structs are the buffer for the matrix; only columns need to be expanded.
 typedef struct {
     DynamicBuffers *cols;

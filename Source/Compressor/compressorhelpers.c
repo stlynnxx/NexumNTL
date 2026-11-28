@@ -157,14 +157,11 @@ char generate_ID(VocabForm *vocab_form, int control) {
 
 
 void vocab_file_parse(FILE* vocab_file, Engram *engram) {
-    // This needs freed
     char *id_buffer = (char *)calloc(50, sizeof(char));
     if (id_buffer == NULL) {
         // needs proper handling
         perror("Engram ID allocation failure");
     }
-
-
 
     Row row = {0};
     row_init(&row);
@@ -309,6 +306,8 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram) {
                         }
                         // append id_buffer to vocab_form
                         vocab_append_string(vocab_form,id_buffer,Engram_associatorID);
+                        // free the buffer
+                        free(id_buffer);
 
                     }
                     else if (association_check == TRUE) {
@@ -336,6 +335,8 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram) {
                         }
                         // append id_buffer to vocab_form
                         vocab_append_string(vocab_form,id_buffer,Engram_associationID);
+                        // free the buffer
+                        free(id_buffer);
 
                     }
                     // Memkey
@@ -364,13 +365,20 @@ void vocab_file_parse(FILE* vocab_file, Engram *engram) {
                         }
                         // append id_buffer to vocab_form
                         vocab_append_string(vocab_form,id_buffer,Engram_memkeyID);
+                        // free the buffer
+                        free(id_buffer);
                     }
                 }
                 break;
         } // End of switch
     } // end of while
 }
-
+void engram_build(VocabForm *vocab_form, int control) {
+    Engram engram;
+    switch (control) {
+        case Engram_Memkey: {break;}
+    }
+}
 void line_parse(Export *export,ParserBuffers *pbuffers, InputForm *form, FILE* export_file) {
     int control;
     char *workingChar;

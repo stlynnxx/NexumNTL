@@ -311,26 +311,48 @@ void in_file_to_nexc_cleanup(FILE* in_file, Export *export_form, InputForm *form
 
 EngramStore *engram_store_init(void) {
     EngramStore *store = calloc(1, sizeof *store);
-
     if (store == NULL) {
         return NULL;
     }
-
     store->capacity = 1000;
     store->next_id = 1;
-
     store->engrams = calloc(
         store->capacity,
         sizeof *store->engrams
     );
-
     if (store->engrams == NULL) {
         free(store);
         return NULL;
     }
+    store->store_id.capacity = 50;
+    store->store_id.length = 0;
+    store->store_id.data = calloc(
+        store->store_id.capacity,
+        sizeof(char)
+    );
 
+    if (store->store_id.data == NULL) {
+        free(store->engrams);
+        free(store);
+        return NULL;
+    }
+    int result = snprintf(
+    store->store_id.data,
+    store->store_id.capacity,
+    "S%02d", 1);
+
+    if (result < 0 ||
+    (size_t)result >= store->store_id.capacity) {
+        free(store->store_id.data);
+        free(store->engrams);
+        free(store);
+        return NULL;
+    }
+
+    store->store_id.length = (size_t)result;
     return store;
 }
+
 EngramID engram_create(EngramStore *store) {
     if (store == NULL ||
         store->count >= store->capacity ||
@@ -339,15 +361,11 @@ EngramID engram_create(EngramStore *store) {
         }
 
     size_t index = store->count;
-
     Engram *engram = &store->engrams[index];
-
     *engram = (Engram){0};
     engram->id = store->next_id;
-
     store->next_id++;
     store->count++;
-
     return engram->id;
 }
 

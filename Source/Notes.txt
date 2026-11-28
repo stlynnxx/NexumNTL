@@ -1503,4 +1503,24 @@ I've  been chasing the goal of having this running again by the end of the year,
 if I really lock in. So, it's time to do it!
 
 So far this morning I've added a field for the memkey, association and associator IDs in the VocabForm struct,
- set up the corresponding init stuff, and gotten the generated ID appended to the vocab form.
+set up the corresponding init stuff, and gotten the generated ID appended to the vocab form.
+
+I have a lot to do today and some thinking on what to do next, so I think I'm going to move on to the next thing
+and possibly come back later, although i'm admittedly terrible at that. We'll see.
+
+Progress is progress, though.
+
+11/28/2026-
+
+I'm back today and have a few things in front of me that need done next so I want to get them down in here and go from
+there.
+
+I started engram_build. We need to init the engram within that function, but the store needs to be init'd in vocab_file
+_parse, before the loop begins.
+
+I need to add both a branch identifier and an engram store identifier to the ID structure.
+
+I actually already have an engram_build funciton in mainhelpers that it seems I totally forgot building, but, it'll need
+some updating since I wrote it for the modern design.
+
+Updates applied!
